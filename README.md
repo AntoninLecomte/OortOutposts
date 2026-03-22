@@ -21,6 +21,7 @@ Military assets include:
     - Fire power
     - Bonus fire power against ennemy types
     - Speed
+    - Range
     - Shield
     - Structure points
 - Passive and active defense infrastructure (same assets).

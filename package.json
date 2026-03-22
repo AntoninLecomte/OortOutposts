@@ -1,0 +1,28 @@
+{
+  "name": "oort_outposts",
+  "version": "1.0.0",
+  "description": "Oort outposts is a web-based game proposing up to 1 week games opposing up to 8 players in the colonization and domination of asteroids cluster.",
+  "homepage": "https://github.com/AntoninLecomte/OortOutposts#readme",
+  "bugs": {
+    "url": "https://github.com/AntoninLecomte/OortOutposts/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntoninLecomte/OortOutposts.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.105.4",
+    "webpack-cli": "^7.0.2"
+  }
+}
