@@ -34,7 +34,7 @@ class Cluster {
                 var tries = 0;
                 var x = 0;
                 var y = 0;
-                this.asteroids.push(new Asteroid(x,y));
+                this.asteroids.push(new Asteroid(x,y,1));
                 var asteroidCount = 1;
             while (tries < 10000) { // Try 10000 times
                 tries++;
@@ -64,7 +64,7 @@ class Cluster {
 
                 // If no astroid is breaking the distance constraint, add a new asteroid
                 if (!tooClose && !tooFar) {
-                    this.asteroids.push(new Asteroid(x,y));
+                    this.asteroids.push(new Asteroid(x,y,asteroidCount));
                     asteroidCount++;
                     if (asteroidCount >= n_asteroids) {
                         return this.asteroids;
@@ -81,7 +81,8 @@ class Cluster {
 }
 
 class Asteroid {
-    constructor(x,y) {
+    constructor(x,y,id) {
+        this.id = id
         this.x = x;
         this.y = y;
         this.size = 50 //km, diameter
@@ -90,7 +91,8 @@ class Asteroid {
             "RAW_MINERALS": 10000, // kg
         }
 
-        this.generateShapePoints(200,500,0);
+        this.generateShapePoints(200,500,id/12);
+        console.log(id)
 
     /** 
     * Brief description of the function here.
@@ -102,18 +104,20 @@ class Asteroid {
     * @return {Array} Returns the generated points, and store them to the asteroid object
     */}
     generateShapePoints(minSize, maxSize, randomness, pointDensity=1/4){
+        this.maxRadius = 0
+
         this.baseRadius = minSize+Math.random()*(maxSize-minSize);
         this.numPoints = 2*Math.round(this.baseRadius*pointDensity/2) // Mutliple of 2 for mirror
         
         // Create array
         this.points = [];
         for (var i = 0; i < this.numPoints; i++) {
-            this.points.push([-this.numPoints/2*this.scale+i*this.scale,0]);
+            this.points.push([-this.numPoints/2+i,0]);
         }
         // Add random sinusoids to the points
         for (var i = 0; i < 10; i++) {
-            var factor = Math.random()*(10+10*randomness);
-            var frequency = 10+Math.random()*(25+25*randomness);
+            var factor = Math.random()*(20+50*randomness);
+            var frequency = 5+Math.random()*(25+25*randomness);
             for (var p = 0; p < this.numPoints/2; p++) {
                 this.points[p][1] += factor * Math.sin(this.points[p][0] / frequency);
             }
@@ -129,6 +133,7 @@ class Asteroid {
         // Circularize
         for (var p = 0; p < this.numPoints; p++) {
             const dist = (this.baseRadius-this.points[p][1])
+            if (dist > this.maxRadius) {this.maxRadius = dist}
             this.points[p][0] = Math.cos(p/this.numPoints*2*Math.PI)*dist;
             this.points[p][1] = Math.sin(p/this.numPoints*2*Math.PI)*dist;
         }
