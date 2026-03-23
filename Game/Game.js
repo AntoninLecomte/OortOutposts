@@ -5,8 +5,6 @@ import {SCENE_Map} from "./Scenes/Scene_map.js"
 import {GameData} from "./GameData.js"
 
 window.gameData = new GameData();
-window.gameData.generateWorld();
-
 var config = {
         type: Phaser.AUTO,
         width: parentDiv.getBoundingClientRect().width+1,

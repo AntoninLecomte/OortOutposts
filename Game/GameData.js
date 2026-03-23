@@ -2,9 +2,6 @@ class GameData {
     constructor(parameters) {
         this.cluster = new Cluster();
     }
-    generateWorld() {
-        this.cluster.generateAsteroids(12, 1, 0.2, 3);
-    }
 }
 
 /**
@@ -17,24 +14,30 @@ class Cluster {
         this.maxX = 0;
         this.minY = 0;
         this.maxY = 0;
+
+        const coords = this.generateAsteroidsCoordinates(12, 1, 0.2, 3);
+        for (var asteroid in coords){
+            this.asteroids.push(new Asteroid(coords[asteroid][0], coords[asteroid][1], asteroid));
+        }
+        this.generateRessources(100,100)
     }
     
     /** 
-    * Generates asteroids with a set of given constraints
+    * Generates coordinates with a set of given constraints
     * @param {integer} n_asteroids - Number of asteroids to be generated
     * @param {number} mapRadius - Map radius, in LightMinutes
     * @param {number} minDistance - Min distance between two asteroids, LightMinutes
     * @param {number} distanceVariation - Distance variation, in ratio of the minDistance
-    * @return {Array} Returns an Array of generated asteroids
+    * @return {Array} Returns an Array of coordinates
     */
-    generateAsteroids(n_asteroids, mapRadius, minDistance, distanceVariation) {
+    generateAsteroidsCoordinates(n_asteroids, mapRadius, minDistance, distanceVariation) {
         this.mapRadius = mapRadius;
         while (true) {
-                this.asteroids = [];
+                var asteroidsCoordinates = [];
                 var tries = 0;
                 var x = 0;
                 var y = 0;
-                this.asteroids.push(new Asteroid(x,y,1));
+                asteroidsCoordinates.push([x,y]);
                 var asteroidCount = 1;
             while (tries < 10000) { // Try 10000 times
                 tries++;
@@ -46,8 +49,8 @@ class Cluster {
                 // Check if the new asteroid is far enough from the others
                 var tooClose = false;
                 
-                for (var asteroid in this.asteroids) {
-                    var distance = Math.sqrt(Math.pow(x-this.asteroids[asteroid].x,2)+Math.pow(y-this.asteroids[asteroid].y,2));
+                for (var asteroid in asteroidsCoordinates) {
+                    var distance = Math.sqrt(Math.pow(x-asteroidsCoordinates[asteroid][0],2)+Math.pow(y-asteroidsCoordinates[asteroid][1],2));
                     if (distance < minDistance) {
                         tooClose = true;
                         break;
@@ -64,10 +67,10 @@ class Cluster {
 
                 // If no astroid is breaking the distance constraint, add a new asteroid
                 if (!tooClose && !tooFar) {
-                    this.asteroids.push(new Asteroid(x,y,asteroidCount));
+                    asteroidsCoordinates.push([x,y]);
                     asteroidCount++;
                     if (asteroidCount >= n_asteroids) {
-                        return this.asteroids;
+                        return asteroidsCoordinates;
                     }
                 }
 
@@ -78,6 +81,41 @@ class Cluster {
             }
         }
     }
+
+    /** 
+    * Select a total amount of ressources and distribute them along asteroids
+    * @param {number} startWater The total water ressource to be available across the cluster
+    * @param {number} startMinerals The total minerals ressource to be available across the cluster
+    * @param {number} totalRandomness The random factor to be applied to total ressources
+    * @param {number} unitaryRandomness The random factor to be applied to individual asteroids
+    * @return {null} Function is operating on Asteroids objects directly
+    */
+    generateRessources(startWater, startMinerals, totalRandomness=0, unitaryRandomness=0.7) {
+        this.startWaterTotal = startWater * (1+totalRandomness);
+        this.startMineralsTotal = startMinerals * (1+totalRandomness);
+        var waterRemaining = this.startWaterTotal;
+        var mineralsRemaining = this.startMineralsTotal;
+        for (var asteroid=0; asteroid<this.asteroids.length; asteroid++){
+            var water=0;
+            var minerals=0;
+            if (asteroid < this.asteroids.length-1){
+                water = waterRemaining/(this.asteroids.length-asteroid) * ((1-unitaryRandomness/2)+unitaryRandomness*Math.random());
+                minerals = mineralsRemaining/(this.asteroids.length-asteroid) * ((1-unitaryRandomness/2)+unitaryRandomness*Math.random());
+
+                waterRemaining -= water;
+                mineralsRemaining -= minerals;
+            }else{
+                // Last asteroid takes all remaining ressources:
+                water = waterRemaining;
+                minerals = mineralsRemaining;
+            }
+
+            this.asteroids[asteroid].startRessources["WATER"] = water;
+            this.asteroids[asteroid].startRessources["MINERALS"] = minerals;
+            this.asteroids[asteroid].baseRadius = Math.pow(Math.pow(water,2)+Math.pow(minerals,2),1)*3;;
+        }
+        
+    }
 }
 
 class Asteroid {
@@ -87,15 +125,13 @@ class Asteroid {
         this.y = y;
         this.size = 50 //km, diameter
         this.startRessources = {
-            "WATER": 10000, // kg,
-            "RAW_MINERALS": 10000, // kg
+            "WATER": 0, // kg,
+            "MINERALS": 0, // kg
         }
 
-        this.generateShapePoints(200,500,id/12);
-        console.log(id)
+        // this.generateShapePoints(200,500,1);
 
     /** 
-    * Brief description of the function here.
     * @summary Generate noisy circular pattern to represent the asteroid shape
     * @param {number} minSize Minimal base radius, km
     * @param {number} maxSize Maximal base radius, km

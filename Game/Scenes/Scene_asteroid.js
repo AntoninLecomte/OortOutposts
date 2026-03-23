@@ -14,16 +14,21 @@ class SCENE_Asteroid extends Phaser.Scene
         const zoomFactor = camera.width/200/this.scale;
         camera.setZoom(zoomFactor*0.4);
         
-        var a=0
-        for (var x=0; x<4; x++){
-            for (var y=0; y<3; y++){
-                this.drawAsteroidShape((-150+100*x)*this.scale, (-100+100*y)*this.scale, window.gameData.cluster.asteroids[a]);
-                a++;
-            }
-        }
+        // Draw all circles
+        // var a=0
+        // for (var x=0; x<4; x++){
+        //     for (var y=0; y<3; y++){
+        //         this.drawAsteroidCircle((-150+100*x)*this.scale, (-100+100*y)*this.scale, window.gameData.cluster.asteroids[a]);
+        //         a++;
+        //     }
+        // }
         
 
         
+    }
+
+    drawAsteroidCircle(x,y,asteroid){
+        this.add.circle(x,y,asteroid.baseRadius,gameConfig.colors["foreground"])
     }
     
     drawAsteroidShape(x,y,asteroid) {

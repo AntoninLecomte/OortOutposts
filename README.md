@@ -91,6 +91,7 @@ Global chat with closed channels to allow alliances and betrayals.
 - Infrastructures building queue
 - Spacecrafts building queue
 - Energy budget
+- Switch to neihbourg asteroids
 
 ### Combat view
 - Replay of combat
