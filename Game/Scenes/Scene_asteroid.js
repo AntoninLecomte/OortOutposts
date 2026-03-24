@@ -5,45 +5,26 @@ class SCENE_Asteroid extends Phaser.Scene
     create (){
         // Create UI DOM:
         this.UI_asteroid = new UI_Asteroid(window.gameDiv,this);
-    }
-
-    /** 
-    * @summary Draws initial view and sets camera when UI html has been received
-    * @return {null} No return.
-    */
-    initialize(){
-        // Set camera to fit remaining space from HUD
-        console.log(this.UI_asteroid)
-        const remainingWidth = document.body.offsetWidth - this.UI_asteroid.mainDiv.getBoundingClientRect().width;
-        const height = document.body.offsetHeight;
-        const camera = this.cameras.main;
-        camera.setSize(remainingWidth,height);
-
 
         this.scale = 15;
+
+        const camera = this.cameras.main;
         // Center camera on the cluster
-        
         camera.centerOnX(0);
         camera.centerOnY(0);
         // // Zoom camera to fit the cluster
         const zoomFactor = camera.width/200/this.scale;
         camera.setZoom(zoomFactor*0.4);
-        
-        // Draw all asteroids
-        // var a=0
-        // for (var x=0; x<4; x++){
-        //     for (var y=0; y<3; y++){
-        //         this.drawAsteroidCircle((-150+100*x)*this.scale, (-100+100*y)*this.scale, window.gameData.cluster.asteroids[a]);
-        //         a++;
-        //     }
-        // }
-        
+
         // Draw current asteroid
         this.drawAsteroidCircle(0,0,window.gameData.cluster.asteroids[0])
     }
 
     drawAsteroidCircle(x,y,asteroid){
-        this.add.circle(x,y,asteroid.baseRadius,gameConfig.colors["foreground"])
+        const graphics = this.add.graphics()
+        graphics.lineStyle(20,gameConfig.colors["foreground"])
+        graphics.strokeCircle(x,y,asteroid.baseRadius)
+        this.add.circle()
     }
     
     drawAsteroidShape(x,y,asteroid) {
@@ -76,7 +57,6 @@ class UI_Asteroid {
     receivedHTML(DOM){
         this.mainDiv = DOM.querySelector("#UI_Asteroid");
         this.parentHTML.append(this.mainDiv);
-        this.parentScene.initialize(); // Indicate the scene that its time to load
     }
 }
 
