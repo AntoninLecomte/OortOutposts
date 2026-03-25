@@ -24,62 +24,20 @@
 
     row-gap: 3vh;
 
-    border: 1px solid green;
+    z-index: 3;
+}
+#UI_Asteroid .UI_WindowContent{
+    margin-top: 10vh;
+    margin-left: 2vh;
+    margin-bottom: 3vh;
+    margin-right: 12vh;
 }
 
-#UI_Asteroid #BottomTimeStampDiv{
+#UI_Asteroid #TopTexts{
     position: absolute;
-    bottom: 1vw;
-
-    border: 1px solid green;
-}
-
-
-p{
-    margin: 0;
-    color: white;
-}
-.UI_Frame{
-    background-color: rgb(50,50,50);
-    border: 1px solid white;
-    border-radius: 1vh;
-
-    padding: 1vw;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.UI_Column{
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.UI_Row{
+    top: 1vw;
     width: 100%;
 
-    display: flex;
-    justify-content: center;
-}
-
-.UI_Button{
-    width: 4vw;
-    height: 4vw;
-    border: 1px solid white;
-    border-radius: 5vw;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.UI_Ressource{
-    display: flex;
-    align-items: center;
-    column-gap: 0.5vw;
-    font-size: medium;
+    justify-content: flex-start;
+    row-gap: 1vh;
 }

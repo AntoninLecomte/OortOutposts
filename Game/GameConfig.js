@@ -1,9 +1,13 @@
 class GameConfig {
     constructor(parameters) {
         this.colors = {
-            "background": 0x000000,
-            "foreground": 0xffffff,
-            "debug": 0xffffffee00e2
+            "background": "rgb(0,0,0)",
+            "foreground": "rgb(255,255,255)",
+            "foreground_fade": "rgb(170,170,170)",
+            "debug": "rgb(255,0,255)"
+        }
+        this.strings_EN = {
+            "ConstructionComplete": "{} construction is complete."
         }
     }
 }

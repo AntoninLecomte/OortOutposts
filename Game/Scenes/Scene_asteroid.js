@@ -3,6 +3,8 @@ class SCENE_Asteroid extends Phaser.Scene
     graphics;
 
     create (){
+        this.asteroid = window.gameData.cluster.asteroids[0]
+
         // Create UI DOM:
         this.UI_asteroid = new UI_Asteroid(window.gameDiv,this);
 
@@ -17,7 +19,7 @@ class SCENE_Asteroid extends Phaser.Scene
         camera.setZoom(zoomFactor*0.4);
 
         // Draw current asteroid
-        this.drawAsteroidCircle(0,0,window.gameData.cluster.asteroids[0])
+        this.drawAsteroidCircle(0,0,this.asteroid);
     }
 
     drawAsteroidCircle(x,y,asteroid){
@@ -41,6 +43,11 @@ class SCENE_Asteroid extends Phaser.Scene
 * Class storing DOM structure and fonctions for the asteroid view UI
 */
 class UI_Asteroid {
+    /** 
+    * UI_Asteroid creation function
+    * @param {HTMLElement} parentHTML - HTML element to be attached to the UI js object
+    * @param {SCENE_Asteroid} parentScene - Parent scene to access game data
+    */
     constructor(parentHTML, parentScene) {
         this.parentHTML = parentHTML;
         this.parentScene = parentScene;
@@ -57,6 +64,43 @@ class UI_Asteroid {
     receivedHTML(DOM){
         this.mainDiv = DOM.querySelector("#UI_Asteroid");
         this.parentHTML.append(this.mainDiv);
+
+        
+        // Create window and associated button objects
+        this.windows = {
+            "Log": [],
+            "Construction": [],
+            "Energy": [],
+            "Shipyard": [],
+        }
+        for (var w in this.windows){
+            this.windows[w] = [
+                new UI_Window(document.querySelector("#Window_"+w)), 
+                new UI_Button(document.querySelector("#Button_"+w),this,this.windowButtonClicked)
+            ]
+        }
+
+        // Build log
+        for (var ev in this.parentScene.asteroid.events){
+            console.log(this.parentScene.asteroid.events[ev])
+        }
+
+        // Open window {DEV}
+        this.windows["Log"][0].open();
+    }
+    windowButtonClicked(button){
+        for (var w in this.windows){
+            if (button != this.windows[w][1]){
+                this.windows[w][0].close(); // Close windows that are not related
+                this.windows[w][1].setState("OFF") // Off the buttons that are not related 
+            }else{
+                if (button.state == "ON"){
+                    this.windows[w][0].open();
+                }else{
+                    this.windows[w][0].close();
+                }
+            }
+        }
     }
 }
 

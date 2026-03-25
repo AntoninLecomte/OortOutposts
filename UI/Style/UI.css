@@ -1,0 +1,69 @@
+.UI_Frame{
+    background-color: rgb(20,20,20);
+    border: 1px solid white;
+    border-radius: 1vh;
+
+    padding: 1vw;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.UI_Column{
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.UI_Row{
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+}
+
+.UI_Button{
+    width: 4vw;
+    height: 4vw;
+    border: 2px solid white;
+    border-radius: 5vw;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.UI_Button p{
+    color: inherit;
+}
+
+.UI_Ressource{
+    display: flex;
+    align-items: center;
+    column-gap: 0.5vw;
+    font-size: medium;
+}
+.UI_RessourceP{
+    font-size: small;
+}
+
+.UI_Window{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    align-items: stretch;
+
+    overflow-x: hidden;
+}
+.UI_Window .UI_WindowContent{
+    box-sizing: border-box;
+    padding: 0;
+    flex: 1;
+    margin: 5vh;
+}

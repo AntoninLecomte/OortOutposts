@@ -88,7 +88,6 @@ class Cluster {
     * @param {number} startMinerals The total minerals ressource to be available across the cluster
     * @param {number} totalRandomness The random factor to be applied to total ressources
     * @param {number} unitaryRandomness The random factor to be applied to individual asteroids
-    * @return {null} Function is operating on Asteroids objects directly
     */
     generateRessources(startWater, startMinerals, totalRandomness=0, unitaryRandomness=0.7) {
         this.startWaterTotal = startWater * (1+totalRandomness);
@@ -129,7 +128,10 @@ class Asteroid {
             "MINERALS": 0, // kg
         }
 
+        this.events = [];
+
         // this.generateShapePoints(200,500,1);
+        this.DEV_generateEvents();
 
     /** 
     * @summary Generate noisy circular pattern to represent the asteroid shape
@@ -173,6 +175,74 @@ class Asteroid {
             this.points[p][0] = Math.cos(p/this.numPoints*2*Math.PI)*dist;
             this.points[p][1] = Math.sin(p/this.numPoints*2*Math.PI)*dist;
         }
+    }
+    DEV_generateEvents(){
+        var ts = Date();
+        for (var i=0; i<50;i++){
+            const newBuilding = new Construction(ts,this,"ID","NAME","DES",0);
+            this.events.push(new ConstructionCompleteEvent(newBuilding))
+        }
+    }
+}
+
+/**
+* Datastructure of an event
+*/
+class GameEvent {
+    /** 
+    * GameEvent creation function
+    * @param {Date} timestamp - A date of occurence
+    * @param {Object} location - An object with the location of occurence: Asteroid, coordinates
+    */
+    constructor(timestamp, location) {
+        this.timestamp = timestamp;
+        this.location = location;
+    }
+}
+
+/**
+* Event to be fired when a construction is complete 
+* @extends GameEvent
+*/
+class ConstructionCompleteEvent extends GameEvent {
+    /** 
+    * ConstructionCompleteEvent creation function
+    * @param {Construction} construction - Event target object, or null
+    */
+    constructor(construction) {
+        super(construction.constructionDate, construction.asteroid);
+        this.construction = construction;
+    }
+
+    /** 
+    * Returns a string describing the event.
+    * @return {String} Event description.
+    */
+    getDescription(){
+        return gameConfig.strings_EN["ConstructionComplete"].replace("{}",this.construction.name); 
+    }
+}
+
+/**
+* Class representing a building
+*/
+class Construction {
+    /**
+    * Construction creation function
+    * @param {Date} constructionDate - Creation timestamp, at construction
+    * @param {Asteroid} asteroid - Parent asteroid object
+    * @param {String} constructionID - Construction ID, one per type of construction
+    * @param {String} name - The construction name
+    * @param {String} description - The construction textual description
+    * @param {integer} structurePoints - Structure points
+    */
+   constructor(creationDate, asteroid, constructionID, name, description, structurePoints) {
+        this.constructionDate = creationDate;
+        this.asteroid = asteroid;
+        this.constructionID = constructionID;
+        this.name = name;
+        this.description = description;
+        this.structurePoints = structurePoints;
     }
 }
 
