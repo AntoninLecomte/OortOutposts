@@ -1,3 +1,7 @@
+.UI_Factory{
+    display: none;
+}
+
 .UI_Frame{
     background-color: rgb(20,20,20);
     border: 1px solid white;
@@ -58,12 +62,16 @@
 
     display: flex;
     align-items: stretch;
-
-    overflow-x: hidden;
 }
 .UI_Window .UI_WindowContent{
     box-sizing: border-box;
     padding: 0;
     flex: 1;
     margin: 5vh;
+
+    overflow-x: hidden;
+
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
 }

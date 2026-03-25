@@ -3,6 +3,10 @@ class SCENE_Asteroid extends Phaser.Scene
     graphics;
 
     create (){
+        /**
+         * Scene current asteroid in focus
+         * @type {Asteroid}
+         */
         this.asteroid = window.gameData.cluster.asteroids[0]
 
         // Create UI DOM:
@@ -81,9 +85,7 @@ class UI_Asteroid {
         }
 
         // Build log
-        for (var ev in this.parentScene.asteroid.events){
-            console.log(this.parentScene.asteroid.events[ev])
-        }
+        this.updateLog();
 
         // Open window {DEV}
         this.windows["Log"][0].open();
@@ -100,6 +102,18 @@ class UI_Asteroid {
                     this.windows[w][0].close();
                 }
             }
+        }
+    }
+    /**
+     * Updates the logs in reference with game data
+     */
+    updateLog(){
+        for (var ev in this.parentScene.asteroid.events){
+            const eventOb = this.parentScene.asteroid.events[ev];
+            const newNode = document.getElementById("LogEventDivFactory").cloneNode(true);
+            newNode.querySelector("p").innerHTML = eventOb.getDescription();
+            newNode.style.display = "flex";
+            document.getElementById("LogEventDivFactory").parentElement.appendChild(newNode);
         }
     }
 }

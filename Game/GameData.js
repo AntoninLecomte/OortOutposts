@@ -128,6 +128,11 @@ class Asteroid {
             "MINERALS": 0, // kg
         }
 
+        /**
+         * List of events associated to this asteroid
+         * @type {Array}
+         * @public
+         */
         this.events = [];
 
         // this.generateShapePoints(200,500,1);
@@ -176,11 +181,18 @@ class Asteroid {
             this.points[p][1] = Math.sin(p/this.numPoints*2*Math.PI)*dist;
         }
     }
+    /** 
+    * Add an event to this asteroid
+    * @param {GameEvent} event - Event object to be added
+    */
+    addEvent(event){
+        this.events.push(event);
+    }
     DEV_generateEvents(){
         var ts = Date();
         for (var i=0; i<50;i++){
             const newBuilding = new Construction(ts,this,"ID","NAME","DES",0);
-            this.events.push(new ConstructionCompleteEvent(newBuilding))
+            this.addEvent(new ConstructionCompleteEvent(newBuilding))
         }
     }
 }
@@ -198,6 +210,13 @@ class GameEvent {
         this.timestamp = timestamp;
         this.location = location;
     }
+    /** 
+    * Returns a string describing the event.
+    * @return {String} Event description.
+    */
+    getDescription(){
+        return "DEV "+this.timestamp+" "+this.location
+    }
 }
 
 /**
@@ -213,11 +232,6 @@ class ConstructionCompleteEvent extends GameEvent {
         super(construction.constructionDate, construction.asteroid);
         this.construction = construction;
     }
-
-    /** 
-    * Returns a string describing the event.
-    * @return {String} Event description.
-    */
     getDescription(){
         return gameConfig.strings_EN["ConstructionComplete"].replace("{}",this.construction.name); 
     }
@@ -246,4 +260,4 @@ class Construction {
     }
 }
 
-export {GameData, Cluster, Asteroid}
+export {GameData, Cluster, Asteroid, GameEvent, ConstructionCompleteEvent, Construction}
