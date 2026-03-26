@@ -7,7 +7,7 @@ class GameConfig {
             "debug": "rgb(255,0,255)"
         }
         this.strings_EN = {
-            "ConstructionComplete": "{} construction is complete."
+            "ConstructionComplete": "Construction completed: {} "
         }
     }
 }

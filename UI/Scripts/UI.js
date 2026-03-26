@@ -9,12 +9,12 @@ class UI_Window{
     */
     constructor(HTML) {
         this.HTML = HTML;
-        this.HTMLContent = HTML.querySelector(".UI_WindowContent");
+        this.HTMLFrame = HTML.querySelector(".UI_WindowFrame");
         this.referenceWidth = this.HTML.getBoundingClientRect().width;
 
         this.state = "CLOSED";
         
-        this.HTMLContent.style.transition = "max-width 0.2s ease-in, opacity 0.2s ease-in";
+        this.HTMLFrame.style.transition = "max-width 0.2s ease-in, opacity 0.2s ease-in";
         this.closeInstant() // Initial state is CLOSED
     }
     /** 
@@ -23,9 +23,9 @@ class UI_Window{
     */
     closeInstant(){
         this.state = "CLOSED";
-        this.HTMLContent.style.maxWidth = 0+"px";
-        this.HTMLContent.style.display="none";
-        this.HTMLContent.style.opacity="0";
+        this.HTMLFrame.style.maxWidth = 0+"px";
+        this.HTMLFrame.style.display="none";
+        this.HTMLFrame.style.opacity="0";
         this.HTML.style.justifyContent = "flex-end";
     }
     /** 
@@ -34,11 +34,11 @@ class UI_Window{
     */
     close(){
         this.state = "CLOSED";
-        this.HTMLContent.style.maxWidth = 0+"px";
-        this.HTMLContent.style.opacity="0";
+        this.HTMLFrame.style.maxWidth = 0+"px";
+        this.HTMLFrame.style.opacity="0";
         this.HTML.style.justifyContent = "flex-end";
         setTimeout(function(w){
-            w.HTMLContent.style.display="none";
+            w.HTMLFrame.style.display="none";
         },200,this);
     }
     /** 
@@ -47,12 +47,12 @@ class UI_Window{
     */
     open(){
         this.state = "OPEN";
-        this.HTMLContent.style.display="flex";
-        this.HTMLContent.style.opacity="1";
+        this.HTMLFrame.style.display="flex";
+        this.HTMLFrame.style.opacity="1";
         this.HTML.style.justifyContent = "flex-start";
         // Little delay to let the display be processed and avoid jumping
         setTimeout(function(w){
-            w.HTMLContent.style.maxWidth = w.referenceWidth+"px";
+            w.HTMLFrame.style.maxWidth = w.referenceWidth+"px";
         },10,this);
     }
 }

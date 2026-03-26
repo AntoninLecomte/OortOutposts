@@ -111,9 +111,14 @@ class UI_Asteroid {
         for (var ev in this.parentScene.asteroid.events){
             const eventOb = this.parentScene.asteroid.events[ev];
             const newNode = document.getElementById("LogEventDivFactory").cloneNode(true);
-            newNode.querySelector("p").innerHTML = eventOb.getDescription();
+            // Get date format
+            newNode.querySelector(".LogEventTimeText").innerHTML = eventOb.timestamp.toLocaleDateString() + " " + eventOb.timestamp.toLocaleTimeString();
+            newNode.querySelector(".LogEventText").innerHTML = gameConfig.strings_EN["ConstructionComplete"].replace("{}", eventOb.construction.name);
             newNode.style.display = "flex";
             document.getElementById("LogEventDivFactory").parentElement.appendChild(newNode);
+
+            // Hide factory
+            document.getElementById("LogEventDivFactory").style.display = "none";
         }
     }
 }

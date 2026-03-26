@@ -189,7 +189,7 @@ class Asteroid {
         this.events.push(event);
     }
     DEV_generateEvents(){
-        var ts = Date();
+        var ts = new Date();
         for (var i=0; i<50;i++){
             const newBuilding = new Construction(ts,this,"ID","NAME","DES",0);
             this.addEvent(new ConstructionCompleteEvent(newBuilding))
@@ -210,13 +210,6 @@ class GameEvent {
         this.timestamp = timestamp;
         this.location = location;
     }
-    /** 
-    * Returns a string describing the event.
-    * @return {String} Event description.
-    */
-    getDescription(){
-        return "DEV "+this.timestamp+" "+this.location
-    }
 }
 
 /**
@@ -231,9 +224,6 @@ class ConstructionCompleteEvent extends GameEvent {
     constructor(construction) {
         super(construction.constructionDate, construction.asteroid);
         this.construction = construction;
-    }
-    getDescription(){
-        return gameConfig.strings_EN["ConstructionComplete"].replace("{}",this.construction.name); 
     }
 }
 

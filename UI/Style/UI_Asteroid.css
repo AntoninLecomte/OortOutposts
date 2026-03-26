@@ -4,7 +4,6 @@
     height: 100%;
     top: 0;
     right: 0;
-    border: 1px solid red;
 
     display: flex;
     flex-direction: column;
@@ -26,12 +25,6 @@
 
     z-index: 3;
 }
-#UI_Asteroid .UI_WindowContent{
-    margin-top: 10vh;
-    margin-left: 2vh;
-    margin-bottom: 3vh;
-    margin-right: 12vh;
-}
 
 #UI_Asteroid #TopTexts{
     position: absolute;
@@ -40,4 +33,55 @@
 
     justify-content: flex-start;
     row-gap: 1vh;
+}
+
+
+#UI_Asteroid .UI_WindowFrame{
+    margin-top: 10vh;
+    margin-left: 2vh;
+    margin-bottom: 3vh;
+    margin-right: 12vh;
+}
+
+#UI_Asteroid #LogEventsDiv{
+    position: relative;
+    flex: 1;
+    margin: 3vh;
+
+    display: flex;
+    flex-direction: column;
+    row-gap: 1vh;
+}
+#UI_Asteroid .LogEventDiv{
+    display: flex;
+    align-items: center;
+    column-gap: 1vw;
+}
+#UI_Asteroid .LogEventPoint{
+    width: 1vh;
+    height: 1vh;
+    background-color: white;
+    border-radius: 1vh;
+}
+#UI_Asteroid .LogEventTimeText{
+    font-size: small;
+}
+#UI_Asteroid .LogEventText{
+    font-size: small;
+}
+#UI_Asteroid #LogEventTimelineDiv{
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
+    width: 1vh;
+}
+#UI_Asteroid #LogEventTimeline{
+    height: 100%;
+    border-left: 0.2vh solid white;
 }
