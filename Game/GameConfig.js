@@ -12,4 +12,4 @@ class GameConfig {
     }
 }
 
-var gameConfig = new GameConfig()
+const gameConfig = new GameConfig()

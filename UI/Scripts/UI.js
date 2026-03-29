@@ -10,11 +10,10 @@ class UI_Window{
     constructor(HTML) {
         this.HTML = HTML;
         this.HTMLFrame = HTML.querySelector(".UI_WindowFrame");
-        this.referenceWidth = this.HTML.getBoundingClientRect().width;
 
         this.state = "CLOSED";
         
-        this.HTMLFrame.style.transition = "max-width 0.2s ease-in, opacity 0.2s ease-in";
+        this.HTMLFrame.style.transition = "opacity 0.2s ease-in";
         this.closeInstant() // Initial state is CLOSED
     }
     /** 
@@ -23,10 +22,8 @@ class UI_Window{
     */
     closeInstant(){
         this.state = "CLOSED";
-        this.HTMLFrame.style.maxWidth = 0+"px";
         this.HTMLFrame.style.display="none";
         this.HTMLFrame.style.opacity="0";
-        this.HTML.style.justifyContent = "flex-end";
     }
     /** 
     * Closes the window with animation
@@ -34,9 +31,7 @@ class UI_Window{
     */
     close(){
         this.state = "CLOSED";
-        this.HTMLFrame.style.maxWidth = 0+"px";
         this.HTMLFrame.style.opacity="0";
-        this.HTML.style.justifyContent = "flex-end";
         setTimeout(function(w){
             w.HTMLFrame.style.display="none";
         },200,this);
@@ -48,11 +43,10 @@ class UI_Window{
     open(){
         this.state = "OPEN";
         this.HTMLFrame.style.display="flex";
-        this.HTMLFrame.style.opacity="1";
-        this.HTML.style.justifyContent = "flex-start";
+        
         // Little delay to let the display be processed and avoid jumping
         setTimeout(function(w){
-            w.HTMLFrame.style.maxWidth = w.referenceWidth+"px";
+            w.HTMLFrame.style.opacity="1";
         },10,this);
     }
 }

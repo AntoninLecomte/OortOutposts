@@ -9,13 +9,17 @@ class GameData {
 */
 class Cluster {
     constructor() {
+        /**
+         * The cluster list of asteroids
+         * @type {Asteroid[]}
+         */
         this.asteroids = [];
         this.minX = 0;
         this.maxX = 0;
         this.minY = 0;
         this.maxY = 0;
 
-        const coords = this.generateAsteroidsCoordinates(12, 1, 0.2, 3);
+        const coords = this.generateAsteroidsCoordinates(1, 1, 0.2, 3);
         for (var asteroid in coords){
             this.asteroids.push(new Asteroid(coords[asteroid][0], coords[asteroid][1], asteroid));
         }
@@ -117,7 +121,10 @@ class Cluster {
     }
 }
 
-class Asteroid {
+/**
+* Class storing all vars and functions related to an Asteroid
+*/
+class Asteroid {   
     constructor(x,y,id) {
         this.id = id
         this.x = x;
@@ -129,14 +136,20 @@ class Asteroid {
         }
 
         /**
-         * List of events associated to this asteroid
-         * @type {Array}
-         * @public
+         * The asteroid list of events
+         * @type {GameEvent[]}
          */
         this.events = [];
 
+        /**
+         * The asteroid constructions queue list
+         * @type {Construction[]}
+         */
+        this.constructionQueue = [];
+
         // this.generateShapePoints(200,500,1);
         this.DEV_generateEvents();
+        this.DEV_generateQueue();
 
     /** 
     * @summary Generate noisy circular pattern to represent the asteroid shape
@@ -191,8 +204,15 @@ class Asteroid {
     DEV_generateEvents(){
         var ts = new Date();
         for (var i=0; i<50;i++){
-            const newBuilding = new Construction(ts,this,"ID","NAME","DES",0);
-            this.addEvent(new ConstructionCompleteEvent(newBuilding))
+            const newConstruction = new Construction(ts,this,"ID","NAME","DES",0);
+            this.addEvent(new ConstructionCompleteEvent(newConstruction))
+        }
+    }
+    DEV_generateQueue(){
+        var ts = new Date();
+        for (var i=0; i<10;i++){
+            const newConstruction = new Construction(ts,100,this,"ID","NAME_LONGER_"+i,"DES",0);
+            this.constructionQueue.push(newConstruction);
         }
     }
 }
@@ -234,14 +254,16 @@ class Construction {
     /**
     * Construction creation function
     * @param {Date} constructionDate - Creation timestamp, at construction
+    * @param {number} constructionEnergy - Energy required for construction
     * @param {Asteroid} asteroid - Parent asteroid object
     * @param {String} constructionID - Construction ID, one per type of construction
     * @param {String} name - The construction name
     * @param {String} description - The construction textual description
     * @param {integer} structurePoints - Structure points
     */
-   constructor(creationDate, asteroid, constructionID, name, description, structurePoints) {
-        this.constructionDate = creationDate;
+   constructor(constructionDate, constructionEnergy, asteroid, constructionID, name, description, structurePoints) {
+        this.constructionDate = constructionDate; 
+        this.constructionEnergy = constructionEnergy;
         this.asteroid = asteroid;
         this.constructionID = constructionID;
         this.name = name;

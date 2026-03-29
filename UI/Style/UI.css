@@ -1,5 +1,5 @@
 .UI_Factory{
-    display: none;
+    display: none !important;
 }
 
 .UI_Frame{
@@ -65,11 +65,9 @@
 }
 .UI_Window .UI_WindowFrame{
     box-sizing: border-box;
-    padding: 0;
+    padding: 3vh;
     flex: 1;
     margin: 5vh;
-
-    overflow: hidden;
 
     z-index: 2;
 }
@@ -82,4 +80,46 @@
     align-items: stretch;
 
     overflow-y: scroll;
+}
+
+.UI_Timeline{
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+}
+.UI_TimelineStep{
+    display: flex;
+    align-items: center;
+    column-gap: 1vw;
+}
+.UI_TimelineStepPoint{
+    width: 1.5vh;
+    height: 1.5vh;
+    background-color: white;
+    border-radius: 1vh;
+}
+.UI_TimelineLineDiv{
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    box-sizing: border-box;
+
+    width: 1.5vh;
+}
+.UI_TimelineLine{
+    height: 100%;
+    border-left: 0.2vh solid white;
+}
+
+.UI_VerticalSeparator{
+    border-left: 1px solid white;
+    height: 100%;
+    margin-left: 2vw;
+    margin-right: 2vw;
 }

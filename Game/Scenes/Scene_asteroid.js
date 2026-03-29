@@ -1,13 +1,10 @@
+import {GameData} from "../GameData.js"
+const gameData = new GameData();
+
 class SCENE_Asteroid extends Phaser.Scene
 {
-    graphics;
-
-    create (){
-        /**
-         * Scene current asteroid in focus
-         * @type {Asteroid}
-         */
-        this.asteroid = window.gameData.cluster.asteroids[0]
+    create(){
+        this.asteroid = gameData.cluster.asteroids[0]
 
         // Create UI DOM:
         this.UI_asteroid = new UI_Asteroid(window.gameDiv,this);
@@ -65,6 +62,10 @@ class UI_Asteroid {
             UI_asteroidObject.receivedHTML(DOM);
         });
     }
+    /** 
+    * Function executed at reception of the UI html code
+    * @param {Document} DOM - Received HML document
+    */
     receivedHTML(DOM){
         this.mainDiv = DOM.querySelector("#UI_Asteroid");
         this.parentHTML.append(this.mainDiv);
@@ -87,8 +88,11 @@ class UI_Asteroid {
         // Build log
         this.updateLog();
 
+        // Build construction queue
+        this.updateConstructionQueue();
+
         // Open window {DEV}
-        this.windows["Log"][0].open();
+        this.windows["Construction"][0].open();
     }
     windowButtonClicked(button){
         for (var w in this.windows){
@@ -104,21 +108,35 @@ class UI_Asteroid {
             }
         }
     }
+
     /**
      * Updates the logs in reference with game data
      */
     updateLog(){
         for (var ev in this.parentScene.asteroid.events){
             const eventOb = this.parentScene.asteroid.events[ev];
-            const newNode = document.getElementById("LogEventDivFactory").cloneNode(true);
+            const newNode = document.getElementById("LogEventItemFactory").cloneNode(true);
+            newNode.classList.remove("UI_Factory");
             // Get date format
             newNode.querySelector(".LogEventTimeText").innerHTML = eventOb.timestamp.toLocaleDateString() + " " + eventOb.timestamp.toLocaleTimeString();
             newNode.querySelector(".LogEventText").innerHTML = gameConfig.strings_EN["ConstructionComplete"].replace("{}", eventOb.construction.name);
-            newNode.style.display = "flex";
-            document.getElementById("LogEventDivFactory").parentElement.appendChild(newNode);
+            document.getElementById("LogEventItemFactory").parentElement.appendChild(newNode);
+        }
+    }
 
-            // Hide factory
-            document.getElementById("LogEventDivFactory").style.display = "none";
+    /**
+     * Updates the construction queue in reference with game data
+     */
+    updateConstructionQueue(){
+        for (var construction in this.parentScene.asteroid.constructionQueue){
+            const constructionOb = this.parentScene.asteroid.constructionQueue[construction];
+            const newNode = document.getElementById("ConstructionQueueItemFactory").cloneNode(true);
+            newNode.classList.remove("UI_Factory");
+            newNode.querySelector(".DurationText").innerHTML = constructionOb.constructionEnergy;
+            newNode.querySelector(".ConstructionName").innerHTML = constructionOb.name;
+            new UI_Button(newNode.querySelectorAll(".UI_Button")[0],this,null);
+            new UI_Button(newNode.querySelectorAll(".UI_Button")[1],this,null);
+            document.getElementById("ConstructionQueueItemFactory").parentElement.appendChild(newNode);
         }
     }
 }

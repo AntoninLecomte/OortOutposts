@@ -37,51 +37,66 @@
 
 
 #UI_Asteroid .UI_WindowFrame{
-    margin-top: 10vh;
-    margin-left: 2vh;
+    margin-top: 12vh;
+    margin-left: 1vw;
     margin-bottom: 3vh;
-    margin-right: 12vh;
+    margin-right: 7vw;
 }
 
 #UI_Asteroid #LogEventsDiv{
-    position: relative;
-    flex: 1;
-    margin: 3vh;
+    row-gap: 2vh;
+    font-size: small;
+}
+#UI_Asteroid #LogEventsDiv .UI_TimelineLineDiv{
+    padding-top: 1.5vh;
+    padding-bottom: 1.5vh;
+}
 
+#UI_Asteroid #Window_Construction .UI_WindowContent{
+    overflow-y: hidden;
+    flex-direction: row;
+}
+#UI_Asteroid #ConstructionQueueScroller{
+    overflow-y: scroll;
+    padding-right: 2vw;
+}
+#UI_Asteroid #ConstructionQueueDiv{
+    row-gap: 3vh;
+}
+#UI_Asteroid #ConstructionQueueDiv .UI_TimelineLineDiv{
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+}
+#UI_Asteroid .UI_TimelineStepPoint{
+    margin-right: 1vw;
+}
+#UI_Asteroid .ConstructionQueueItem .Miniature{
+    position: relative;
+    border: 1px solid white;
+}
+#UI_Asteroid .ConstructionQueueItem img{
+    width: 10vh;
+    height: 10vh;
+}
+#UI_Asteroid .ConstructionQueueItem .DurationText{
+    position: absolute;
+    bottom: 2vh;
+    width: 100%;
+    text-align: center;
+    background-color: black;    
+}
+#UI_Asteroid .ConstructionQueueItem .RightPanel{
     display: flex;
     flex-direction: column;
     row-gap: 1vh;
 }
-#UI_Asteroid .LogEventDiv{
+#UI_Asteroid .ConstructionQueueItem .ButtonsPanel{
     display: flex;
-    align-items: center;
-    column-gap: 1vw;
+    flex-direction: row;
+    column-gap: 0.5vw;
 }
-#UI_Asteroid .LogEventPoint{
-    width: 1vh;
-    height: 1vh;
-    background-color: white;
-    border-radius: 1vh;
-}
-#UI_Asteroid .LogEventTimeText{
-    font-size: small;
-}
-#UI_Asteroid .LogEventText{
-    font-size: small;
-}
-#UI_Asteroid #LogEventTimelineDiv{
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 0.5vh;
-    padding-bottom: 0.5vh;
-    width: 1vh;
-}
-#UI_Asteroid #LogEventTimeline{
-    height: 100%;
-    border-left: 0.2vh solid white;
+#UI_Asteroid .ConstructionQueueItem .UI_Button{
+    border-radius: 0.8vw;
+    width: 3vw;
+    height: 3vw;
 }

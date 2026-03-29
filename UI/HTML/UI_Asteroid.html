@@ -30,14 +30,14 @@
     <div class="UI_Window" id="Window_Log">
         <div class="UI_WindowFrame UI_Frame">
             <div class="UI_WindowContent">
-                <div id="LogEventsDiv">
-                    <div class="UI_Factory LogEventDiv" id="LogEventDivFactory">
-                        <div class="LogEventPoint"></div>
+                <div id="LogEventsDiv" class="UI_Timeline">
+                    <div class="UI_Factory UI_TimelineStep LogEventsItem" id="LogEventItemFactory">
+                        <div class="UI_TimelineStepPoint"></div>
                         <p class="LogEventTimeText"></p>
                         <p class="LogEventText"></p>
                     </div>
-                    <div id="LogEventTimelineDiv">
-                        <div id="LogEventTimeline"></div>
+                    <div class="UI_TimelineLineDiv">
+                        <div class="UI_TimelineLine"></div>
                     </div>
                 </div>
             </div>
@@ -46,7 +46,29 @@
     <div class="UI_Window" id="Window_Construction">
         <div class="UI_WindowFrame UI_Frame">
             <div class="UI_WindowContent">
-                
+                <div id="ConstructionQueueScroller">
+                    <div id="ConstructionQueueDiv" class="UI_Timeline">
+                        <div class="UI_Factory UI_TimelineStep ConstructionQueueItem" id="ConstructionQueueItemFactory">
+                            <div class="UI_TimelineStepPoint"></div>
+                            <div class="Miniature">
+                                <img src="NO_IMAGE"/>
+                                <p class="DurationText"></p>
+                            </div>
+                            <div class="RightPanel">
+                                <p class="ConstructionName"></p>
+                                <div class="ButtonsPanel">
+                                    <div class="UI_Button"><p>△</p></div>
+                                    <div class="UI_Button"><p>▽</p></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="UI_TimelineLineDiv">
+                            <div class="UI_TimelineLine"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="UI_VerticalSeparator"></div>
             </div>
         </div>
     </div>
