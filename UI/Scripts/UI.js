@@ -70,7 +70,7 @@ class UI_Button {
 
         this.setState("OFF");
 
-        this.HTML.ob = this // To find back object in events callbacks
+        this.HTML.UI_ob = this // To find back object in events callbacks
         this.HTML.addEventListener("click",this.clicked);
     }
 
@@ -80,7 +80,7 @@ class UI_Button {
     * @return {null} Returns no value
     */
     clicked(ev){
-        const self = ev.currentTarget.ob;
+        const self = ev.currentTarget.UI_ob;
         self.switchState();
         if (self.callBackObTarget == null){
             self.callback(self);
@@ -124,8 +124,8 @@ class UI_Button {
                 break;
             case "DISABLED":
                 this.HTML. style.opacity = 0.5;
-                this.HTML.style.color = gameConfig.colors["debug"];
-                this.HTML.style.borderColor = gameConfig.colors["debug"];
+                this.HTML.style.color = gameConfig.colors["foreground_fade"];
+                this.HTML.style.borderColor = gameConfig.colors["foreground_fade"];
                 this.HTML.style.cursor = "not-allowed";
                 break;
         }

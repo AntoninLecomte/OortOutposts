@@ -128,16 +128,62 @@ class UI_Asteroid {
      * Updates the construction queue in reference with game data
      */
     updateConstructionQueue(){
+        this.UI_constructionQueueItems = [];
         for (var construction in this.parentScene.asteroid.constructionQueue){
             const constructionOb = this.parentScene.asteroid.constructionQueue[construction];
+
             const newNode = document.getElementById("ConstructionQueueItemFactory").cloneNode(true);
-            newNode.classList.remove("UI_Factory");
-            newNode.querySelector(".DurationText").innerHTML = constructionOb.constructionEnergy;
-            newNode.querySelector(".ConstructionName").innerHTML = constructionOb.name;
-            new UI_Button(newNode.querySelectorAll(".UI_Button")[0],this,null);
-            new UI_Button(newNode.querySelectorAll(".UI_Button")[1],this,null);
             document.getElementById("ConstructionQueueItemFactory").parentElement.appendChild(newNode);
+            const newConstructionQueueItem = new UI_ConstructionQueueItem(newNode, constructionOb);
+            this.UI_constructionQueueItems.push(newConstructionQueueItem)
+
+            new UI_Button(newNode.querySelectorAll(".UI_Button")[0],newConstructionQueueItem,newConstructionQueueItem.upButtonClicked);
+            new UI_Button(newNode.querySelectorAll(".UI_Button")[1],newConstructionQueueItem,newConstructionQueueItem.downButtonClicked);
         }
+        // Update buttons:
+        for (var item in this.UI_constructionQueueItems){
+            this.UI_constructionQueueItems[item].updateButtons()
+        }
+    }
+}
+
+/**
+* Class storing DOM structure and fonctions for a construction queue item
+*/
+class UI_ConstructionQueueItem{
+    /** 
+    * UI_ConstructionQueueItem creation function
+    * @param {HTMLElement} HTMLRoot - Item root HTML element
+    * @param {Construction} constructionOb - Game data Construction object
+    */
+    constructor(HTMLRoot, constructionOb){
+        this.HTMLRoot = HTMLRoot;
+        this.constructionOb = constructionOb;
+
+        this.HTMLRoot.classList.remove("UI_Factory");
+        this.HTMLRoot.querySelector(".DurationText").innerHTML = constructionOb.constructionEnergy;
+        this.HTMLRoot.querySelector(".ConstructionName").innerHTML = constructionOb.name;
+
+        this.HTMLRoot.style.top = "0px";
+    }
+    updateButtons(){
+        // Disable buttons for extremities:
+        if (Array.from(this.HTMLRoot.parentNode.children).indexOf(this.HTMLRoot) == 2){
+            this.HTMLRoot.querySelectorAll(".UI_Button")[0].UI_ob.setState("DISABLED");
+        }else{
+            this.HTMLRoot.querySelectorAll(".UI_Button")[0].UI_ob.setState("OFF");
+        }
+        if (Array.from(this.HTMLRoot.parentNode.children).indexOf(this.HTMLRoot) == this.HTMLRoot.parentNode.children.length-1){
+            this.HTMLRoot.querySelectorAll(".UI_Button")[1].UI_ob.setState("DISABLED");
+        }else{
+            this.HTMLRoot.querySelectorAll(".UI_Button")[1].UI_ob.setState("OFF");
+        }
+    }
+    upButtonClicked(){
+        this.HTMLRoot.style.top = "100px";
+    }
+    downButtonClicked(){
+        
     }
 }
 

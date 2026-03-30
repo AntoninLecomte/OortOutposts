@@ -67,6 +67,11 @@
     padding-top: 5vh;
     padding-bottom: 5vh;
 }
+#UI_Asteroid .ConstructionQueueItem{
+    position: relative;
+    top: 0;
+    transition: 1s ease-in top;
+}
 #UI_Asteroid .UI_TimelineStepPoint{
     margin-right: 1vw;
 }
@@ -96,7 +101,12 @@
     column-gap: 0.5vw;
 }
 #UI_Asteroid .ConstructionQueueItem .UI_Button{
-    border-radius: 0.8vw;
-    width: 3vw;
-    height: 3vw;
+    border-radius: 0.5em;
+    width: 3em;
+    height: 3em;
+}
+#UI_Asteroid .ConstructionQueueItem .UI_Button p{
+    font-size: medium;
+    text-align: center;
+    vertical-align: middle;
 }
