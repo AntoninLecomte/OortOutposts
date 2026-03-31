@@ -70,7 +70,7 @@
 #UI_Asteroid .ConstructionQueueItem{
     position: relative;
     top: 0;
-    transition: 1s ease-in top;
+    transition: 0.3s ease-in top;
 }
 #UI_Asteroid .UI_TimelineStepPoint{
     margin-right: 1vw;

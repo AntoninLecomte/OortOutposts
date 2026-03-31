@@ -1,6 +1,34 @@
 class GameData {
     constructor(parameters) {
-        this.cluster = new Cluster();
+        /**
+         * The collection of constructions static fields information
+         * @type {JSON}
+         */
+        this.constructionsList = {};
+
+        this.loadConstructionsList();
+        this.generateWorld();
+    }
+
+     /** 
+    * Generate a cluster of asteroids
+    * */
+    generateWorld(){
+        this.cluster = new Cluster(this);
+    }
+
+    /** 
+    * DEV to be later integrated on server side
+    * */
+    loadConstructionsList(){
+        const ob = this;
+        var xmlhttp=new XMLHttpRequest();
+        xmlhttp.open("GET","./Game_data/Constructions.json",false);
+        xmlhttp.send();
+        if (xmlhttp.status==200 && xmlhttp.readyState == 4 )
+        {
+            ob.constructionsList = JSON.parse(xmlhttp.responseText);
+        }
     }
 }
 
@@ -8,7 +36,12 @@ class GameData {
 * Store functions related to cluster of asteroids generation
 */
 class Cluster {
-    constructor() {
+     /** 
+    * Cluster creation function
+    * @param {GameData} gameData - GameData object storing all variables
+    */
+    constructor(gameData) {
+        this.gameData = gameData;
         /**
          * The cluster list of asteroids
          * @type {Asteroid[]}
@@ -21,7 +54,7 @@ class Cluster {
 
         const coords = this.generateAsteroidsCoordinates(1, 1, 0.2, 3);
         for (var asteroid in coords){
-            this.asteroids.push(new Asteroid(coords[asteroid][0], coords[asteroid][1], asteroid));
+            this.asteroids.push(new Asteroid(this.gameData, coords[asteroid][0], coords[asteroid][1], asteroid));
         }
         this.generateRessources(100,100)
     }
@@ -124,8 +157,16 @@ class Cluster {
 /**
 * Class storing all vars and functions related to an Asteroid
 */
-class Asteroid {   
-    constructor(x,y,id) {
+class Asteroid {
+    /** 
+    * Asteroid creation function
+    * @param {GameData} gameData - GameData object storing all variables
+    * @param {number} x - X coordinate of the asteroid
+    * @param {number} y - Y coordinate of the asteroid
+    * @param {integer} id- Unique ID of the asteroid
+    */
+    constructor(gameData, x,y,id) {
+        this.gameData = gameData;
         this.id = id
         this.x = x;
         this.y = y;
@@ -202,16 +243,15 @@ class Asteroid {
         this.events.push(event);
     }
     DEV_generateEvents(){
-        var ts = new Date();
+        
         for (var i=0; i<50;i++){
-            const newConstruction = new Construction(ts,this,"ID","NAME","DES",0);
-            this.addEvent(new ConstructionCompleteEvent(newConstruction))
+            const newConstruction = new Construction(this.gameData, this, "DEV");
+            this.addEvent(new ConstructionCompleteEvent(this.gameData, newConstruction))
         }
     }
     DEV_generateQueue(){
-        var ts = new Date();
         for (var i=0; i<10;i++){
-            const newConstruction = new Construction(ts,100,this,"ID","NAME_LONGER_"+i,"DES",0);
+            const newConstruction = new Construction(this.gameData, this, "DEV");
             this.constructionQueue.push(newConstruction);
         }
     }
@@ -223,10 +263,12 @@ class Asteroid {
 class GameEvent {
     /** 
     * GameEvent creation function
+    * @param {GameData} gameData - GameData object storing all variables
     * @param {Date} timestamp - A date of occurence
     * @param {Object} location - An object with the location of occurence: Asteroid, coordinates
     */
-    constructor(timestamp, location) {
+    constructor(gameData, timestamp, location) {
+        this.gameData = gameData;
         this.timestamp = timestamp;
         this.location = location;
     }
@@ -239,10 +281,11 @@ class GameEvent {
 class ConstructionCompleteEvent extends GameEvent {
     /** 
     * ConstructionCompleteEvent creation function
+    * @param {GameData} gameData - GameData object storing all variables
     * @param {Construction} construction - Event target object, or null
     */
-    constructor(construction) {
-        super(construction.constructionDate, construction.asteroid);
+    constructor(gameData, construction) {
+        super(gameData, construction.constructionDate, construction.asteroid);
         this.construction = construction;
     }
 }
@@ -253,22 +296,28 @@ class ConstructionCompleteEvent extends GameEvent {
 class Construction {
     /**
     * Construction creation function
-    * @param {Date} constructionDate - Creation timestamp, at construction
-    * @param {number} constructionEnergy - Energy required for construction
+    * @param {GameData} gameData - GameData object storing all variables
     * @param {Asteroid} asteroid - Parent asteroid object
     * @param {String} constructionID - Construction ID, one per type of construction
-    * @param {String} name - The construction name
-    * @param {String} description - The construction textual description
-    * @param {integer} structurePoints - Structure points
     */
-   constructor(constructionDate, constructionEnergy, asteroid, constructionID, name, description, structurePoints) {
-        this.constructionDate = constructionDate; 
-        this.constructionEnergy = constructionEnergy;
+   constructor(gameData, asteroid, constructionID) {
+        this.gameData = gameData;
         this.asteroid = asteroid;
-        this.constructionID = constructionID;
-        this.name = name;
-        this.description = description;
-        this.structurePoints = structurePoints;
+
+        // DEV - Pick random id
+        const keys = Object.keys(this.gameData.constructionsList);
+        this.constructionID = keys[ keys.length * Math.random() << 0];
+        
+        // Load static fields
+        const statics = this.gameData.constructionsList[this.constructionID];
+        for (var field in statics){
+            this[field] = statics[field];
+        }
+
+        // Initialize dynamic fields
+        this.constructionDate = new Date();
+        this.constructedEnergy = 0;
+        this.asteroid = asteroid;
     }
 }
 

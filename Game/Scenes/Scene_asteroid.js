@@ -1,4 +1,4 @@
-import {GameData} from "../GameData.js"
+import {GameData} from "../../Game_data/GameData.js"
 const gameData = new GameData();
 
 class SCENE_Asteroid extends Phaser.Scene
@@ -180,10 +180,22 @@ class UI_ConstructionQueueItem{
         }
     }
     upButtonClicked(){
-        this.HTMLRoot.style.top = "100px";
+        const exchangeTarget = this.HTMLRoot.previousElementSibling;
+        const yOffset = exchangeTarget.getBoundingClientRect().top - this.HTMLRoot.getBoundingClientRect().top;
+        this.HTMLRoot.style.top = yOffset+"px";
+        exchangeTarget.style.top = -yOffset+"px";
+        setTimeout(function(self){
+            self.HTMLRoot.querySelectorAll(".UI_Button")[0].UI_ob.setState("OFF");
+        },300,this);
     }
     downButtonClicked(){
-        
+        const exchangeTarget = this.HTMLRoot.nextElementSibling;
+        const yOffset = exchangeTarget.getBoundingClientRect().top - this.HTMLRoot.getBoundingClientRect().top;
+        this.HTMLRoot.style.top = yOffset+"px";
+        exchangeTarget.style.top = -yOffset+"px";
+        setTimeout(function(self){
+            self.HTMLRoot.querySelectorAll(".UI_Button")[1].UI_ob.setState("OFF");
+        },300,this);
     }
 }
 
