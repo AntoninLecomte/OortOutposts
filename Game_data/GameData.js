@@ -1,12 +1,17 @@
 class GameData {
     constructor(parameters) {
         /**
-         * The collection of constructions static fields information
+         * Collection of constructions static fields information
          * @type {JSON}
          */
-        this.constructionsList = {};
+        this.constructionData = {};
+        /**
+         * Collection of default constructions
+         * @type {Construction{}}
+         */
+        this.constructionsTypes = {};
 
-        this.loadConstructionsList();
+        this.loadconstructionData();
         this.generateWorld();
     }
 
@@ -20,14 +25,20 @@ class GameData {
     /** 
     * DEV to be later integrated on server side
     * */
-    loadConstructionsList(){
+    loadconstructionData(){
         const ob = this;
         var xmlhttp=new XMLHttpRequest();
         xmlhttp.open("GET","./Game_data/Constructions.json",false);
         xmlhttp.send();
         if (xmlhttp.status==200 && xmlhttp.readyState == 4 )
         {
-            ob.constructionsList = JSON.parse(xmlhttp.responseText);
+            this.constructionData = JSON.parse(xmlhttp.responseText);
+            for (var constructionID in this.constructionData){
+                this.constructionsTypes[constructionID] = new Construction(this,null,constructionID);
+            }
+            for (var constructionID in this.constructionData){
+                this.constructionsTypes[constructionID+"1"] = new Construction(this,null,constructionID);
+            }
         }
     }
 }
@@ -302,22 +313,77 @@ class Construction {
     */
    constructor(gameData, asteroid, constructionID) {
         this.gameData = gameData;
+        /**
+        * The construction parent asteroid
+        * @type {Asteroid}
+        */
         this.asteroid = asteroid;
+        this.constructionID = constructionID;
+
+        // Default values. To be overriden by JSON data from gamedata.
+        /**
+         * Total energy required for initial construction
+         * @type {number}
+         */
+        this.costEnergy = 0;
+        /**
+         * Total minerals required for initial construction
+         * @type {number}
+         */
+        this.costMinerals = 0;
+        /**
+         * Total water required for initial construction
+         * @type {number}
+         */
+        this.costWater = 0;
+        /**
+        * Produced energy by cycle
+        * @type {number}
+        */
+        this.generationEnergy = 0;
+        /**
+        * Produced minerals by cycle
+        * @type {number}
+        */
+        this.generationMinerals = 0;
+        /**
+        * Produced water by cycle
+        * @type {number}
+        */
+        this.generationWater = 0;
+        /**
+        * Construction intial structure points
+        * @type {number}
+        */
+        this.maxStructurePoints = 0;
+        /**
+        * Damage dealt to ennemy units when defending
+        * @type {number}
+        */
+        this.damage = 0;
+
 
         // DEV - Pick random id
-        const keys = Object.keys(this.gameData.constructionsList);
+        const keys = Object.keys(this.gameData.constructionData);
         this.constructionID = keys[ keys.length * Math.random() << 0];
         
         // Load static fields
-        const statics = this.gameData.constructionsList[this.constructionID];
+        const statics = this.gameData.constructionData[this.constructionID];
         for (var field in statics){
             this[field] = statics[field];
         }
 
         // Initialize dynamic fields
+        /**
+        * Construction date
+        * @type {Date}
+        */
         this.constructionDate = new Date();
+        /**
+        * Amount of energy used for construction
+        * @type {number}
+        */
         this.constructedEnergy = 0;
-        this.asteroid = asteroid;
     }
 }
 

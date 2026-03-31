@@ -1,4 +1,5 @@
 import {GameData} from "../../Game_data/GameData.js"
+import {Construction} from "../../Game_data/GameData.js"
 const gameData = new GameData();
 
 class SCENE_Asteroid extends Phaser.Scene
@@ -85,11 +86,10 @@ class UI_Asteroid {
             ]
         }
 
-        // Build log
         this.updateLog();
-
-        // Build construction queue
         this.updateConstructionQueue();
+        this.updateConstructionPicks();
+
 
         // Open window {DEV}
         this.windows["Construction"][0].open();
@@ -145,6 +145,18 @@ class UI_Asteroid {
             this.UI_constructionQueueItems[item].updateButtons()
         }
     }
+
+    /**
+     * Updates the available constructions in reference with game data
+     */
+    updateConstructionPicks(){
+        this.UI_constructionPicks = {};
+        for (var constructionID in gameData.constructionsTypes){
+            const newNode = document.getElementById("ConstructionPickFactory").cloneNode(true);
+            document.getElementById("ConstructionPickFactory").parentElement.appendChild(newNode);
+            this.UI_constructionPicks[constructionID] = new UI_ConstructionPick(newNode, gameData.constructionsTypes[constructionID]);
+        }
+    }
 }
 
 /**
@@ -161,7 +173,7 @@ class UI_ConstructionQueueItem{
         this.constructionOb = constructionOb;
 
         this.HTMLRoot.classList.remove("UI_Factory");
-        this.HTMLRoot.querySelector(".DurationText").innerHTML = constructionOb.constructionEnergy;
+        this.HTMLRoot.querySelector(".DurationText").innerHTML = constructionOb.constructedEnergy;
         this.HTMLRoot.querySelector(".ConstructionName").innerHTML = constructionOb.name;
 
         this.HTMLRoot.style.top = "0px";
@@ -196,6 +208,46 @@ class UI_ConstructionQueueItem{
         setTimeout(function(self){
             self.HTMLRoot.querySelectorAll(".UI_Button")[1].UI_ob.setState("OFF");
         },300,this);
+    }
+}
+
+
+/**
+* UI element allowing details visualization and addition to queue
+*/
+class UI_ConstructionPick{
+    /** 
+    * UI_ConstructionPick creation function
+    * @param {HTMLElement} HTMLRoot - Item root HTML element
+    * @param {Construction} construction - Construction type unique identifier
+    */
+    constructor(HTMLRoot, construction){
+        this.HTMLRoot = HTMLRoot;
+        this.construction = construction;
+
+        this.HTMLRoot.classList.remove("UI_Factory");
+        this.HTMLRoot.querySelector(".ConstructionName").innerHTML = this.construction.name;
+        this.HTMLRoot.querySelector(".DurationText").innerHTML = this.construction.constructedEnergy;
+        this.HTMLRoot.querySelector(".Description").innerHTML = this.construction.description;
+
+        // Add button behavior
+        this.HTMLRoot.querySelector(".AddToQueueButtonText").innerHTML = "▲ " + gameConfig.strings_EN["AddToQueue"] + " ▲";
+        this.addButton = new UI_Button( this.HTMLRoot.querySelector(".UI_Button"),null,null);
+
+        // Set frame titles
+        this.HTMLRoot.querySelector(".CostFrame").querySelector(".NumberFrameTitle").innerHTML = gameConfig.strings_EN["ConstructionCost"];
+        this.HTMLRoot.querySelector(".GenerationFrame").querySelector(".NumberFrameTitle").innerHTML = gameConfig.strings_EN["ConstructionGeneration"];
+        this.HTMLRoot.querySelector(".DefenseFrame").querySelector(".NumberFrameTitle").innerHTML = gameConfig.strings_EN["ConstructionDefense"];
+
+        // Set frames values
+        this.HTMLRoot.querySelector(".CostFrame").querySelector(".Energy").innerHTML = this.construction.costEnergy;
+        this.HTMLRoot.querySelector(".CostFrame").querySelector(".Minerals").innerHTML = this.construction.costMinerals;
+        this.HTMLRoot.querySelector(".CostFrame").querySelector(".Water").innerHTML = this.construction.costWater;
+        this.HTMLRoot.querySelector(".GenerationFrame").querySelector(".Energy").innerHTML = this.construction.generationEnergy;
+        this.HTMLRoot.querySelector(".GenerationFrame").querySelector(".Minerals").innerHTML = this.construction.generationMinerals;
+        this.HTMLRoot.querySelector(".GenerationFrame").querySelector(".Water").innerHTML = this.construction.generationWater;
+        this.HTMLRoot.querySelector(".DefenseFrame").querySelector(".Structure").innerHTML = this.construction.maxStructurePoints;
+        this.HTMLRoot.querySelector(".DefenseFrame").querySelector(".Damage").innerHTML = this.construction.damage;
     }
 }
 

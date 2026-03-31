@@ -1,63 +1,28 @@
 {
     "CONST_MineralExtractor":{
-        "constructionEnergy": 0,
-        "constructionMinerals": 0,
-        "constructionWater": 0,
-        "productionEnergy": 0,
-        "productionMinerals": 0,
-        "productionWater": 0,
-        "structurePoints": 0,
         "category": "Extraction",
         "name": "Mineral extractor",
-        "description": "Laser based mineral extraction and conditioning unit. Provides your asteroid with required minerals."
+        "description": "Drill based extraction and conditioning unit. Provides your asteroid with required minerals."
     },
     "CONST_WaterExtractor":{
-        "constructionEnergy": 0,
-        "constructionMinerals": 0,
-        "constructionWater": 0,
-        "productionEnergy": 0,
-        "productionMinerals": 0,
-        "productionWater": 0,
-        "structurePoints": 0,
         "category": "Extraction",
         "name": "Water extractor",
-        "description": "Laser based water extraction unit. Provides your asteroid with required water."
+        "description": "Laser based extraction unit. Provides your asteroid with required water."
     },
     "CONST_SolarUnit":{
-        "constructionEnergy": 0,
-        "constructionMinerals": 0,
-        "constructionWater": 0,
-        "productionEnergy": 0,
-        "productionMinerals": 0,
-        "productionWater": 0,
-        "structurePoints": 0,
         "category": "Energy",
         "name": "Solar unit",
         "description": "Orbital solar station, beaming down power to your asteroid."
     },
     "CONST_PlasmaCanon":{
-        "constructionEnergy": 0,
-        "constructionMinerals": 0,
-        "constructionWater": 0,
-        "productionEnergy": 0,
-        "productionMinerals": 0,
-        "productionWater": 0,
-        "structurePoints": 0,
         "damage": 0,
         "category": "Military",
         "name": "Plasma canon",
         "description": "Simple defense system focusing a high energy plasma burst on targets."
     },
     "CONST_Shipyard":{
-        "constructionEnergy": 0,
-        "constructionMinerals": 0,
-        "constructionWater": 0,
-        "productionEnergy": 0,
-        "productionMinerals": 0,
-        "productionWater": 0,
-        "structurePoints": 0,
         "category": "Military",
-        "name": "Plasma canon",
-        "description": "Simple defense system focusing a high energy plasma burst on targets."
+        "name": "Shipyard",
+        "description": "Allow production of cargo and military fleets."
     }
 }

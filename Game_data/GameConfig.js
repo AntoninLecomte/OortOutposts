@@ -7,7 +7,11 @@ class GameConfig {
             "debug": "rgb(255,0,255)"
         }
         this.strings_EN = {
-            "ConstructionComplete": "Construction completed: {} "
+            "ConstructionComplete": "Construction completed: {} ",
+            "AddToQueue": "Add",
+            "ConstructionCost": "Cost",
+            "ConstructionGeneration": "Generation",
+            "ConstructionDefense": "Defense"
         }
     }
 }

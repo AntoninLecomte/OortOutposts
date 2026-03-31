@@ -75,15 +75,15 @@
 #UI_Asteroid .UI_TimelineStepPoint{
     margin-right: 1vw;
 }
-#UI_Asteroid .ConstructionQueueItem .Miniature{
+#UI_Asteroid #Window_Construction .Miniature{
     position: relative;
     border: 1px solid white;
 }
-#UI_Asteroid .ConstructionQueueItem img{
+#UI_Asteroid #Window_Construction .Miniature img{
     width: 10vh;
     height: 10vh;
 }
-#UI_Asteroid .ConstructionQueueItem .DurationText{
+#UI_Asteroid #Window_Construction .Miniature .DurationText{
     position: absolute;
     bottom: 2vh;
     width: 100%;
@@ -109,4 +109,66 @@
     font-size: medium;
     text-align: center;
     vertical-align: middle;
+}
+
+
+#UI_Asteroid #ConstructionPickScroller{
+    overflow-y: scroll;
+    padding-right: 2vw;
+    flex: 1;
+}
+#UI_Asteroid #ConstructionPicksDiv{
+    display: flex;
+    flex-direction: column;
+    row-gap: 2vh;
+}
+#UI_Asteroid .ConstructionPick{
+    border: 1px solid red;
+    border-radius: 0.5vw;
+    padding: 1vw;
+    display: flex;
+    align-items: center;
+    column-gap: 1vw;
+}
+#UI_Asteroid .ConstructionPick .UI_Button{
+    height: 8vh;
+    width: 2vw;
+    border-radius: 0.5vw;
+    writing-mode: sideways-lr;
+}
+#UI_Asteroid .ConstructionPick .RightPanel{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#UI_Asteroid .ConstructionPick .ConstructionName{
+    font-weight: bold;
+    margin-bottom: 0.5vh;
+}
+#UI_Asteroid .ConstructionPick .NumberFramesDiv{
+    display: flex;
+    margin-top: 2vh;
+    column-gap: 1vw;
+}
+#UI_Asteroid .ConstructionPick .NumberFrame{
+    position: relative;
+    border: 1px solid white;
+    border-radius: 0.25vw;
+    display: flex;
+    column-gap: 1vw;
+    padding: 0.5vw;
+}
+#UI_Asteroid .ConstructionPick .NumberFrameTitleCentralizer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top:-1em;
+    left:0;
+}
+#UI_Asteroid .ConstructionPick .NumberFrameTitle{
+    font-size: x-small;
+    background-color: black;
+    padding-left: 0.3vw;
+    padding-right: 0.3vw;
 }
