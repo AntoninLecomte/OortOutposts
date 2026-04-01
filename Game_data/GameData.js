@@ -11,7 +11,19 @@ class GameData {
          */
         this.constructionsTypes = {};
 
+        /**
+         * Collection of spaceships static fields information
+         * @type {JSON}
+         */
+        this.spaceshipsData = {};
+        /**
+         * Collection of default spaceships
+         * @type {Spaceship{}}
+         */
+        this.spaceshipsTypes = {};
+
         this.loadconstructionData();
+        this.loadSpaceshipData();
         this.generateWorld();
     }
 
@@ -38,6 +50,26 @@ class GameData {
             }
             for (var constructionID in this.constructionData){
                 this.constructionsTypes[constructionID+"1"] = new Construction(this,null,constructionID);
+            }
+        }
+    }
+
+    /** 
+    * DEV to be later integrated on server side
+    * */
+    loadSpaceshipData(){
+        const ob = this;
+        var xmlhttp=new XMLHttpRequest();
+        xmlhttp.open("GET","./Game_data/Spaceships.json",false);
+        xmlhttp.send();
+        if (xmlhttp.status==200 && xmlhttp.readyState == 4 )
+        {
+            this.spaceshipData = JSON.parse(xmlhttp.responseText);
+            for (var spaceshipID in this.spaceshipData){
+                this.spaceshipsTypes[spaceshipID] = new Spaceship(this,spaceshipID);
+            }
+            for (var spaceshipID in this.spaceshipData){
+                this.spaceshipsTypes[spaceshipID+"1"] = new Spaceship(this,spaceshipID);
             }
         }
     }
@@ -199,6 +231,12 @@ class Asteroid {
          */
         this.constructionQueue = [];
 
+        /**
+         * The asteroid spaceships queue list
+         * @type {Spaceship[]}
+         */
+        this.spaceshipsQueue = [];
+
         // this.generateShapePoints(200,500,1);
         this.DEV_generateEvents();
         this.DEV_generateQueue();
@@ -264,6 +302,10 @@ class Asteroid {
         for (var i=0; i<10;i++){
             const newConstruction = new Construction(this.gameData, this, "DEV");
             this.constructionQueue.push(newConstruction);
+        }
+        for (var i=0; i<10;i++){
+            const newSpaceShip = new Spaceship(this.gameData, "DEV");
+            this.spaceshipsQueue.push(newSpaceShip);
         }
     }
 }
@@ -357,12 +399,16 @@ class Construction {
         */
         this.maxStructurePoints = 0;
         /**
-        * Damage dealt to ennemy units when defending
+        * Shield reducing incoming damage
         * @type {number}
         */
-        this.damage = 0;
-
-
+        this.shield = 0;
+        /**
+        * Damage dealt to ennemy units shield and structure points
+        * @type {number}
+        */
+        this.firePower = 0;
+        
         // DEV - Pick random id
         const keys = Object.keys(this.gameData.constructionData);
         this.constructionID = keys[ keys.length * Math.random() << 0];
@@ -380,10 +426,112 @@ class Construction {
         */
         this.constructionDate = new Date();
         /**
-        * Amount of energy used for construction
+        * Amount of energy used for construction (progress)
         * @type {number}
         */
         this.constructedEnergy = 0;
+        /**
+        * Remaining structure points
+        * @type {number}
+        */
+        this.structurePoints = this.maxStructurePoints;
+    }
+}
+
+/**
+* Class representing a spacecraft
+*/
+class Spaceship {
+    /**
+    * Spaceship creation function
+    * @param {GameData} gameData - GameData object storing all variables
+    * @param {String} spaceshipID - spaceship ID, one per type of spaceship
+    */
+   constructor(gameData, spaceshipID) {
+        this.gameData = gameData;
+        this.spaceshipID = spaceshipID;
+
+        // Default values. To be overriden by JSON data from gamedata.
+        /**
+         * Total energy required for initial construction
+         * @type {number}
+         */
+        this.costEnergy = 0;
+        /**
+         * Total minerals required for initial construction
+         * @type {number}
+         */
+        this.costMinerals = 0;
+        /**
+         * Total water required for initial construction
+         * @type {number}
+         */
+        this.costWater = 0;
+
+        /**
+        * Ability to start firing before ennemy units
+        * @type {number}
+        */
+        this.initiative = 0;
+        /**
+        * spaceship intial structure points
+        * @type {number}
+        */
+        this.maxStructurePoints = 0;
+        /**
+        * Shield reducing incoming damage
+        * @type {number}
+        */
+        this.shield = 0;
+        /**
+        * Damage dealt to ennemy units shield and structure points
+        * @type {number}
+        */
+        this.firePower = 0;
+
+        /**
+        * Spaceship speed
+        * @type {number}
+        */
+        this.speed = 0;
+        /**
+        * Water consumption in T/distance
+        * @type {number}
+        */
+        this.waterConsumption = 0;
+        /**
+        * Range in distance
+        * @type {number}
+        */
+        this.range = 0;
+        
+
+        // DEV - Pick random id
+        const keys = Object.keys(this.gameData.spaceshipData);
+        this.spaceshipID = keys[ keys.length * Math.random() << 0];
+        
+        // Load static fields
+        const statics = this.gameData.spaceshipData[this.spaceshipID];
+        for (var field in statics){
+            this[field] = statics[field];
+        }
+
+        // Initialize dynamic fields
+        /**
+        * Construction date
+        * @type {Date}
+        */
+        this.constructionDate = new Date();
+        /**
+        * Amount of energy used for construction (progress)
+        * @type {number}
+        */
+        this.constructedEnergy = 0;
+        /**
+        * Remaining structure points
+        * @type {number}
+        */
+        this.structurePoints = this.maxStructurePoints;
     }
 }
 

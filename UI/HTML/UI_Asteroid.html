@@ -22,7 +22,6 @@
     <div class="UI_Column" id="RightButtonsDiv">
         <div class="UI_Button" id="Button_Log"><p>LOG</p></div>
         <div class="UI_Button" id="Button_Construction"><p>CST</p></div>
-        <div class="UI_Button" id="Button_Energy"><p>ENG</p></div>
         <div class="UI_Button" id="Button_Shipyard"><p>SHP</p></div>
     </div>
     
@@ -47,9 +46,9 @@
     <div class="UI_Window" id="Window_Construction">
         <div class="UI_WindowFrame UI_Frame">
             <div class="UI_WindowContent">
-                <div id="ConstructionQueueScroller">
+                <div id="QueueScroller">
                     <div id="ConstructionQueueDiv" class="UI_Timeline">
-                        <div class="UI_Factory UI_TimelineStep ConstructionQueueItem" id="ConstructionQueueItemFactory">
+                        <div class="UI_Factory UI_TimelineStep QueueItem" id="QueueItemFactory">
                             <div class="UI_TimelineStepPoint"></div>
                             <div class="Miniature">
                                 <img src="NO_IMAGE"/>
@@ -144,17 +143,86 @@
         </div>
     </div>
 
-    <div class="UI_Window" id="Window_Energy">
-        <div class="UI_WindowFrame UI_Frame">
-            <div class="UI_WindowContent">
-                
-            </div>
-        </div>
-    </div>
-
     <div class="UI_Window" id="Window_Shipyard">
         <div class="UI_WindowFrame UI_Frame">
             <div class="UI_WindowContent">
+                <div id="QueueScroller">
+                    <div id="SpaceshipsQueueDiv" class="UI_Timeline">
+                        <div class="UI_TimelineLineDiv">
+                            <div class="UI_TimelineLine"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="UI_VerticalSeparator"></div>
+
+                <div id="SpaceshipPickScroller">
+                    <div id="SpaceshipPicksDiv">
+                        <div class="UI_Factory SpaceshipCategory" id="SpaceshipPickCategoryFactory">
+                            <p>CATEGORY</p>
+                        </div>
+                        <div class="UI_Factory SpaceshipPick" id="SpaceshipPickFactory">
+                            <div class="ButtonCentralizer">
+                                <div class="UI_Button">
+                                    <p class="AddToQueueButtonText"></p>
+                                </div>
+                            </div>
+                            
+                            <div class="Miniature">
+                                <img src="NO_IMAGE"/>
+                                <p class="DurationText"></p>
+                            </div>
+                            <div class="RightPanel">
+                                 <p class="SpaceshipName"></p>
+                                 <p class="Description"></p>
+                                 <div class="NumberFramesDiv">
+                                    <div class="NumberFrame CostFrame">
+                                        <div class="NumberFrameTitleCentralizer"><p class="NumberFrameTitle"></p></div>
+                                        <div class="UI_Ressource">
+                                            <img class="UI_RessourceImg" src="RESSOURCE.jpg">
+                                            <p class="UI_RessourceP Energy"></p>
+                                        </div>
+                                        <div class="UI_Ressource">
+                                            <img class="UI_RessourceImg" src="RESSOURCE.jpg">
+                                            <p class="UI_RessourceP Minerals"></p>
+                                        </div>
+                                        <div class="UI_Ressource">
+                                            <img class="UI_RessourceImg" src="RESSOURCE.jpg">
+                                            <p class="UI_RessourceP Water"></p>
+                                        </div> 
+                                    </div>
+                                    <div class="NumberFrame GenerationFrame">
+                                        <div class="NumberFrameTitleCentralizer"><p class="NumberFrameTitle"></p></div>
+                                        <div class="UI_Ressource">
+                                            <img class="UI_RessourceImg" src="RESSOURCE.jpg">
+                                            <p class="UI_RessourceP Energy"></p>
+                                        </div>
+                                        <div class="UI_Ressource">
+                                            <img class="UI_RessourceImg" src="RESSOURCE.jpg">
+                                            <p class="UI_RessourceP Minerals"></p>
+                                        </div>
+                                        <div class="UI_Ressource">
+                                            <img class="UI_RessourceImg" src="RESSOURCE.jpg">
+                                            <p class="UI_RessourceP Water"></p>
+                                        </div> 
+                                    </div>
+                                    <div class="NumberFrame DefenseFrame">
+                                        <div class="NumberFrameTitleCentralizer"><p class="NumberFrameTitle"></p></div>
+                                        <div class="UI_Ressource">
+                                            <img class="UI_RessourceImg" src="RESSOURCE.jpg">
+                                            <p class="UI_RessourceP Structure"></p>
+                                        </div>
+                                        <div class="UI_Ressource">
+                                            <img class="UI_RessourceImg" src="RESSOURCE.jpg">
+                                            <p class="UI_RessourceP Damage"></p>
+                                        </div>
+                                    </div>
+                                 </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
                 
             </div>
         </div>

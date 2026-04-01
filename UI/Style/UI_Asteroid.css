@@ -56,7 +56,7 @@
     overflow-y: hidden;
     flex-direction: row;
 }
-#UI_Asteroid #ConstructionQueueScroller{
+#UI_Asteroid #QueueScroller{
     overflow-y: scroll;
     padding-right: 2vw;
 }
@@ -67,7 +67,7 @@
     padding-top: 5vh;
     padding-bottom: 5vh;
 }
-#UI_Asteroid .ConstructionQueueItem{
+#UI_Asteroid .QueueItem{
     position: relative;
     top: 0;
     transition: 0.3s ease-in top;
@@ -75,37 +75,37 @@
 #UI_Asteroid .UI_TimelineStepPoint{
     margin-right: 1vw;
 }
-#UI_Asteroid #Window_Construction .Miniature{
+#UI_Asteroid .Miniature{
     position: relative;
     border: 1px solid white;
 }
-#UI_Asteroid #Window_Construction .Miniature img{
+#UI_Asteroid .Miniature img{
     width: 10vh;
     height: 10vh;
 }
-#UI_Asteroid #Window_Construction .Miniature .DurationText{
+#UI_Asteroid .Miniature .DurationText{
     position: absolute;
     bottom: 2vh;
     width: 100%;
     text-align: center;
     background-color: black;    
 }
-#UI_Asteroid .ConstructionQueueItem .RightPanel{
+#UI_Asteroid .QueueItem .RightPanel{
     display: flex;
     flex-direction: column;
     row-gap: 1vh;
 }
-#UI_Asteroid .ConstructionQueueItem .ButtonsPanel{
+#UI_Asteroid .QueueItem .ButtonsPanel{
     display: flex;
     flex-direction: row;
     column-gap: 0.5vw;
 }
-#UI_Asteroid .ConstructionQueueItem .UI_Button{
+#UI_Asteroid .QueueItem .UI_Button{
     border-radius: 0.5em;
     width: 3em;
     height: 3em;
 }
-#UI_Asteroid .ConstructionQueueItem .UI_Button p{
+#UI_Asteroid .QueueItem .UI_Button p{
     font-size: medium;
     text-align: center;
     vertical-align: middle;
@@ -123,7 +123,7 @@
     row-gap: 2vh;
 }
 #UI_Asteroid .ConstructionPick{
-    border: 1px solid red;
+    border: 1px solid white;
     border-radius: 0.5vw;
     padding: 1vw;
     display: flex;

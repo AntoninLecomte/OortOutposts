@@ -76,7 +76,6 @@ class UI_Asteroid {
         this.windows = {
             "Log": [],
             "Construction": [],
-            "Energy": [],
             "Shipyard": [],
         }
         for (var w in this.windows){
@@ -89,10 +88,12 @@ class UI_Asteroid {
         this.updateLog();
         this.updateConstructionQueue();
         this.updateConstructionPicks();
+        this.updateSpaceshipsQueue();
+        this.updateSpaceshipsPicks();
 
 
         // Open window {DEV}
-        this.windows["Construction"][0].open();
+        this.windows["Shipyard"][0].open();
     }
     windowButtonClicked(button){
         for (var w in this.windows){
@@ -132,13 +133,13 @@ class UI_Asteroid {
         for (var construction in this.parentScene.asteroid.constructionQueue){
             const constructionOb = this.parentScene.asteroid.constructionQueue[construction];
 
-            const newNode = document.getElementById("ConstructionQueueItemFactory").cloneNode(true);
-            document.getElementById("ConstructionQueueItemFactory").parentElement.appendChild(newNode);
-            const newConstructionQueueItem = new UI_ConstructionQueueItem(newNode, constructionOb);
-            this.UI_constructionQueueItems.push(newConstructionQueueItem)
+            const newNode = document.getElementById("QueueItemFactory").cloneNode(true);
+            document.getElementById("ConstructionQueueDiv").appendChild(newNode);
+            const newQueueItem = new UI_QueueItem(newNode, constructionOb);
+            this.UI_constructionQueueItems.push(newQueueItem)
 
-            new UI_Button(newNode.querySelectorAll(".UI_Button")[0],newConstructionQueueItem,newConstructionQueueItem.upButtonClicked);
-            new UI_Button(newNode.querySelectorAll(".UI_Button")[1],newConstructionQueueItem,newConstructionQueueItem.downButtonClicked);
+            new UI_Button(newNode.querySelectorAll(".UI_Button")[0],newQueueItem,newQueueItem.upButtonClicked);
+            new UI_Button(newNode.querySelectorAll(".UI_Button")[1],newQueueItem,newQueueItem.downButtonClicked);
         }
         // Update buttons:
         for (var item in this.UI_constructionQueueItems){
@@ -157,24 +158,58 @@ class UI_Asteroid {
             this.UI_constructionPicks[constructionID] = new UI_ConstructionPick(newNode, gameData.constructionsTypes[constructionID]);
         }
     }
+
+    /**
+     * Updates the soaceships queue in reference with game data
+     */
+    updateSpaceshipsQueue(){
+        this.UI_spaceshipsQueueItems = [];
+        for (var spaceship in this.parentScene.asteroid.spaceshipsQueue){
+            const spaceshipOb = this.parentScene.asteroid.spaceshipsQueue[spaceship];
+
+            const newNode = document.getElementById("QueueItemFactory").cloneNode(true);
+            document.getElementById("SpaceshipsQueueDiv").appendChild(newNode);
+            const newSpaceshipQueueItem = new UI_QueueItem(newNode, spaceshipOb);
+            this.UI_spaceshipsQueueItems.push(newSpaceshipQueueItem)
+
+            new UI_Button(newNode.querySelectorAll(".UI_Button")[0],newSpaceshipQueueItem,newSpaceshipQueueItem.upButtonClicked);
+            new UI_Button(newNode.querySelectorAll(".UI_Button")[1],newSpaceshipQueueItem,newSpaceshipQueueItem.downButtonClicked);
+        }
+        // Update buttons:
+        for (var item in this.UI_spaceshipsQueueItems){
+            this.UI_spaceshipsQueueItems[item].updateButtons()
+        }
+    }
+
+    /**
+     * Update the available spaceships in reference with game data
+     */
+    updateSpaceshipsPicks(){
+        this.UI_spaceshipPicks = {};
+        for (var spaceshipID in gameData.spaceshipsTypes){
+            const newNode = document.getElementById("SpaceshipPickFactory").cloneNode(true);
+            document.getElementById("SpaceshipPickFactory").parentElement.appendChild(newNode);
+            this.UI_spaceshipPicks[spaceshipID] = new UI_SpaceshipPick(newNode, gameData.spaceshipsTypes[spaceshipID]);
+        }
+    }
 }
 
 /**
 * Class storing DOM structure and fonctions for a construction queue item
 */
-class UI_ConstructionQueueItem{
+class UI_QueueItem{
     /** 
-    * UI_ConstructionQueueItem creation function
+    * UI_QueueItem creation function
     * @param {HTMLElement} HTMLRoot - Item root HTML element
-    * @param {Construction} constructionOb - Game data Construction object
+    * @param {Construction} targetOb - Game data Construction object
     */
-    constructor(HTMLRoot, constructionOb){
+    constructor(HTMLRoot, targetOb){
         this.HTMLRoot = HTMLRoot;
-        this.constructionOb = constructionOb;
+        this.targetOb = targetOb;
 
         this.HTMLRoot.classList.remove("UI_Factory");
-        this.HTMLRoot.querySelector(".DurationText").innerHTML = constructionOb.constructedEnergy;
-        this.HTMLRoot.querySelector(".ConstructionName").innerHTML = constructionOb.name;
+        this.HTMLRoot.querySelector(".DurationText").innerHTML = targetOb.constructedEnergy;
+        this.HTMLRoot.querySelector(".ConstructionName").innerHTML = targetOb.name;
 
         this.HTMLRoot.style.top = "0px";
     }
@@ -213,7 +248,7 @@ class UI_ConstructionQueueItem{
 
 
 /**
-* UI element allowing details visualization and addition to queue
+* UI element allowing construction details visualization and addition to queue
 */
 class UI_ConstructionPick{
     /** 
@@ -248,6 +283,45 @@ class UI_ConstructionPick{
         this.HTMLRoot.querySelector(".GenerationFrame").querySelector(".Water").innerHTML = this.construction.generationWater;
         this.HTMLRoot.querySelector(".DefenseFrame").querySelector(".Structure").innerHTML = this.construction.maxStructurePoints;
         this.HTMLRoot.querySelector(".DefenseFrame").querySelector(".Damage").innerHTML = this.construction.damage;
+    }
+}
+
+/**
+* UI element allowing spacecraft details visualization and addition to queue
+*/
+class UI_SpaceshipPick{
+    /** 
+    * UI_SpaceshipPick creation function
+    * @param {HTMLElement} HTMLRoot - Item root HTML element
+    * @param {Spacecraft} spacecraft - Construction type unique identifier
+    */
+    constructor(HTMLRoot, spacecraft){
+        this.HTMLRoot = HTMLRoot;
+        this.spacecraft = spacecraft;
+
+        this.HTMLRoot.classList.remove("UI_Factory");
+        this.HTMLRoot.querySelector(".SpaceshipName").innerHTML = this.spacecraft.name;
+        this.HTMLRoot.querySelector(".DurationText").innerHTML = this.spacecraft.constructedEnergy;
+        this.HTMLRoot.querySelector(".Description").innerHTML = this.spacecraft.description;
+
+        // Add button behavior
+        this.HTMLRoot.querySelector(".AddToQueueButtonText").innerHTML = "▲ " + gameConfig.strings_EN["AddToQueue"] + " ▲";
+        this.addButton = new UI_Button( this.HTMLRoot.querySelector(".UI_Button"),null,null);
+
+        // Set frame titles
+        this.HTMLRoot.querySelector(".CostFrame").querySelector(".NumberFrameTitle").innerHTML = gameConfig.strings_EN["ConstructionCost"];
+        this.HTMLRoot.querySelector(".GenerationFrame").querySelector(".NumberFrameTitle").innerHTML = gameConfig.strings_EN["ConstructionGeneration"];
+        this.HTMLRoot.querySelector(".DefenseFrame").querySelector(".NumberFrameTitle").innerHTML = gameConfig.strings_EN["ConstructionDefense"];
+
+        // Set frames values
+        this.HTMLRoot.querySelector(".CostFrame").querySelector(".Energy").innerHTML = this.spacecraft.costEnergy;
+        this.HTMLRoot.querySelector(".CostFrame").querySelector(".Minerals").innerHTML = this.spacecraft.costMinerals;
+        this.HTMLRoot.querySelector(".CostFrame").querySelector(".Water").innerHTML = this.spacecraft.costWater;
+        this.HTMLRoot.querySelector(".GenerationFrame").querySelector(".Energy").innerHTML = this.spacecraft.generationEnergy;
+        this.HTMLRoot.querySelector(".GenerationFrame").querySelector(".Minerals").innerHTML = this.spacecraft.generationMinerals;
+        this.HTMLRoot.querySelector(".GenerationFrame").querySelector(".Water").innerHTML = this.spacecraft.generationWater;
+        this.HTMLRoot.querySelector(".DefenseFrame").querySelector(".Structure").innerHTML = this.spacecraft.maxStructurePoints;
+        this.HTMLRoot.querySelector(".DefenseFrame").querySelector(".Damage").innerHTML = this.spacecraft.damage;
     }
 }
 

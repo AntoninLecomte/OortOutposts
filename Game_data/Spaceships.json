@@ -1,0 +1,27 @@
+{
+    "SHIP_Cargo":{
+        "category": "Cargo",
+        "name": "Cargo ship",
+        "description": "High capacity medium speed ship. No combat abilities."
+    },
+    "SHIP_Alpha":{
+        "category": "Fighter",
+        "name": "Alpha",
+        "description": "A light, fast but limited range fighter."
+    },
+    "SHIP_Omega":{
+        "category": "Fighter",
+        "name": "Omega",
+        "description": "A polyvalent fighter."
+    },
+    "SHIP_Delta":{
+        "category": "Fighter",
+        "name": "Delta",
+        "description": "A heavy fighter."
+    },
+    "SHIP_Goliath":{
+        "category": "Monster",
+        "name": "Goliath",
+        "description": "A heavy multi-purpose ship with tremendous fire power."
+    }
+}
