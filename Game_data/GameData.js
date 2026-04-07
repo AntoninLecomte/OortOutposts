@@ -1,5 +1,5 @@
 class GameData {
-    constructor(parameters) {
+    constructor() {
         /**
          * Collection of constructions static fields information
          * @type {JSON}
@@ -22,9 +22,8 @@ class GameData {
          */
         this.spaceshipsTypes = {};
 
-        this.loadconstructionData();
-        this.loadSpaceshipData();
-        this.generateWorld();
+        // this.loadconstructionData();
+        // this.loadSpaceshipData();
     }
 
      /** 
@@ -35,43 +34,25 @@ class GameData {
     }
 
     /** 
-    * DEV to be later integrated on server side
+    * Create reference objets from static data fields
     * */
-    loadconstructionData(){
-        const ob = this;
-        var xmlhttp=new XMLHttpRequest();
-        xmlhttp.open("GET","./Game_data/Constructions.json",false);
-        xmlhttp.send();
-        if (xmlhttp.status==200 && xmlhttp.readyState == 4 )
-        {
-            this.constructionData = JSON.parse(xmlhttp.responseText);
-            for (var constructionID in this.constructionData){
-                this.constructionsTypes[constructionID] = new Construction(this,null,constructionID);
-            }
-            for (var constructionID in this.constructionData){
-                this.constructionsTypes[constructionID+"1"] = new Construction(this,null,constructionID);
-            }
+    createObjectTypes(){
+        for (var constructionID in this.constructionData){
+            this.constructionsTypes[constructionID] = new Construction(this,null,constructionID);
+        }
+        for (var spaceshipID in this.spaceshipsData){
+            this.spaceshipsTypes[spaceshipID] = new Spaceship(this,spaceshipID);
         }
     }
 
     /** 
-    * DEV to be later integrated on server side
+    * Export all dynamic fields relative to game state to JSON
+    * @returns {object} - An {object} structure containing all fields.
     * */
-    loadSpaceshipData(){
-        const ob = this;
-        var xmlhttp=new XMLHttpRequest();
-        xmlhttp.open("GET","./Game_data/Spaceships.json",false);
-        xmlhttp.send();
-        if (xmlhttp.status==200 && xmlhttp.readyState == 4 )
-        {
-            this.spaceshipData = JSON.parse(xmlhttp.responseText);
-            for (var spaceshipID in this.spaceshipData){
-                this.spaceshipsTypes[spaceshipID] = new Spaceship(this,spaceshipID);
-            }
-            for (var spaceshipID in this.spaceshipData){
-                this.spaceshipsTypes[spaceshipID+"1"] = new Spaceship(this,spaceshipID);
-            }
-        }
+    getJSON(){
+        var data = {};
+        data.cluster = this.cluster.getJSON();
+        return data;
     }
 }
 
@@ -99,7 +80,7 @@ class Cluster {
         for (var asteroid in coords){
             this.asteroids.push(new Asteroid(this.gameData, coords[asteroid][0], coords[asteroid][1], asteroid));
         }
-        this.generateRessources(100,100)
+        this.generateRessources(100,100);
     }
     
     /** 
@@ -194,6 +175,18 @@ class Cluster {
             this.asteroids[asteroid].baseRadius = Math.pow(Math.pow(water,2)+Math.pow(minerals,2),1)*3;;
         }
         
+    }
+
+    /** 
+    * Export all dynamic fields relative to game state to JSON
+    * @returns {object} - An {object} structure containing all fields.
+    * */
+    getJSON(){
+        var data = {"asteroids":[]};
+        for (var ast in this.asteroids){
+            data["asteroids"].push(this.asteroids[ast].getJSON());
+        }
+        return data;
     }
 }
 
@@ -308,6 +301,19 @@ class Asteroid {
             this.spaceshipsQueue.push(newSpaceShip);
         }
     }
+
+    /** 
+    * Export all dynamic fields relative to game state to JSON
+    * @returns {object} - An {object} structure containing all fields.
+    * */
+    getJSON(){
+        var data = {}
+        const dynamicFields = ["x","y","id"];
+        for (var f in dynamicFields){
+            data[dynamicFields[f]] = this[dynamicFields[f]];
+        }
+        return data;
+    }
 }
 
 /**
@@ -421,10 +427,6 @@ class Construction {
         */
         this.firePower = 0;
         
-        // DEV - Pick random id
-        const keys = Object.keys(this.gameData.constructionData);
-        this.constructionID = keys[ keys.length * Math.random() << 0];
-        
         // Load static fields
         const statics = this.gameData.constructionData[this.constructionID];
         for (var field in statics){
@@ -523,13 +525,8 @@ class Spaceship {
         */
         this.maxCargo = 0;
         
-
-        // DEV - Pick random id
-        const keys = Object.keys(this.gameData.spaceshipData);
-        this.spaceshipID = keys[ keys.length * Math.random() << 0];
-        
         // Load static fields
-        const statics = this.gameData.spaceshipData[this.spaceshipID];
+        const statics = this.gameData.spaceshipsData[this.spaceshipID];
         for (var field in statics){
             this[field] = statics[field];
         }

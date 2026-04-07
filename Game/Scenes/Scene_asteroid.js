@@ -13,10 +13,8 @@ class SCENE_Asteroid extends Phaser.Scene
         this.scale = 15;
 
         const camera = this.cameras.main;
-        // Center camera on the cluster
         camera.centerOnX(0);
         camera.centerOnY(0);
-        // // Zoom camera to fit the cluster
         const zoomFactor = camera.width/200/this.scale;
         camera.setZoom(zoomFactor*0.4);
 
