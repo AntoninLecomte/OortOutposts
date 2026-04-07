@@ -110,22 +110,7 @@
 }
 
 
-/* Construction window */
-#UI_Asteroid #Window_Construction .UI_WindowContent{
-    overflow-y: hidden;
-    flex-direction: row;
-}
-#UI_Asteroid #ConstructionPicksScroller{
-    padding-right: 2vw;
-    flex: 1;
-}
-#UI_Asteroid .PicksDiv{
-    display: flex;
-    flex-direction: column;
-    row-gap: 2vh;
-}
-
-
+/* Pick items common stying */
 #UI_Asteroid .PickItem{
     border: 1px solid white;
     border-radius: 0.5vw;
@@ -175,6 +160,20 @@
     padding: 0.5vw;
 }
 
+/* Construction window */
+#UI_Asteroid #Window_Construction .UI_WindowContent{
+    overflow-y: hidden;
+    flex-direction: row;
+}
+#UI_Asteroid #ConstructionPicksScroller{
+    padding-right: 2vw;
+    flex: 1;
+}
+#UI_Asteroid .PicksDiv{
+    display: flex;
+    flex-direction: column;
+    row-gap: 2vh;
+}
 
 
 /* Shipyard window */
