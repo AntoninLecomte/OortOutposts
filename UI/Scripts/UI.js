@@ -82,10 +82,12 @@ class UI_Button {
     clicked(ev){
         const self = ev.currentTarget.UI_ob;
         self.switchState();
-        if (self.callBackObTarget == null){
-            self.callback(self);
-        }else{
-            self.callback.call(self.callBackObTarget,self);
+        if (self.state != "DISABLED"){
+            if (self.callBackObTarget == null){
+                self.callback(self);
+            }else{
+                self.callback.call(self.callBackObTarget,self);
+            }
         }
     }
     /** 

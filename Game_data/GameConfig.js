@@ -11,7 +11,11 @@ class GameConfig {
             "AddToQueue": "Add",
             "ConstructionCost": "Cost",
             "ConstructionGeneration": "Generation",
-            "ConstructionDefense": "Defense"
+            "ConstructionDefense": "Defense",
+
+            "SpaceshipNavigation": "Navigation",
+            "SpaceshipCargo": "Cargo",
+            "SpaceshipCombat": "Combat"
         }
     }
 }

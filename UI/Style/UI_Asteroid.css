@@ -43,6 +43,15 @@
     margin-right: 7vw;
 }
 
+
+/* Applicable to all windows */
+#UI_Asteroid .Miniature{
+    position: relative;
+    border: 1px solid white;
+}
+
+
+/* Log events window */
 #UI_Asteroid #LogEventsDiv{
     row-gap: 2vh;
     font-size: small;
@@ -50,34 +59,6 @@
 #UI_Asteroid #LogEventsDiv .UI_TimelineLineDiv{
     padding-top: 1.5vh;
     padding-bottom: 1.5vh;
-}
-
-#UI_Asteroid #Window_Construction .UI_WindowContent{
-    overflow-y: hidden;
-    flex-direction: row;
-}
-#UI_Asteroid #QueueScroller{
-    overflow-y: scroll;
-    padding-right: 2vw;
-}
-#UI_Asteroid #ConstructionQueueDiv{
-    row-gap: 3vh;
-}
-#UI_Asteroid #ConstructionQueueDiv .UI_TimelineLineDiv{
-    padding-top: 5vh;
-    padding-bottom: 5vh;
-}
-#UI_Asteroid .QueueItem{
-    position: relative;
-    top: 0;
-    transition: 0.3s ease-in top;
-}
-#UI_Asteroid .UI_TimelineStepPoint{
-    margin-right: 1vw;
-}
-#UI_Asteroid .Miniature{
-    position: relative;
-    border: 1px solid white;
 }
 #UI_Asteroid .Miniature img{
     width: 10vh;
@@ -89,6 +70,23 @@
     width: 100%;
     text-align: center;
     background-color: black;    
+}
+
+/* Construction queue common styling */
+#UI_Asteroid .UI_Timeline{
+    row-gap: 3vh;
+}
+#UI_Asteroid .UI_TimelineStepPoint{
+    margin-right: 1vw;
+}
+#UI_Asteroid .UI_Timeline .UI_TimelineLineDiv{
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+}
+#UI_Asteroid .QueueItem{
+    position: relative;
+    top: 0;
+    transition: 0.3s ease-in top;
 }
 #UI_Asteroid .QueueItem .RightPanel{
     display: flex;
@@ -112,17 +110,23 @@
 }
 
 
-#UI_Asteroid #ConstructionPickScroller{
-    overflow-y: scroll;
+/* Construction window */
+#UI_Asteroid #Window_Construction .UI_WindowContent{
+    overflow-y: hidden;
+    flex-direction: row;
+}
+#UI_Asteroid #ConstructionPicksScroller{
     padding-right: 2vw;
     flex: 1;
 }
-#UI_Asteroid #ConstructionPicksDiv{
+#UI_Asteroid .PicksDiv{
     display: flex;
     flex-direction: column;
     row-gap: 2vh;
 }
-#UI_Asteroid .ConstructionPick{
+
+
+#UI_Asteroid .PickItem{
     border: 1px solid white;
     border-radius: 0.5vw;
     padding: 1vw;
@@ -130,27 +134,39 @@
     align-items: center;
     column-gap: 1vw;
 }
-#UI_Asteroid .ConstructionPick .UI_Button{
+#UI_Asteroid .PickItem .UI_Button{
     height: 8vh;
     width: 2vw;
     border-radius: 0.5vw;
     writing-mode: sideways-lr;
 }
-#UI_Asteroid .ConstructionPick .RightPanel{
+#UI_Asteroid .PickItem .RightPanel{
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
-#UI_Asteroid .ConstructionPick .ConstructionName{
+#UI_Asteroid .PickItem .Name{
     font-weight: bold;
     margin-bottom: 0.5vh;
 }
-#UI_Asteroid .ConstructionPick .NumberFramesDiv{
+#UI_Asteroid .PickItem .NumberFramesDiv{
     display: flex;
     margin-top: 2vh;
     column-gap: 1vw;
 }
-#UI_Asteroid .ConstructionPick .NumberFrame{
+#UI_Asteroid .PickItem .NumberFrameDiv{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.2vh;
+}
+#UI_Asteroid .PickItem .NumberFrameTitle{
+    font-size: x-small;
+    background-color: black;
+    padding-left: 0.3vw;
+    padding-right: 0.3vw;
+}
+#UI_Asteroid .PickItem .NumberFrameContent{
     position: relative;
     border: 1px solid white;
     border-radius: 0.25vw;
@@ -158,17 +174,15 @@
     column-gap: 1vw;
     padding: 0.5vw;
 }
-#UI_Asteroid .ConstructionPick .NumberFrameTitleCentralizer{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    top:-1em;
-    left:0;
+
+
+
+/* Shipyard window */
+#UI_Asteroid #Window_Shipyard .UI_WindowContent{
+    overflow-y: hidden;
+    flex-direction: row;
 }
-#UI_Asteroid .ConstructionPick .NumberFrameTitle{
-    font-size: x-small;
-    background-color: black;
-    padding-left: 0.3vw;
-    padding-right: 0.3vw;
+#UI_Asteroid #SpaceshipsPickScroller{
+    padding-right: 2vw;
+    flex: 1;
 }

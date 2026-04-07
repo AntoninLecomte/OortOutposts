@@ -29,6 +29,11 @@
     justify-content: center;
 }
 
+.UI_Scroller{
+    overflow-y: scroll;
+    padding-right: 2vw;
+}
+
 .UI_Button{
     width: 4vw;
     height: 4vw;

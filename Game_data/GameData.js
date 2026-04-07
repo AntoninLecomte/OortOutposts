@@ -364,6 +364,17 @@ class Construction {
 
         // Default values. To be overriden by JSON data from gamedata.
         /**
+         * Construction name
+         * @type {string}
+         */
+        this.name = "DEV_DEFAULT_NAME";
+        /**
+         * Construction description in picker
+         * @type {string}
+         */
+        this.description = "DEV_DEFAULT_DESCRIPTION";
+
+        /**
          * Total energy required for initial construction
          * @type {number}
          */
@@ -393,6 +404,7 @@ class Construction {
         * @type {number}
         */
         this.generationWater = 0;
+
         /**
         * Construction intial structure points
         * @type {number}
@@ -504,6 +516,12 @@ class Spaceship {
         * @type {number}
         */
         this.range = 0;
+
+        /**
+        * Spaceship cargo capacity in kg
+        * @type {number}
+        */
+        this.maxCargo = 0;
         
 
         // DEV - Pick random id
@@ -535,4 +553,4 @@ class Spaceship {
     }
 }
 
-export {GameData, Cluster, Asteroid, GameEvent, ConstructionCompleteEvent, Construction}
+export {GameData, Cluster, Asteroid, GameEvent, ConstructionCompleteEvent, Construction, Spaceship}
