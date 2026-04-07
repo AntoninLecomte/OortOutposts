@@ -114,7 +114,7 @@ class UI_Asteroid {
      * Updates the logs in reference with game data
      */
     updateLog(){
-        for (var ev in this.parentScene.asteroid.events){
+        for (var ev=this.parentScene.asteroid.events.length-1; ev>0; ev--){
             const eventOb = this.parentScene.asteroid.events[ev];
             const newNode = document.getElementById("LogEventItemFactory").cloneNode(true);
             newNode.classList.remove("UI_Factory");
@@ -290,6 +290,7 @@ class UI_Pick{
         const newRes = this.HTMLRoot.querySelector("#NumberFrameRessourceFactory").cloneNode(true);
         newRes.classList.add(ressourceID);
         newRes.classList.remove("UI_Factory");
+        newRes.querySelector(".UI_RessourceImg").src = "./UI/Media/Ressources/"+ressourceID+".png";
         newRes.querySelector(".UI_RessourceP").innerHTML = value;
         this.HTMLRoot.querySelector("."+frameID).querySelector(".NumberFrameContent").appendChild(newRes);
     }
@@ -315,6 +316,11 @@ class UI_Pick_Construction extends UI_Pick{
         this.addRessourceToFrame("CostFrame","MINERALS",this.construction.costMinerals);
         this.addRessourceToFrame("CostFrame","WATER",this.construction.costWater);
         this.addRessourceToFrame("CostFrame","ENERGY",this.construction.costEnergy);
+
+        this.addFrame("GenerationFrame",gameConfig.strings_EN["ConstructionGeneration"]);
+        this.addRessourceToFrame("GenerationFrame","MINERALS",this.construction.generationMinerals);
+        this.addRessourceToFrame("GenerationFrame","WATER",this.construction.generationWater);
+        this.addRessourceToFrame("GenerationFrame","ENERGY",this.construction.generationEnergy);
 
         this.addFrame("DefenseFrame",gameConfig.strings_EN["ConstructionDefense"]);
         this.addRessourceToFrame("DefenseFrame","STRUCTURE",this.construction.maxStructurePoints);
@@ -352,6 +358,7 @@ class UI_Pick_Spaceship extends UI_Pick{
         this.addFrame("CombatFrame",gameConfig.strings_EN["SpaceshipCombat"]);
         this.addRessourceToFrame("CombatFrame","STRUCTURE",this.spaceship.maxStructurePoints);
         this.addRessourceToFrame("CombatFrame","SHIELD",this.spaceship.shield);
+        this.addRessourceToFrame("CombatFrame","INITIATIVE",this.spaceship.initiative);
         this.addRessourceToFrame("CombatFrame","FIRE_POWER",this.spaceship.firePower);
 
          this.addFrame("CargoFrame",gameConfig.strings_EN["SpaceshipCargo"]);

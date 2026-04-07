@@ -52,8 +52,12 @@
 .UI_Ressource{
     display: flex;
     align-items: center;
-    column-gap: 0.5vw;
+    column-gap: 0.3em;
     font-size: medium;
+}
+.UI_RessourceImg{
+    width: 1.3em;
+    height: 1.3em;
 }
 .UI_RessourceP{
     font-size: small;
@@ -100,8 +104,8 @@
     column-gap: 1vw;
 }
 .UI_TimelineStepPoint{
-    width: 1.5vh;
-    height: 1.5vh;
+    width: 0.8em;
+    height: 0.8em;
     background-color: white;
     border-radius: 1vh;
 }
@@ -116,7 +120,7 @@
 
     box-sizing: border-box;
 
-    width: 1.5vh;
+    width: 0.8em;
 }
 .UI_TimelineLine{
     height: 100%;

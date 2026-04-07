@@ -56,10 +56,6 @@
     row-gap: 2vh;
     font-size: small;
 }
-#UI_Asteroid #LogEventsDiv .UI_TimelineLineDiv{
-    padding-top: 1.5vh;
-    padding-bottom: 1.5vh;
-}
 #UI_Asteroid .Miniature img{
     width: 10vh;
     height: 10vh;
@@ -78,10 +74,6 @@
 }
 #UI_Asteroid .UI_TimelineStepPoint{
     margin-right: 1vw;
-}
-#UI_Asteroid .UI_Timeline .UI_TimelineLineDiv{
-    padding-top: 5vh;
-    padding-bottom: 5vh;
 }
 #UI_Asteroid .QueueItem{
     position: relative;
@@ -111,6 +103,11 @@
 
 
 /* Pick items common stying */
+#UI_Asteroid .PicksDiv{
+    display: flex;
+    flex-direction: column;
+    row-gap: 2vh;
+}
 #UI_Asteroid .PickItem{
     border: 1px solid white;
     border-radius: 0.5vw;
@@ -120,10 +117,12 @@
     column-gap: 1vw;
 }
 #UI_Asteroid .PickItem .UI_Button{
-    height: 8vh;
-    width: 2vw;
+    width: auto;
+    height: auto;
+    padding: 0.5em;
     border-radius: 0.5vw;
     writing-mode: sideways-lr;
+    word-break: keep-all;
 }
 #UI_Asteroid .PickItem .RightPanel{
     display: flex;
@@ -138,6 +137,7 @@
     display: flex;
     margin-top: 2vh;
     column-gap: 1vw;
+    flex-wrap: wrap;
 }
 #UI_Asteroid .PickItem .NumberFrameDiv{
     position: relative;
@@ -156,7 +156,7 @@
     border: 1px solid white;
     border-radius: 0.25vw;
     display: flex;
-    column-gap: 1vw;
+    column-gap: 0.8em;
     padding: 0.5vw;
 }
 
@@ -169,11 +169,7 @@
     padding-right: 2vw;
     flex: 1;
 }
-#UI_Asteroid .PicksDiv{
-    display: flex;
-    flex-direction: column;
-    row-gap: 2vh;
-}
+
 
 
 /* Shipyard window */
