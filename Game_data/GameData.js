@@ -69,7 +69,11 @@ class GameData {
     * */
     exportJSON(){
         var data = {};
+        data.asteroidCurrentID = this.asteroidCurrentID;
+        data.constructionCurrentID = this.constructionCurrentID;
+        data.spaceshipCurrentID = this.spaceshipCurrentID;
         data.cluster = this.cluster.exportJSON();
+
         return data;
     }
 
@@ -355,6 +359,36 @@ class Asteroid {
             const newSpaceShip = new Spaceship(this.gameData, this, Object.keys(this.gameData.spaceshipsData)[0]);
             this.spaceshipsQueue.push(newSpaceShip);
         }
+    }
+
+    /** 
+    * Add a construction to this asteroid construction queue
+    * @param {string} constructionTypeID - Construction type to be added
+    */
+    addConstructionToQueue(constructionTypeID){
+        this.constructionsQueue.push(new Construction(this.gameData, this, constructionTypeID));
+    }
+     /** 
+    * Remove a construction from queue at specified position
+    * @param {integer} position - Position in the queue to be deleted
+    */
+    removeConstructionFromQueue(position){
+        this.constructionsQueue.splice(position,1);
+    }
+
+    /** 
+    * Add a spaceship to this asteroid construction queue
+    * @param {string} spaceshipTypeID - Spaceship type to be added
+    */
+    addSpaceshipToQueue(spaceshipTypeID){
+        this.constructionsQueue.push(new Spaceship(this.gameData, this, spaceshipTypeID));
+    }
+     /** 
+    * Remove a spaceship from queue at specified position
+    * @param {integer} position - Position in the queue to be deleted
+    */
+    removeSpaceshipFromQueue(position){
+        this.spaceshipsQueue.splice(position,1);
     }
 
     /** 
