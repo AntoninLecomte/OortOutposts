@@ -4,12 +4,304 @@
             {
                 "x": 0,
                 "y": 0,
-                "id": "0"
+                "asteroidID": 0,
+                "constructions": [],
+                "constructionsQueue": [
+                    {
+                        "constructionID": 55,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 56,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 57,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 58,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 59,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 60,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 61,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 62,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 63,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 64,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    }
+                ],
+                "spaceships": [],
+                "spaceshipsQueue": [
+                    {
+                        "spaceshipID": 5,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 6,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 7,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 8,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 9,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 10,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 11,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 12,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 13,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 14,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    }
+                ]
             },
             {
-                "x": -0.45854259015824245,
-                "y": 0.167388393593305,
-                "id": "1"
+                "x": 0.4249171684042921,
+                "y": 0.45778605497703856,
+                "asteroidID": 1,
+                "constructions": [],
+                "constructionsQueue": [
+                    {
+                        "constructionID": 115,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 116,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 117,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 118,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 119,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 120,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 121,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 122,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 123,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "constructionID": 124,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    }
+                ],
+                "spaceships": [],
+                "spaceshipsQueue": [
+                    {
+                        "spaceshipID": 15,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 16,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 17,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 18,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 19,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 20,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 21,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 22,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 23,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "spaceshipID": 24,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-10T11:18:39.502Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    }
+                ]
             }
         ]
     }

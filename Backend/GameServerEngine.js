@@ -8,6 +8,7 @@ class GameServerEngine {
 
         this.createNewGame();
         this.saveDynamicData();
+        this.loadDynamicData();
     }
     createNewGame(){
         this.currentGameData.generateWorld();
@@ -24,7 +25,14 @@ class GameServerEngine {
      * Saves a game data state in a JSON file
      */
     saveDynamicData(){
-        writeFileSync('./Backend/Saved_Game.json', JSON.stringify(this.currentGameData.getJSON(), null, 4));
+        writeFileSync('./Backend/Saved_Game.json', JSON.stringify(this.currentGameData.exportJSON(), null, 4));
+    }
+    /**
+     * Loads a game data state from a JSON file
+     */
+    loadDynamicData(){
+        const JSONData = JSON.parse(readFileSync('./Backend/Saved_Game.json',"utf8"));
+        this.currentGameData.loadJSON(JSONData);
     }
 }
 
