@@ -21,7 +21,7 @@ class GameData {
          * Collection of constructions static fields information
          * @type {JSON}
          */
-        this.constructionData = {};
+        this.constructionsData = {};
         /**
          * Collection of default constructions
          * @type {Construction{}}
@@ -40,8 +40,11 @@ class GameData {
          */
         this.spaceshipsTypes = {};
 
-        // this.loadconstructionData();
-        // this.loadSpaceshipData();
+        /**
+         * The game cluster
+         * @type {Cluster}
+         */
+        this.cluster = null;
     }
 
      /** 
@@ -290,8 +293,8 @@ class Asteroid {
         this.spaceshipsQueue = [];
 
         // this.generateShapePoints(200,500,1);
-        this.DEV_generateEvents();
-        this.DEV_generateQueue();
+        // this.DEV_generateEvents();
+        // this.DEV_generateQueue();
 
     /** 
     * @summary Generate noisy circular pattern to represent the asteroid shape
@@ -343,23 +346,23 @@ class Asteroid {
     addEvent(event){
         this.events.push(event);
     }
-    DEV_generateEvents(){
+    // DEV_generateEvents(){
         
-        for (var i=0; i<50;i++){
-            const newConstruction = new Construction(this.gameData, this, Object.keys(this.gameData.constructionData)[0]);
-            this.addEvent(new ConstructionCompleteEvent(this.gameData, newConstruction))
-        }
-    }
-    DEV_generateQueue(){
-        for (var i=0; i<10;i++){
-            const newConstruction = new Construction(this.gameData, this, Object.keys(this.gameData.constructionData)[0]);
-            this.constructionsQueue.push(newConstruction);
-        }
-        for (var i=0; i<10;i++){
-            const newSpaceShip = new Spaceship(this.gameData, this, Object.keys(this.gameData.spaceshipsData)[0]);
-            this.spaceshipsQueue.push(newSpaceShip);
-        }
-    }
+    //     for (var i=0; i<50;i++){
+    //         const newConstruction = new Construction(this.gameData, this, Object.keys(this.gameData.constructionData)[0]);
+    //         this.addEvent(new ConstructionCompleteEvent(this.gameData, newConstruction))
+    //     }
+    // }
+    // DEV_generateQueue(){
+    //     for (var i=0; i<10;i++){
+    //         const newConstruction = new Construction(this.gameData, this, Object.keys(this.gameData.constructionData)[0]);
+    //         this.constructionsQueue.push(newConstruction);
+    //     }
+    //     for (var i=0; i<10;i++){
+    //         const newSpaceShip = new Spaceship(this.gameData, this, Object.keys(this.gameData.spaceshipsData)[0]);
+    //         this.spaceshipsQueue.push(newSpaceShip);
+    //     }
+    // }
 
     /** 
     * Add a construction to this asteroid construction queue

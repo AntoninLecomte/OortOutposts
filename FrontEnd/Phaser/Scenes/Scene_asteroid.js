@@ -1,11 +1,7 @@
-import {GameData} from "../../Game_data/GameData.js"
-import {Construction, Spaceship} from "../../Game_data/GameData.js"
-const gameData = new GameData();
-
 class SCENE_Asteroid extends Phaser.Scene
 {
     create(){
-        this.asteroid = gameData.cluster.asteroids[0]
+        this.asteroid = GAME_DATA.cluster.asteroids[0]
 
         // Create UI DOM:
         this.UI_asteroid = new UI_Asteroid(window.gameDiv,this);
@@ -171,7 +167,7 @@ class UI_Asteroid {
      */
     updateConstructionPicks(){
         this.UI_constructionPicks = {};
-        for (var constructionID in gameData.constructionsTypes){
+        for (var constructionID in GAME_DATA.constructionsTypes){
             const newNode = document.getElementById("PickItemFactory").cloneNode(true);
             document.getElementById("ConstructionPicksDiv").appendChild(newNode);
             this.UI_constructionPicks[constructionID] = new UI_Pick_Construction(newNode, gameData.constructionsTypes[constructionID]);
@@ -182,10 +178,10 @@ class UI_Asteroid {
      */
     updateSpaceshipsPicks(){
         this.UI_spaceshipPicks = {};
-        for (var spaceshipID in gameData.spaceshipsTypes){
+        for (var spaceshipID in GAME_DATA.spaceshipsTypes){
             const newNode = document.getElementById("PickItemFactory").cloneNode(true);
             document.getElementById("SpaceshipPicksDiv").appendChild(newNode);
-            this.UI_spaceshipPicks[spaceshipID] = new UI_Pick_Spaceship(newNode, gameData.spaceshipsTypes[spaceshipID]);
+            this.UI_spaceshipPicks[spaceshipID] = new UI_Pick_Spaceship(newNode, GAME_DATA.spaceshipsTypes[spaceshipID]);
         }
     }
 }
