@@ -1,7 +1,17 @@
+import { GameData } from "../../Game_data/GameData.js";
+
 class SCENE_Asteroid extends Phaser.Scene
 {
-    create(){
-        this.asteroid = GAME_DATA.cluster.asteroids[0]
+    constructor( ...args ){
+        super({ key: 'SCENE_Asteroid', ...args })
+    }
+    /**
+     * @param {GameData} gameData - A GameData object containing all game state information
+     */
+    create(gameData){
+        this.gameData = gameData;
+        console.log(this.gameData);
+        this.asteroid = this.gameData.cluster.asteroids[0]
 
         // Create UI DOM:
         this.UI_asteroid = new UI_Asteroid(window.gameDiv,this);
@@ -47,6 +57,7 @@ class UI_Asteroid {
     constructor(parentHTML, parentScene) {
         this.parentHTML = parentHTML;
         this.parentScene = parentScene;
+        this.gameData = parentScene.gameData;
 
         let UI_asteroidObject = this
         fetch("UI/HTML/UI_Asteroid.html")
@@ -167,10 +178,10 @@ class UI_Asteroid {
      */
     updateConstructionPicks(){
         this.UI_constructionPicks = {};
-        for (var constructionID in GAME_DATA.constructionsTypes){
+        for (var constructionID in this.gameData.constructionsTypes){
             const newNode = document.getElementById("PickItemFactory").cloneNode(true);
             document.getElementById("ConstructionPicksDiv").appendChild(newNode);
-            this.UI_constructionPicks[constructionID] = new UI_Pick_Construction(newNode, gameData.constructionsTypes[constructionID]);
+            this.UI_constructionPicks[constructionID] = new UI_Pick_Construction(newNode, this.gameData.constructionsTypes[constructionID]);
         }
     }
     /**
@@ -178,10 +189,10 @@ class UI_Asteroid {
      */
     updateSpaceshipsPicks(){
         this.UI_spaceshipPicks = {};
-        for (var spaceshipID in GAME_DATA.spaceshipsTypes){
+        for (var spaceshipID in this.gameData.spaceshipsTypes){
             const newNode = document.getElementById("PickItemFactory").cloneNode(true);
             document.getElementById("SpaceshipPicksDiv").appendChild(newNode);
-            this.UI_spaceshipPicks[spaceshipID] = new UI_Pick_Spaceship(newNode, GAME_DATA.spaceshipsTypes[spaceshipID]);
+            this.UI_spaceshipPicks[spaceshipID] = new UI_Pick_Spaceship(newNode, this.gameData.spaceshipsTypes[spaceshipID]);
         }
     }
 }

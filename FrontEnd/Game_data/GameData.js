@@ -58,11 +58,11 @@ class GameData {
     * Create reference objets from static data fields
     * */
     createObjectTypes(){
-        for (var constructionTypeID in this.constructionData){
+        for (var constructionTypeID in this.constructionsData){
             this.constructionsTypes[constructionTypeID] = new Construction(this,null,constructionTypeID);
         }
         for (var spaceshipTypeID in this.spaceshipsData){
-            this.spaceshipsTypes[spaceshipTypeID] = new Spaceship(this,spaceshipTypeID);
+            this.spaceshipsTypes[spaceshipTypeID] = new Spaceship(this,null,spaceshipTypeID);
         }
     }
 
@@ -586,6 +586,9 @@ class Construction {
         */
         this.firePower = 0;
 
+        // Update fields with static data:
+        this.loadStaticFields();
+
 
         // Initialize dynamic fields
         /**
@@ -609,7 +612,7 @@ class Construction {
     * Load all type related static fields
     * */
     loadStaticFields(){
-        const statics = this.gameData.constructionData[this.constructionTypeID];
+        const statics = this.gameData.constructionsData[this.constructionTypeID];
         for (var field in statics){
             this[field] = statics[field];
         }
@@ -664,6 +667,16 @@ class Spaceship {
         this.gameData.spaceshipCurrentID ++;
 
         // Default values. To be overriden by JSON data from gamedata.
+        /**
+         * Spaceship name
+         * @type {string}
+         */
+        this.name = "{DEFAULT}_NAME";
+        /**
+         * Spaceship description in picker
+         * @type {string}
+         */
+        this.description = "{DEFAULT}_DESCRIPTION";
         /**
          * Total energy required for initial construction
          * @type {number}
@@ -723,6 +736,9 @@ class Spaceship {
         */
         this.maxCargo = 0;
 
+        // Load static data
+        this.loadStaticFields();
+
         // Initialize dynamic fields
         /**
         * Construction date
@@ -745,8 +761,9 @@ class Spaceship {
     * Load all type related static fields
     * */
     loadStaticFields(){
-        const statics = this.gameData.constructionData[this.constructionTypeID];
+        const statics = this.gameData.spaceshipsData[this.spaceshipTypeID];
         for (var field in statics){
+            
             this[field] = statics[field];
         }
     }
