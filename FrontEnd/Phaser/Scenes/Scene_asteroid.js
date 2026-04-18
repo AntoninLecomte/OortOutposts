@@ -1,4 +1,6 @@
-import { GameData } from "../../Game_data/GameData.js";
+import { GameData, Construction, Spaceship } from "../../Game_data/GameData.js";
+import { NetworkHandler } from "../../UI/Scripts/Network.js";
+import { UI_Window, UI_Button } from "../../UI/Scripts/UI.js";
 
 class SCENE_Asteroid extends Phaser.Scene
 {
@@ -6,12 +8,14 @@ class SCENE_Asteroid extends Phaser.Scene
         super({ key: 'SCENE_Asteroid', ...args })
     }
     /**
-     * @param {GameData} gameData - A GameData object containing all game state information
+     * @param {Object} handlers - A collection with gameData and network handlers
      */
-    create(gameData){
-        this.gameData = gameData;
-        console.log(this.gameData);
-        this.asteroid = this.gameData.cluster.asteroids[0]
+    create(handlers){
+        this.gameData = handlers.gameData;
+        /** @type {NetworkHandler} */
+        this.networkHandler = handlers.networkHandler;
+        this.asteroid = this.gameData.cluster.asteroids[0];
+        console.log(this.asteroid);
 
         // Create UI DOM:
         this.UI_asteroid = new UI_Asteroid(window.gameDiv,this);
@@ -90,12 +94,7 @@ class UI_Asteroid {
             ]
         }
 
-        this.updateLog();
-        this.updateConstructionQueue();
-        this.updateConstructionPicks();
-        this.updateSpaceshipsQueue();
-        this.updateSpaceshipsPicks();
-
+        this.refresh();
 
         // Open window {DEV}
         this.windows["Shipyard"][0].open();
@@ -115,9 +114,20 @@ class UI_Asteroid {
         }
     }
 
-    /**
-     * Updates the logs in reference with game data
-     */
+    /** Asks server for any updates and show result */
+    getChangesFromServer(){
+        this.parentScene.networkHandler.updateGameObjectData(this.parentScene.asteroid,this,this.refresh);
+    }
+    /** Refresh displayed information to match gamedata state */
+    refresh(){
+        this.updateLog();
+        this.updateConstructionQueue();
+        this.updateConstructionPicks();
+        this.updateSpaceshipsQueue();
+        this.updateSpaceshipsPicks();
+    }
+
+    /** Updates the logs in reference with game data*/
     updateLog(){
         for (var ev=this.parentScene.asteroid.events.length-1; ev>0; ev--){
             const eventOb = this.parentScene.asteroid.events[ev];
@@ -130,21 +140,26 @@ class UI_Asteroid {
         }
     }
 
-    /**
-     * Updates the construction queue in reference with game data
-     */
+    /** Updates the construction queue in reference with game data */
     updateConstructionQueue(){
+        // Remove existing elements
         this.UI_constructionQueueItems = [];
-        for (var construction in this.parentScene.asteroid.constructionQueue){
-            const constructionOb = this.parentScene.asteroid.constructionQueue[construction];
+        var previousItems = document.getElementById("ConstructionQueueDiv").querySelectorAll(".QueueItem");
+        previousItems.forEach(function (el){
+            if (el.id != "QueueItemFactory"){
+                el.remove(el);
+            }
+        });
+
+        // Recreate items:
+        for (var construction in this.parentScene.asteroid.constructionsQueue){
+            const constructionOb = this.parentScene.asteroid.constructionsQueue[construction];
 
             const newNode = document.getElementById("QueueItemFactory").cloneNode(true);
+            newNode.id = "";
             document.getElementById("ConstructionQueueDiv").appendChild(newNode);
-            const newQueueItem = new UI_QueueItem(newNode, constructionOb, this.parentScene.asteroid.constructionQueue);
+            const newQueueItem = new UI_QueueItem(this.parentScene, newNode, constructionOb, this.parentScene.asteroid.constructionsQueue);
             this.UI_constructionQueueItems.push(newQueueItem)
-
-            new UI_Button(newNode.querySelectorAll(".UI_Button")[0],newQueueItem,newQueueItem.upButtonClicked);
-            new UI_Button(newNode.querySelectorAll(".UI_Button")[1],newQueueItem,newQueueItem.downButtonClicked);
         }
         // Update buttons:
         for (var item in this.UI_constructionQueueItems){
@@ -155,17 +170,24 @@ class UI_Asteroid {
      * Updates the soaceships queue in reference with game data
      */
     updateSpaceshipsQueue(){
+        // Remove existing elements
         this.UI_spaceshipsQueueItems = [];
+        var previousItems = document.getElementById("SpaceshipsQueueDiv").querySelectorAll(".QueueItem");
+        previousItems.forEach(function (el){
+            if (el.id != "QueueItemFactory"){
+                el.remove(el);
+            }
+        });
+
+        // Recreate items
         for (var spaceship in this.parentScene.asteroid.spaceshipsQueue){
             const spaceshipOb = this.parentScene.asteroid.spaceshipsQueue[spaceship];
 
             const newNode = document.getElementById("QueueItemFactory").cloneNode(true);
+            newNode.id = "";
             document.getElementById("SpaceshipsQueueDiv").appendChild(newNode);
-            const newSpaceshipQueueItem = new UI_QueueItem(newNode, spaceshipOb, this.parentScene.asteroid.spaceshipsQueue);
-            this.UI_spaceshipsQueueItems.push(newSpaceshipQueueItem)
-
-            new UI_Button(newNode.querySelectorAll(".UI_Button")[0],newSpaceshipQueueItem,newSpaceshipQueueItem.upButtonClicked);
-            new UI_Button(newNode.querySelectorAll(".UI_Button")[1],newSpaceshipQueueItem,newSpaceshipQueueItem.downButtonClicked);
+            const newQueueItem = new UI_QueueItem(this.parentScene, newNode, spaceshipOb, this.parentScene.asteroid.spaceshipsQueue);
+            this.UI_spaceshipsQueueItems.push(newQueueItem)
         }
         // Update buttons:
         for (var item in this.UI_spaceshipsQueueItems){
@@ -177,22 +199,42 @@ class UI_Asteroid {
      * Updates the available constructions in reference with game data
      */
     updateConstructionPicks(){
-        this.UI_constructionPicks = {};
+        // Remove existing elements
+        this.UI_constructionPicks = [];
+        var previousItems = document.getElementById("ConstructionPicksDiv").querySelectorAll(".PickItem");
+        previousItems.forEach(function (el){
+            if (el.id != "PickItemFactory"){
+                el.remove(el);
+            }
+        });
+
+        // Recreate elements
         for (var constructionID in this.gameData.constructionsTypes){
             const newNode = document.getElementById("PickItemFactory").cloneNode(true);
+            newNode.id = "";
             document.getElementById("ConstructionPicksDiv").appendChild(newNode);
-            this.UI_constructionPicks[constructionID] = new UI_Pick_Construction(newNode, this.gameData.constructionsTypes[constructionID]);
+            this.UI_constructionPicks[constructionID] = new UI_Pick_Construction(this.parentScene, newNode, this.gameData.constructionsTypes[constructionID]);
         }
     }
     /**
      * Update the available spaceships in reference with game data
      */
     updateSpaceshipsPicks(){
+        // Remove existing elements
         this.UI_spaceshipPicks = {};
+        var previousItems = document.getElementById("SpaceshipPicksDiv").querySelectorAll(".PickItem");
+        previousItems.forEach(function (el){
+            if (el.id != "PickItemFactory"){
+                el.remove(el);
+            }
+        });
+
+        // Recreate elements
         for (var spaceshipID in this.gameData.spaceshipsTypes){
             const newNode = document.getElementById("PickItemFactory").cloneNode(true);
+            newNode.id = "";
             document.getElementById("SpaceshipPicksDiv").appendChild(newNode);
-            this.UI_spaceshipPicks[spaceshipID] = new UI_Pick_Spaceship(newNode, this.gameData.spaceshipsTypes[spaceshipID]);
+            this.UI_spaceshipPicks[spaceshipID] = new UI_Pick_Spaceship(this.parentScene ,newNode, this.gameData.spaceshipsTypes[spaceshipID]);
         }
     }
 }
@@ -203,10 +245,13 @@ class UI_Asteroid {
 class UI_QueueItem{
     /** 
     * UI_QueueItem creation function
+    * @param {SCENE_Asteroid} parentScene - Parent scene to access game data
     * @param {HTMLElement} HTMLRoot - Item root HTML element
     * @param {Construction} targetOb - Game data Construction object
+    * @param {Array} queueList - The parent array for swap
     */
-    constructor(HTMLRoot, targetOb, queueList){
+    constructor(parentScene, HTMLRoot, targetOb, queueList){
+        this.parentScene = parentScene;
         this.HTMLRoot = HTMLRoot;
         this.targetOb = targetOb;
         this.queueList = queueList;
@@ -214,6 +259,10 @@ class UI_QueueItem{
         this.HTMLRoot.classList.remove("UI_Factory");
         this.HTMLRoot.querySelector(".DurationText").innerHTML = targetOb.constructedEnergy;
         this.HTMLRoot.querySelector(".Name").innerHTML = targetOb.name;
+
+        this.upButton = new UI_Button(this.HTMLRoot.querySelectorAll(".UI_Button")[0],this,this.upButtonClicked);
+        this.upButton = new UI_Button(this.HTMLRoot.querySelectorAll(".UI_Button")[1],this,this.downButtonClicked);
+        this.deleteButton = new UI_Button(this.HTMLRoot.querySelectorAll(".UI_Button")[2],this,this.deleteButtonClicked);
 
         this.HTMLRoot.style.top = "0px";
     }
@@ -231,25 +280,95 @@ class UI_QueueItem{
         }
     }
     upButtonClicked(){
+        var objectTo = null;
+        if (this.targetOb instanceof Construction){
+            const indexFrom = this.parentScene.UI_asteroid.UI_constructionQueueItems.indexOf(this);
+            objectTo = this.parentScene.UI_asteroid.UI_constructionQueueItems[indexFrom-1];
+        }
+        if (this.targetOb instanceof Spaceship){
+            const indexFrom = this.parentScene.UI_asteroid.UI_spaceshipsQueueItems.indexOf(this);
+            objectTo = this.parentScene.UI_asteroid.UI_spaceshipsQueueItems[indexFrom-1];
+        }
+        // Send command:
+            this.parentScene.networkHandler.sendCommand(
+            "swapQueueObjects",
+            {
+                "gameObjectID":this.targetOb.gameObjectId,
+                "gameObjectID2":objectTo.targetOb.gameObjectId,
+                "asteroidID":this.parentScene.asteroid.gameObjectId
+            },
+            this,
+            this.upCallback
+        );
+        
+    }
+    upCallback(){
+        this.upButton.setState("OFF");
+
         const exchangeTarget = this.HTMLRoot.previousElementSibling;
         const yOffset = exchangeTarget.getBoundingClientRect().top - this.HTMLRoot.getBoundingClientRect().top;
         this.HTMLRoot.style.top = yOffset+"px";
         exchangeTarget.style.top = -yOffset+"px";
+
         setTimeout(function(self){
-            self.HTMLRoot.querySelectorAll(".UI_Button")[0].UI_ob.setState("OFF");
+            self.parentScene.UI_asteroid.getChangesFromServer();
         },300,this);
+        
     }
     downButtonClicked(){
+        var objectTo = null;
+        var objectTo = null;
+        if (this.targetOb instanceof Construction){
+            const indexFrom = this.parentScene.UI_asteroid.UI_constructionQueueItems.indexOf(this);
+            objectTo = this.parentScene.UI_asteroid.UI_constructionQueueItems[indexFrom+1];
+        }
+        if (this.targetOb instanceof Spaceship){
+            const indexFrom = this.parentScene.UI_asteroid.UI_spaceshipsQueueItems.indexOf(this);
+            objectTo = this.parentScene.UI_asteroid.UI_spaceshipsQueueItems[indexFrom+1];
+        }
+        // Send command:
+            this.parentScene.networkHandler.sendCommand(
+            "swapQueueObjects",
+            {
+                "gameObjectID":this.targetOb.gameObjectId,
+                "gameObjectID2":objectTo.targetOb.gameObjectId,
+                "asteroidID":this.parentScene.asteroid.gameObjectId
+            },
+            this,
+            this.downCallback
+        );
+        
+    }
+    downCallback(){
+        this.upButton.setState("OFF");
+
         const exchangeTarget = this.HTMLRoot.nextElementSibling;
         const yOffset = exchangeTarget.getBoundingClientRect().top - this.HTMLRoot.getBoundingClientRect().top;
         this.HTMLRoot.style.top = yOffset+"px";
         exchangeTarget.style.top = -yOffset+"px";
+
         setTimeout(function(self){
-            self.HTMLRoot.querySelectorAll(".UI_Button")[1].UI_ob.setState("OFF");
+            self.parentScene.UI_asteroid.getChangesFromServer();
         },300,this);
+        
+    }
+
+    deleteButtonClicked(){
+        this.parentScene.networkHandler.sendCommand(
+            "deleteObject",
+            {
+                "gameObjectID":this.targetOb.gameObjectId, 
+                "asteroidID":this.parentScene.asteroid.gameObjectId
+            },
+            this,
+            this.deleteCallback
+        );
+    }
+    deleteCallback(){
+        this.deleteButton.setState("OFF");
+        this.parentScene.UI_asteroid.getChangesFromServer();
     }
 }
-
 
 /**
 * UI element allowing details visualization and addition to queue
@@ -257,21 +376,20 @@ class UI_QueueItem{
 class UI_Pick{
     /** 
     * UI_ConstructionPick creation function
+    * @param {SCENE_Asteroid} parentScene - Parent scene to get access to data
     * @param {HTMLElement} HTMLRoot - Item root HTML element
     */
-    constructor(HTMLRoot){
+    constructor(parentScene,HTMLRoot){
+        this.parentScene = parentScene;
         this.HTMLRoot = HTMLRoot;
 
         this.HTMLRoot.classList.remove("UI_Factory");
 
         // Add button behavior
         this.HTMLRoot.querySelector(".AddToQueueButtonText").innerHTML = "▲ " + gameConfig.strings_EN["AddToQueue"] + " ▲";
-        this.addButton = new UI_Button( this.HTMLRoot.querySelector(".UI_Button"),null,null);
+        this.addButton = new UI_Button(this.HTMLRoot.querySelector(".UI_Button"),this,this.addToQueue);
 
         this.numberFrames = {};
-
-        // this.HTMLRoot.querySelector(".DefenseFrame").querySelector(".Structure").innerHTML = this.construction.maxStructurePoints;
-        // this.HTMLRoot.querySelector(".DefenseFrame").querySelector(".Damage").innerHTML = this.construction.damage;
     }
     /** 
     * Creates a UI number frame, to be populated later by ressources
@@ -299,6 +417,36 @@ class UI_Pick{
         newRes.querySelector(".UI_RessourceP").innerHTML = value;
         this.HTMLRoot.querySelector("."+frameID).querySelector(".NumberFrameContent").appendChild(newRes);
     }
+    /** Sends a command to add pick to queue*/
+    addToQueue(){
+        if (this instanceof UI_Pick_Construction){
+             this.parentScene.networkHandler.sendCommand(
+                "addConstructionToQueue",
+                {
+                    "constructionTypeID":this.construction.constructionTypeID, 
+                    "asteroidID":this.parentScene.asteroid.gameObjectId
+                },
+                this,
+                this.addToQueueCallback
+            );
+        }
+        if (this instanceof UI_Pick_Spaceship){
+             this.parentScene.networkHandler.sendCommand(
+                "addSpaceShipToQueue",
+                {
+                    "spaceshipTypeID":this.spaceship.spaceshipTypeID, 
+                    "asteroidID":this.parentScene.asteroid.gameObjectId
+                },
+                this,
+                this.addToQueueCallback
+            );
+        }
+    }
+    /** Answer from addToQueue*/
+    addToQueueCallback(){
+        this.addButton.setState("OFF");
+        this.parentScene.UI_asteroid.getChangesFromServer();
+    }
 }
 
 /**
@@ -307,11 +455,12 @@ class UI_Pick{
 */
 class UI_Pick_Construction extends UI_Pick{
     /** 
+    * @param {SCENE_Asteroid} parentScene - Parent scene to get access to data
     * @param {HTMLElement} HTMLRoot - Item root HTML element
     * @param {Construction} construction - Target construction object
     */
-    constructor(HTMLRoot, construction) {
-        super(HTMLRoot);
+    constructor(parentScene,HTMLRoot, construction) {
+        super(parentScene,HTMLRoot);
         this.construction = construction;
 
         this.HTMLRoot.querySelector(".Name").innerHTML = this.construction.name;
@@ -340,11 +489,12 @@ class UI_Pick_Construction extends UI_Pick{
 */
 class UI_Pick_Spaceship extends UI_Pick{
     /** 
+    * @param {SCENE_Asteroid} parentScene - Parent scene to get access to data
     * @param {HTMLElement} HTMLRoot - Item root HTML element
     * @param {Spaceship} spaceship - Target spaceship object
     */
-    constructor(HTMLRoot, spaceship) {
-        super(HTMLRoot);
+    constructor(parentScene, HTMLRoot, spaceship) {
+        super(parentScene,HTMLRoot);
         this.spaceship = spaceship;
 
         this.HTMLRoot.querySelector(".Name").innerHTML = this.spaceship.name;
@@ -370,4 +520,5 @@ class UI_Pick_Spaceship extends UI_Pick{
         this.addRessourceToFrame("CargoFrame","CARGO",this.spaceship.maxCargo);
     }
 }
+
 export {SCENE_Asteroid}

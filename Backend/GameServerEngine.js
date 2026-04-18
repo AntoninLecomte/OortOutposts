@@ -10,6 +10,8 @@ class GameServerEngine {
         this.currentGameData = new GameData();
         this.loadStaticData();
         this.loadDynamicData();
+        // this.createNewGame();
+        // this.saveDynamicData();
     }
     createNewGame(){
         this.currentGameData.generateWorld();
@@ -18,7 +20,7 @@ class GameServerEngine {
      * Loads static data from JSON files into the current gameData object
      */
     loadStaticData(){
-        this.currentGameData.constructionData = JSON.parse(readFileSync("./Frontend/Game_data/Constructions.json", "utf8"));
+        this.currentGameData.constructionsData = JSON.parse(readFileSync("./Frontend/Game_data/Constructions.json", "utf8"));
         this.currentGameData.spaceshipsData = JSON.parse(readFileSync("./Frontend/Game_data/Spaceships.json", "utf8"));
         this.currentGameData.createObjectTypes();
     }
@@ -34,6 +36,7 @@ class GameServerEngine {
     loadDynamicData(){
         const JSONData = JSON.parse(readFileSync('./Backend/Saved_Game.json',"utf8"));
         this.currentGameData.loadJSON(JSONData);
+        console.log("Loaded dynamic data")
     }
 }
 
@@ -84,7 +87,7 @@ class Server{
     }
     serveFile(request, response){
         try{
-            console.info("file requested: "+request.url)
+            // console.info("file requested: "+request.url)
             const ext = request.url.split(".")[request.url.split(".").length-1];
             const mimeType = server.MIME_TYPES[ext] || server.MIME_TYPES.default;
             response.writeHead(200, { "Content-Type": mimeType });
@@ -92,21 +95,31 @@ class Server{
             response.end(readFileSync(filePath));
         }
         catch(er){
-            console.error(er);
+            // console.error(er);
         }
         
     }  
     processGameGET(request, response){
-        const urlParams = new URLSearchParams(request.url);
+        console.log(request.url.split("command/")[1])
+        const queryString = request.url.split("/")[request.url.split("/").length-1];
+        const urlParams = new URLSearchParams(queryString);
         //  Get targets from parameters
         /** @type {GameData} */
         const gameData = server.gameData;
-        /** @type {Asteroid} */
-        const targetAsteroid = server.gameData.cluster.asteroids[urlParams.get("asteroidID")];
+
+        var targetAsteroid; /** @type {Asteroid} */
+        if (urlParams.get("asteroidID") != null){
+            targetAsteroid = gameData.getGameObjectById(urlParams.get("asteroidID"))
+        }
+        
 
         // Execute action
         if (request.url.includes("getGameData")){
             return response.end(JSON.stringify(gameData.exportJSON(), null, 4));
+        }
+        if (request.url.includes("getGameObjectData")){
+            const targetGameObject = gameData.getGameObjectById(urlParams.get("gameObjectID"));
+            return response.end(JSON.stringify(targetGameObject.exportJSON(), null, 4));
         }
 
 
@@ -114,21 +127,22 @@ class Server{
             targetAsteroid.addConstructionToQueue(urlParams.get("constructionTypeID"));
             gameServerEngine.saveDynamicData();
         }
-    
-        if (request.url.includes("removeConstructionFromQueue")){
-            targetAsteroid.removeConstructionFromQueue(urlParams.get("position"));
-        }
-
-        if (request.url.includes("addspaceshipToQueue")){
+        if (request.url.includes("addSpaceShipToQueue")){
             targetAsteroid.addSpaceshipToQueue(urlParams.get("spaceshipTypeID"));
             gameServerEngine.saveDynamicData();
         }
-    
-        if (request.url.includes("removeSpaceshipFromQueue")){
-            targetAsteroid.removeSpaceshipFromQueue(urlParams.get("position"));
+        if (request.url.includes("swapQueueObjects")){
+            const targetGameObject = gameData.getGameObjectById(urlParams.get("gameObjectID"));
+            const targetGameObject2 = gameData.getGameObjectById(urlParams.get("gameObjectID2"));
+            targetAsteroid.swapQueueObjects(targetGameObject, targetGameObject2);
+            gameServerEngine.saveDynamicData();
         }
-
-        gameServerEngine.saveDynamicData();
+    
+        if (request.url.includes("deleteObject")){
+            const targetGameObject = gameData.getGameObjectById(urlParams.get("gameObjectID"));
+            targetGameObject.delete();
+            gameServerEngine.saveDynamicData();
+        }
         response.end("Ok");
     }
 }

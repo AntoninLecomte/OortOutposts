@@ -1,20 +1,15 @@
 class GameData {
     constructor() {
         /**
-         * Incremental counter to allow individual unique ids for asteroid objects
+         * Incremental counter to allow individual unique ids for all game objects
          * @type {integer}
          */
-        this.asteroidCurrentID = 0;
-        /**
-         * Incremental counter to allow individual unique ids for construction objects
-         * @type {integer}
+        this.gameObjectCurrentID = 0;
+         /**
+         * Flat list of all gameobjects
+         * @type {GameObject[]}
          */
-        this.constructionCurrentID = 0;
-        /**
-         * Incremental counter to allow individual unique ids for spaceship objects
-         * @type {integer}
-         */
-        this.spaceshipCurrentID = 0;
+        this.gameObjectsFlatList = [];
 
 
         /**
@@ -52,6 +47,8 @@ class GameData {
     * */
     generateWorld(){
         this.cluster = new Cluster(this);
+        this.cluster.spawnAsteroids();
+        console.log("Generated world")
     }
 
     /** 
@@ -67,11 +64,25 @@ class GameData {
     }
 
     /** 
+    * Returns the instance of the object with gameObjectId
+    * @param {object} JSONData - An {object} structure containing all fields.
+    * */
+    getGameObjectById(gameObjectId){
+        for (var ob in this.gameObjectsFlatList){
+            if (this.gameObjectsFlatList[ob].gameObjectId == gameObjectId){
+                return this.gameObjectsFlatList[ob];
+            }
+        }
+        throw new Error("No object found for gameObjectId "+gameObjectId);
+    }
+
+    /** 
     * Export all dynamic fields relative to game state to JSON
     * @returns {object} - An {object} structure containing all fields.
     * */
     exportJSON(){
         var data = {};
+        data.gameObjectCurrentID = this.gameObjectCurrentID;
         data.asteroidCurrentID = this.asteroidCurrentID;
         data.constructionCurrentID = this.constructionCurrentID;
         data.spaceshipCurrentID = this.spaceshipCurrentID;
@@ -85,15 +96,55 @@ class GameData {
     * @param {object} JSONData - An {object} structure containing all fields.
     * */
     loadJSON(JSONData){
+        this.gameObjectCurrentID = JSONData.gameObjectCurrentID;
+        this.asteroidCurrentID = JSONData.asteroidCurrentID;
+        this.constructionCurrentID = JSONData.constructionCurrentID;
+        this.spaceshipCurrentID = JSONData.spaceshipCurrentID;
+
         this.cluster = new Cluster(this);
         this.cluster.loadJSON(JSONData["cluster"]);
     }
 }
 
 /**
+* All game objects share this class
+*/
+class GameObject{
+    /** 
+    * Cluster creation function
+    * @param {GameData} gameData - GameData object storing all variables
+    */
+    constructor(gameData){
+        this.gameData = gameData;
+    }
+    /** Attribute a new unique gameObjectID to this object */
+    attributeNewId(){
+        this.gameObjectId = this.gameData.gameObjectCurrentID;
+        console.log(this.constructor.name+ " "+this.gameObjectId);
+        this.gameData.gameObjectsFlatList.push(this);
+        this.gameData.gameObjectCurrentID ++;
+    }
+    exportJSON(){
+        return {"gameObjectId":this.gameObjectId};
+    }
+    loadJSON(data){
+        this.gameObjectId = data.gameObjectId;
+        this.gameData.gameObjectsFlatList.push(this);
+    }
+    delete(){
+         // Remove itself from the flat list
+        for (var ob in this.gameData.gameObjectsFlatList){
+            if (this.gameData.gameObjectsFlatList[ob].gameObjectId == this.gameObjectId){
+                this.gameData.gameObjectsFlatList.splice(ob,1);
+            }
+        }
+    }
+}
+
+/**
 * Store functions related to cluster of asteroids generation
 */
-class Cluster {
+class Cluster{
      /** 
     * Cluster creation function
     * @param {GameData} gameData - GameData object storing all variables
@@ -109,12 +160,20 @@ class Cluster {
         this.maxX = 0;
         this.minY = 0;
         this.maxY = 0;
+    }
 
+    spawnAsteroids(){
         const coords = this.generateAsteroidsCoordinates(1, 1, 0.2, 3);
         for (var asteroid in coords){
-            this.asteroids.push(new Asteroid(this.gameData, coords[asteroid][0], coords[asteroid][1], asteroid));
+            this.createAsteroid(new Asteroid(this.gameData, coords[asteroid][0], coords[asteroid][1]));
         }
         this.generateRessources(100,100);
+    }
+
+    /** Add an asteroid to the cluster and register it with unique ID @param {Asteroid} - The asteroid to be added */
+    createAsteroid(asteroid){
+        this.asteroids.push(asteroid);
+        asteroid.attributeNewId();
     }
     
     /** 
@@ -216,7 +275,8 @@ class Cluster {
     * @returns {object} - An {object} structure containing all fields.
     * */
     exportJSON(){
-        var data = {"asteroids":[]};
+        var data = {};
+        data.asteroids = [];
         for (var ast in this.asteroids){
             data["asteroids"].push(this.asteroids[ast].exportJSON());
         }
@@ -239,18 +299,16 @@ class Cluster {
 /**
 * Class storing all vars and functions related to an Asteroid
 */
-class Asteroid {
+class Asteroid extends GameObject{
     /** 
     * Asteroid creation function
     * @param {GameData} gameData - GameData object storing all variables
     * @param {number} x - X coordinate of the asteroid
     * @param {number} y - Y coordinate of the asteroid
-    * @param {integer} id- Unique ID of the asteroid
     */
-    constructor(gameData, x,y,asteroidID) {
-        this.gameData = gameData;
+    constructor(gameData, x,y) {
+        super(gameData);
 
-        this.asteroidID = this.gameData.asteroidCurrentID;
         this.gameData.asteroidCurrentID ++;
 
         this.x = x;
@@ -365,33 +423,44 @@ class Asteroid {
     // }
 
     /** 
-    * Add a construction to this asteroid construction queue
+    * Add a construction to this asteroid construction queue and register unique id
     * @param {string} constructionTypeID - Construction type to be added
     */
     addConstructionToQueue(constructionTypeID){
-        this.constructionsQueue.push(new Construction(this.gameData, this, constructionTypeID));
+        const newConstruction = new Construction(this.gameData, this, constructionTypeID);
+        newConstruction.attributeNewId();
+        this.constructionsQueue.push(newConstruction);
     }
-     /** 
-    * Remove a construction from queue at specified position
-    * @param {integer} position - Position in the queue to be deleted
-    */
-    removeConstructionFromQueue(position){
-        this.constructionsQueue.splice(position,1);
-    }
-
     /** 
-    * Add a spaceship to this asteroid construction queue
+    * Add a spaceship to this asteroid construction queue and register unique id
     * @param {string} spaceshipTypeID - Spaceship type to be added
     */
     addSpaceshipToQueue(spaceshipTypeID){
-        this.constructionsQueue.push(new Spaceship(this.gameData, this, spaceshipTypeID));
+        const newSpaceShip = new Spaceship(this.gameData, this, spaceshipTypeID);
+        newSpaceShip.attributeNewId();
+        this.spaceshipsQueue.push(newSpaceShip);
     }
-     /** 
-    * Remove a spaceship from queue at specified position
-    * @param {integer} position - Position in the queue to be deleted
+    /** 
+    * Swaps two elements from a queue
+    * @param {GameObject} gameObject - First object
+    * @param {GameObject} gameObject2 - second object
     */
-    removeSpaceshipFromQueue(position){
-        this.spaceshipsQueue.splice(position,1);
+    swapQueueObjects(gameObject, gameObject2){
+        if (gameObject instanceof Construction){
+            const switchCopy = gameObject;
+            const index = this.constructionsQueue.indexOf(gameObject);
+            const index2 = this.constructionsQueue.indexOf(gameObject2);
+            this.constructionsQueue[index] = gameObject2;
+            this.constructionsQueue[index2] = switchCopy;
+            
+        }
+        if (gameObject instanceof Spaceship){
+            const switchCopy = gameObject;
+            const index = this.spaceshipsQueue.indexOf(gameObject);
+            const index2 = this.spaceshipsQueue.indexOf(gameObject2);
+            this.spaceshipsQueue[index] = gameObject2;
+            this.spaceshipsQueue[index2] = switchCopy;
+        }
     }
 
     /** 
@@ -399,10 +468,9 @@ class Asteroid {
     * @returns {object} - An {object} structure containing all fields.
     * */
     exportJSON(){
-        var data = {};
+        var data = super.exportJSON();
         data.x = this.x;
         data.y = this.y;
-        data.asteroidID = this.asteroidID;
 
         data["constructions"] = [];
         for (var construction in this.constructions){
@@ -430,9 +498,9 @@ class Asteroid {
     * @param {object} JSONData - An {object} structure containing all fields.
     * */
     loadJSON(JSONData){
+        super.loadJSON(JSONData);
         this.x = JSONData.x;
         this.y = JSONData.x;
-        this.asteroidID = JSONData.asteroidID;
 
         this.constructions = [];
         for (var construction in JSONData.constructions){
@@ -457,9 +525,9 @@ class Asteroid {
             this.spaceships.push(newSpaceship);
         }
         this.spaceshipsQueue = [];
-        for (var spaceship in JSONData.constructionsQueue){
-            const newSpaceship = new Construction(this.gameData, this, null);
-            newSpaceship.loadJSON(JSONData.constructionsQueue[spaceship]);
+        for (var spaceship in JSONData.spaceshipsQueue){
+            const newSpaceship = new Spaceship(this.gameData, this, null);
+            newSpaceship.loadJSON(JSONData.spaceshipsQueue[spaceship]);
             newSpaceship.loadStaticFields();
             this.spaceshipsQueue.push(newSpaceship);
         }
@@ -503,15 +571,15 @@ class ConstructionCompleteEvent extends GameEvent {
 /**
 * Class representing a building
 */
-class Construction {
+class Construction extends GameObject {
     /**
     * Construction creation function
     * @param {GameData} gameData - GameData object storing all variables
     * @param {Asteroid} asteroid - Parent asteroid object
     * @param {String} constructionTypeID - Construction ID, one per type of construction
     */
-   constructor(gameData, asteroid, constructionTypeID) {
-        this.gameData = gameData;
+    constructor(gameData, asteroid, constructionTypeID) {
+        super(gameData);
         /**
         * The construction parent asteroid
         * @type {Asteroid}
@@ -519,13 +587,6 @@ class Construction {
         this.asteroid = asteroid;
 
         this.constructionTypeID = constructionTypeID;
-
-        /**
-        * An unique ID to reference this construction object
-        * @type {integer}
-        */
-        this.constructionID = this.gameData.constructionCurrentID;
-        this.gameData.constructionCurrentID ++;
 
         // Default values. To be overriden by JSON data from gamedata.
         /**
@@ -618,13 +679,18 @@ class Construction {
         }
     }
 
+    /** Removes the construction from the world */
+    delete(){
+        super.delete();
+        this.asteroid.constructionsQueue.splice(this.asteroid.constructionsQueue.indexOf(this),1);
+    }
+
      /** 
     * Export all dynamic fields relative to game state to JSON
     * @returns {object} - An {object} structure containing all fields.
     * */
     exportJSON(){
-        var data = {};
-        data.constructionID = this.constructionID;
+        var data = super.exportJSON();
         data.constructionTypeID = this.constructionTypeID;
         data.constructionDate = this.constructionDate;
         data.constructedEnergy = this.constructedEnergy;
@@ -636,7 +702,7 @@ class Construction {
     * @param {object} JSONData - An {object} structure containing all fields.
     * */
     loadJSON(JSONData){
-        this.constructionID = JSONData.constructionID;
+        super.loadJSON(JSONData);
         this.constructionTypeID = JSONData.constructionTypeID;
         this.constructionDate = Date.parse(JSONData.constructionDate);
         this.constructedEnergy = JSONData.constructedEnergy;
@@ -647,7 +713,7 @@ class Construction {
 /**
 * Class representing a spacecraft
 */
-class Spaceship {
+class Spaceship extends GameObject{
     /**
     * Spaceship creation function
     * @param {GameData} gameData - GameData object storing all variables
@@ -655,16 +721,9 @@ class Spaceship {
     * @param {String} spaceshipTypeID - spaceship ID, one per type of spaceship
     */
    constructor(gameData, asteroid, spaceshipTypeID) {
-        this.gameData = gameData;
+        super(gameData);
         this.asteroid = asteroid;
         this.spaceshipTypeID = spaceshipTypeID;
-
-        /**
-        * An unique ID to reference this spaceship object
-        * @type {integer}
-        */
-        this.spaceshipID = this.gameData.spaceshipCurrentID;
-        this.gameData.spaceshipCurrentID ++;
 
         // Default values. To be overriden by JSON data from gamedata.
         /**
@@ -757,15 +816,18 @@ class Spaceship {
         this.structurePoints = this.maxStructurePoints;
     }
 
-     /** 
-    * Load all type related static fields
-    * */
+     /** Load all type related static fields */
     loadStaticFields(){
         const statics = this.gameData.spaceshipsData[this.spaceshipTypeID];
         for (var field in statics){
-            
             this[field] = statics[field];
         }
+    }
+
+    /** Removes the spaceship from the world */
+    delete(){
+        super.delete();
+        this.asteroid.spaceshipsQueue.splice(this.asteroid.spaceshipsQueue.indexOf(this),1);
     }
 
     /** 
@@ -773,8 +835,7 @@ class Spaceship {
     * @returns {object} - An {object} structure containing all fields.
     * */
     exportJSON(){
-        var data = {};
-        data.spaceshipID = this.spaceshipID;
+        var data = super.exportJSON();
         data.spaceshipTypeID = this.spaceshipTypeID;
         data.constructionDate = this.constructionDate;
         data.constructedEnergy = this.constructedEnergy;
@@ -786,7 +847,7 @@ class Spaceship {
     * @param {object} JSONData - An {object} structure containing all fields.
     * */
     loadJSON(JSONData){
-        this.spaceshipID = JSONData.spaceshipID;
+        super.loadJSON(JSONData);
         this.spaceshipTypeID = JSONData.spaceshipTypeID;
         this.constructionDate = Date.parse(JSONData.constructionDate);
         this.constructedEnergy = JSONData.constructedEnergy;
@@ -794,4 +855,4 @@ class Spaceship {
     }
 }
 
-export {GameData, Cluster, Asteroid, GameEvent, ConstructionCompleteEvent, Construction, Spaceship}
+export {GameData, GameObject, Cluster, Asteroid, GameEvent, ConstructionCompleteEvent, Construction, Spaceship}

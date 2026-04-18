@@ -1,22 +1,93 @@
 {
-    "asteroidCurrentID": 4,
-    "constructionCurrentID": 245,
-    "spaceshipCurrentID": 45,
+    "gameObjectCurrentID": 12,
+    "asteroidCurrentID": 6,
     "cluster": {
         "asteroids": [
             {
+                "gameObjectId": 0,
                 "x": 0,
                 "y": 0,
-                "asteroidID": 0,
                 "constructions": [],
-                "constructionsQueue": [],
+                "constructionsQueue": [
+                    {
+                        "gameObjectId": 7,
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": null,
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 8,
+                        "constructionTypeID": "CONST_WaterExtractor",
+                        "constructionDate": null,
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 9,
+                        "constructionTypeID": "CONST_SolarUnit",
+                        "constructionDate": null,
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 10,
+                        "constructionTypeID": "CONST_PlasmaCanon",
+                        "constructionDate": null,
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 11,
+                        "constructionTypeID": "CONST_Shipyard",
+                        "constructionDate": null,
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    }
+                ],
                 "spaceships": [],
-                "spaceshipsQueue": []
+                "spaceshipsQueue": [
+                    {
+                        "gameObjectId": 2,
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": null,
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 3,
+                        "spaceshipTypeID": "SHIP_Alpha",
+                        "constructionDate": null,
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 4,
+                        "spaceshipTypeID": "SHIP_Omega",
+                        "constructionDate": null,
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 5,
+                        "spaceshipTypeID": "SHIP_Delta",
+                        "constructionDate": null,
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 6,
+                        "spaceshipTypeID": "SHIP_Goliath",
+                        "constructionDate": null,
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    }
+                ]
             },
             {
-                "x": 0.052819294637291105,
-                "y": 0.052819294637291105,
-                "asteroidID": 1,
+                "gameObjectId": 1,
+                "x": 0.5813572794300643,
+                "y": 0.5813572794300643,
                 "constructions": [],
                 "constructionsQueue": [],
                 "spaceships": [],
