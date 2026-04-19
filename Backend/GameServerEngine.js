@@ -12,6 +12,8 @@ class GameServerEngine {
         this.loadDynamicData();
         // this.createNewGame();
         // this.saveDynamicData();
+
+       this.currentGameData.startIterationLoopTime()
     }
     createNewGame(){
         this.currentGameData.generateWorld();

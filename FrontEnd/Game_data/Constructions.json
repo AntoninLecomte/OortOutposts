@@ -2,7 +2,10 @@
     "CONST_MineralExtractor":{
         "category": "Extraction",
         "name": "Mineral extractor",
-        "description": "Drill based extraction and conditioning unit. Provides your asteroid with required minerals."
+        "description": "Drill based extraction and conditioning unit. Provides your asteroid with required minerals.",
+        
+        "generationMinerals": 1,
+        "costEnergy": 4
     },
     "CONST_WaterExtractor":{
         "category": "Extraction",

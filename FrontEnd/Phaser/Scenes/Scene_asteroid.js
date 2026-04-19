@@ -11,6 +11,7 @@ class SCENE_Asteroid extends Phaser.Scene
      * @param {Object} handlers - A collection with gameData and network handlers
      */
     create(handlers){
+        /** @type {GameData} */
         this.gameData = handlers.gameData;
         /** @type {NetworkHandler} */
         this.networkHandler = handlers.networkHandler;
@@ -71,6 +72,11 @@ class UI_Asteroid {
             let DOM = parser.parseFromString(text, 'text/html');
             UI_asteroidObject.receivedHTML(DOM);
         });
+
+        // Start periodic update:
+        setInterval(function(self){
+            self.getChangesFromServer();
+        },3000,this)
     }
     /** 
     * Function executed at reception of the UI html code
@@ -120,11 +126,23 @@ class UI_Asteroid {
     }
     /** Refresh displayed information to match gamedata state */
     refresh(){
+        this.updateRessources();
         this.updateLog();
         this.updateConstructionQueue();
         this.updateConstructionPicks();
         this.updateSpaceshipsQueue();
         this.updateSpaceshipsPicks();
+    }
+
+    /** Update ressources level */
+    updateRessources(){
+        const stringMinerals = Math.round(this.parentScene.asteroid.ressourceMinerals*10)/10+" ("+ Math.round(this.parentScene.asteroid.mineralsGeneration*10)/10+"/h)";
+        const stringWater = Math.round(this.parentScene.asteroid.ressourceWater*10)/10+" ("+ Math.round(this.parentScene.asteroid.waterGeneration*10)/10+"/h)";
+        const stringEnergy = "("+ Math.round(this.parentScene.asteroid.energyGeneration*10)/10+"/h)";
+
+        document.getElementById("ressourceMinerals").querySelector(".UI_RessourceP").innerHTML = stringMinerals;
+        document.getElementById("ressourceWater").querySelector(".UI_RessourceP").innerHTML = stringWater;
+        document.getElementById("ressourceEnergy").querySelector(".UI_RessourceP").innerHTML = stringEnergy;
     }
 
     /** Updates the logs in reference with game data*/
@@ -450,8 +468,7 @@ class UI_Pick{
 }
 
 /**
-* @extends UI_Pick
-* Derived UI_Pick to fit Construction picking
+* @extends UI_Pick Derived UI_Pick to fit Construction picking
 */
 class UI_Pick_Construction extends UI_Pick{
     /** 
@@ -466,26 +483,50 @@ class UI_Pick_Construction extends UI_Pick{
         this.HTMLRoot.querySelector(".Name").innerHTML = this.construction.name;
         this.HTMLRoot.querySelector(".Description").innerHTML = this.construction.description;
 
-        this.addFrame("CostFrame",gameConfig.strings_EN["ConstructionCost"]);
-        this.addRessourceToFrame("CostFrame","MINERALS",this.construction.costMinerals);
-        this.addRessourceToFrame("CostFrame","WATER",this.construction.costWater);
-        this.addRessourceToFrame("CostFrame","ENERGY",this.construction.costEnergy);
+        const characteristics = {
+            "ConstructionCost":{
+                "costMinerals":"MINERALS",
+                "costWater":"WATER",
+                "costEnergy":"Energy",
+            },
+            "ConstructionGeneration":{
+                "generationMinerals":"MINERALS",
+                "generationWater":"WATER",
+                "generationEnergy":"Energy",
+            },
+            "ConstructionDefense":{
+                "maxStructurePoints":"STRUCTURE",
+                "shield":"SHIELD",
+                "firePower":"FIRE_POWER",
+            },
+        }
 
-        this.addFrame("GenerationFrame",gameConfig.strings_EN["ConstructionGeneration"]);
-        this.addRessourceToFrame("GenerationFrame","MINERALS",this.construction.generationMinerals);
-        this.addRessourceToFrame("GenerationFrame","WATER",this.construction.generationWater);
-        this.addRessourceToFrame("GenerationFrame","ENERGY",this.construction.generationEnergy);
-
-        this.addFrame("DefenseFrame",gameConfig.strings_EN["ConstructionDefense"]);
-        this.addRessourceToFrame("DefenseFrame","STRUCTURE",this.construction.maxStructurePoints);
-        this.addRessourceToFrame("DefenseFrame","SHIELD",this.construction.shield);
-        this.addRessourceToFrame("DefenseFrame","FIRE_POWER",this.construction.firePower);
+        for (var frameTitle in characteristics){
+            var isEmpty = true;
+            for (var field in characteristics[frameTitle]){
+                if (this.parentScene.gameData.constructionsData[construction.constructionTypeID][field] != undefined){
+                    isEmpty = false;
+                    break;
+                }
+            }
+            if (!isEmpty){
+                this.addFrame(frameTitle,gameConfig.strings_EN[frameTitle]);
+                 for (var field in characteristics[frameTitle]){
+                    if (this.parentScene.gameData.constructionsData[construction.constructionTypeID][field] != undefined){
+                        this.addRessourceToFrame(
+                            frameTitle,
+                            characteristics[frameTitle][field],
+                            this.parentScene.gameData.constructionsData[construction.constructionTypeID][field]
+                        );
+                    }
+                 }
+            }
+        }
     }
 }
 
 /**
-* @extends UI_Pick
-* Derived UI_Pick to fit Spaceship picking
+* @extends UI_Pick Derived UI_Pick to fit Spaceship picking
 */
 class UI_Pick_Spaceship extends UI_Pick{
     /** 
@@ -500,24 +541,49 @@ class UI_Pick_Spaceship extends UI_Pick{
         this.HTMLRoot.querySelector(".Name").innerHTML = this.spaceship.name;
         this.HTMLRoot.querySelector(".Description").innerHTML = this.spaceship.description;
 
-        this.addFrame("CostFrame",gameConfig.strings_EN["ConstructionCost"]);
-        this.addRessourceToFrame("CostFrame","MINERALS",this.spaceship.costMinerals);
-        this.addRessourceToFrame("CostFrame","WATER",this.spaceship.costWater);
-        this.addRessourceToFrame("CostFrame","ENERGY",this.spaceship.costEnergy);
+        const characteristics = {
+            "ConstructionCost":{
+                "costMinerals":"MINERALS",
+                "costWater":"WATER",
+                "costEnergy":"Energy",
+            },
+            "SpaceshipNavigation":{
+                "speed":"SPEED",
+                "range":"RANGE",
+                "waterConsumption":"WATER",
+            },
+            "SpaceshipCombat":{
+                "maxStructurePoints":"STRUCTURE",
+                "shield":"SHIELD",
+                "initiative":"INITIATIVE",
+                "firePower":"FIRE_POWER",
+            },
+            "SpaceshipCargo":{
+                "maxCargo":"CARGO",
+            },
+        }
 
-        this.addFrame("NavigationFrame",gameConfig.strings_EN["SpaceshipNavigation"]);
-        this.addRessourceToFrame("NavigationFrame","SPEED",this.spaceship.speed);
-        this.addRessourceToFrame("NavigationFrame","RANGE",this.spaceship.range);
-        this.addRessourceToFrame("NavigationFrame","WATER",this.spaceship.waterConsumption);
-
-        this.addFrame("CombatFrame",gameConfig.strings_EN["SpaceshipCombat"]);
-        this.addRessourceToFrame("CombatFrame","STRUCTURE",this.spaceship.maxStructurePoints);
-        this.addRessourceToFrame("CombatFrame","SHIELD",this.spaceship.shield);
-        this.addRessourceToFrame("CombatFrame","INITIATIVE",this.spaceship.initiative);
-        this.addRessourceToFrame("CombatFrame","FIRE_POWER",this.spaceship.firePower);
-
-         this.addFrame("CargoFrame",gameConfig.strings_EN["SpaceshipCargo"]);
-        this.addRessourceToFrame("CargoFrame","CARGO",this.spaceship.maxCargo);
+        for (var frameTitle in characteristics){
+            var isEmpty = true;
+            for (var field in characteristics[frameTitle]){
+                if (this.parentScene.gameData.spaceshipsData[spaceship.spaceshipTypeID][field] != undefined){
+                    isEmpty = false;
+                    break;
+                }
+            }
+            if (!isEmpty){
+                this.addFrame(frameTitle,gameConfig.strings_EN[frameTitle]);
+                 for (var field in characteristics[frameTitle]){
+                    if (this.parentScene.gameData.spaceshipsData[spaceship.spaceshipTypeID][field] != undefined){
+                        this.addRessourceToFrame(
+                            frameTitle,
+                            characteristics[frameTitle][field],
+                            this.parentScene.gameData.spaceshipsData[spaceship.spaceshipTypeID][field]
+                        );
+                    }
+                 }
+            }
+        }
     }
 }
 

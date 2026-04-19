@@ -1,44 +1,32 @@
 class GameData {
     constructor() {
-        /**
-         * Incremental counter to allow individual unique ids for all game objects
-         * @type {integer}
-         */
+        /** @type {Date} - Game start date and time */
+        this.startDate = new Date();
+        /** @type {number} - Elapsed seconds since game start */
+        this.elapsedSeconds = 0;
+        /** @type {number} - Time in s, between two iterations of the game world */
+        this.iterationLoopTime = 3;
+        /** @type {number} - {DEV} allowing time multiplication for dev purposes */
+        this.DEV_timeMultiplier = 3600/this.iterationLoopTime;
+        
+        /** @type {integer} - Incremental counter to allow individual unique ids for all game objects */
         this.gameObjectCurrentID = 0;
-         /**
-         * Flat list of all gameobjects
-         * @type {GameObject[]}
-         */
+         /** @type {GameObject[]} - Flat list of all gameobjects */
         this.gameObjectsFlatList = [];
 
 
-        /**
-         * Collection of constructions static fields information
-         * @type {JSON}
-         */
+        /** @type {JSON} - Collection of constructions static fields information */
         this.constructionsData = {};
-        /**
-         * Collection of default constructions
-         * @type {Construction{}}
-         */
+        /** @type {Construction{}} - Collection of default constructions */
         this.constructionsTypes = {};
 
 
-        /**
-         * Collection of spaceships static fields information
-         * @type {JSON}
-         */
+        /** @type {JSON} - Collection of spaceships static fields information */
         this.spaceshipsData = {};
-        /**
-         * Collection of default spaceships
-         * @type {Spaceship{}}
-         */
+        /** @type {Spaceship{}} - Collection of default spaceships */
         this.spaceshipsTypes = {};
 
-        /**
-         * The game cluster
-         * @type {Cluster}
-         */
+        /** @type {Cluster} - The game cluster */
         this.cluster = null;
     }
 
@@ -76,16 +64,30 @@ class GameData {
         throw new Error("No object found for gameObjectId "+gameObjectId);
     }
 
+    /** Starts iterating to propagate the game state through time */
+    startIterationLoopTime(){
+        this.loopInterval = setInterval(function(self){self.runLoopIteration()},this.iterationLoopTime*1000,this);
+    }
+    /** Runs a loop to propagate the game state through time */
+    runLoopIteration(){
+        const dt = this.iterationLoopTime * this.DEV_timeMultiplier
+        this.elapsedSeconds += dt;
+        const currentGameDate = new Date(this.startDate.getTime()+this.elapsedSeconds*1000);
+        this.cluster.runLoopIteration(dt, currentGameDate);
+    }
+
+
     /** 
     * Export all dynamic fields relative to game state to JSON
     * @returns {object} - An {object} structure containing all fields.
     * */
     exportJSON(){
         var data = {};
+
         data.gameObjectCurrentID = this.gameObjectCurrentID;
-        data.asteroidCurrentID = this.asteroidCurrentID;
-        data.constructionCurrentID = this.constructionCurrentID;
-        data.spaceshipCurrentID = this.spaceshipCurrentID;
+
+        data.startDate      = this.startDate.toISOString();
+        data.elapsedSeconds = this.elapsedSeconds;
         data.cluster = this.cluster.exportJSON();
 
         return data;
@@ -97,9 +99,9 @@ class GameData {
     * */
     loadJSON(JSONData){
         this.gameObjectCurrentID = JSONData.gameObjectCurrentID;
-        this.asteroidCurrentID = JSONData.asteroidCurrentID;
-        this.constructionCurrentID = JSONData.constructionCurrentID;
-        this.spaceshipCurrentID = JSONData.spaceshipCurrentID;
+
+        this.startDate      = new Date(Date.parse(JSONData.startDate));
+        this.elapsedSeconds = JSONData.elapsedSeconds;
 
         this.cluster = new Cluster(this);
         this.cluster.loadJSON(JSONData["cluster"]);
@@ -167,7 +169,6 @@ class Cluster{
         for (var asteroid in coords){
             this.createAsteroid(new Asteroid(this.gameData, coords[asteroid][0], coords[asteroid][1]));
         }
-        this.generateRessources(100,100);
     }
 
     /** Add an asteroid to the cluster and register it with unique ID @param {Asteroid} - The asteroid to be added */
@@ -221,11 +222,11 @@ class Cluster{
 
                 // If no astroid is breaking the distance constraint, add a new asteroid
                 if (!tooClose && !tooFar) {
-                    asteroidsCoordinates.push([x,y]);
-                    asteroidCount++;
                     if (asteroidCount >= n_asteroids) {
                         return asteroidsCoordinates;
                     }
+                    asteroidsCoordinates.push([x,y]);
+                    asteroidCount++;
                 }
 
                 if (x < this.minX) {this.minX = x;}
@@ -236,38 +237,14 @@ class Cluster{
         }
     }
 
-    /** 
-    * Select a total amount of ressources and distribute them along asteroids
-    * @param {number} startWater The total water ressource to be available across the cluster
-    * @param {number} startMinerals The total minerals ressource to be available across the cluster
-    * @param {number} totalRandomness The random factor to be applied to total ressources
-    * @param {number} unitaryRandomness The random factor to be applied to individual asteroids
+    /** Runs a loop to propagate the game state through time 
+     * @param {number} dt - Elapsed seconds since last loop
+     * @param {Date} currentDate - Current loop date
     */
-    generateRessources(startWater, startMinerals, totalRandomness=0, unitaryRandomness=0.7) {
-        this.startWaterTotal = startWater * (1+totalRandomness);
-        this.startMineralsTotal = startMinerals * (1+totalRandomness);
-        var waterRemaining = this.startWaterTotal;
-        var mineralsRemaining = this.startMineralsTotal;
-        for (var asteroid=0; asteroid<this.asteroids.length; asteroid++){
-            var water=0;
-            var minerals=0;
-            if (asteroid < this.asteroids.length-1){
-                water = waterRemaining/(this.asteroids.length-asteroid) * ((1-unitaryRandomness/2)+unitaryRandomness*Math.random());
-                minerals = mineralsRemaining/(this.asteroids.length-asteroid) * ((1-unitaryRandomness/2)+unitaryRandomness*Math.random());
-
-                waterRemaining -= water;
-                mineralsRemaining -= minerals;
-            }else{
-                // Last asteroid takes all remaining ressources:
-                water = waterRemaining;
-                minerals = mineralsRemaining;
-            }
-
-            this.asteroids[asteroid].startRessources["WATER"] = water;
-            this.asteroids[asteroid].startRessources["MINERALS"] = minerals;
-            this.asteroids[asteroid].baseRadius = Math.pow(Math.pow(water,2)+Math.pow(minerals,2),1)*3;;
+    runLoopIteration(dt, currentDate){
+        for (var asteroid in this.asteroids){
+            this.asteroids[asteroid].runLoopIteration(dt,currentDate);
         }
-        
     }
 
     /** 
@@ -311,49 +288,55 @@ class Asteroid extends GameObject{
 
         this.gameData.asteroidCurrentID ++;
 
+        /** @type {number} - X coordiate of this asteroid */
         this.x = x;
+        /** @type {number} - Y coordiate of this asteroid */
         this.y = y;
-        this.size = 50 //km, diameter
-        this.startRessources = {
-            "WATER": 0, // kg,
-            "MINERALS": 0, // kg
-        }
+        /** @type {number} - Diameter of the asteroid in km */
+        this.size = 50;
 
-        /**
-         * The asteroid list of events
-         * @type {GameEvent[]}
-         */
+        /** @type {number} - Minerals stored in this asteroid in tons */
+        this.ressourceMinerals = 10; 
+        /** @type {number} - Water stored in this asteroid in tons */
+        this.ressourceWater = 10; 
+
+        /** @type {number} - Mineral production in tons per hour */
+        this.mineralsGeneration = -1;
+        /** @type {number} - Water production in tons per hour */
+        this.waterGeneration = -1; 
+        /** @type {number} - Energy production in kW */
+        this.energyGeneration = -1;
+
+        /** @type {Construction[]} - The asteroid list of events */
         this.events = [];
-
-
-        /**
-         * The asteroid completed constructions
-         * @type {Construction[]}
-         */
+        /** @type {Construction[]} - The asteroid completed constructions */
         this.constructions = [];
-
-        /**
-         * The asteroid constructions queue list
-         * @type {Construction[]}
-         */
+        /** @type {Construction[]} - The asteroid constructions queue list */
         this.constructionsQueue = [];
 
-        /**
-         * List of spaceships based to this asteroid
-         * @type {Spaceship[]}
-         */
+        /** @type {Spaceship[]} - List of spaceships based to this asteroid */
         this.spaceships = [];
 
-        /**
-         * The asteroid spaceships queue list
-         * @type {Spaceship[]}
-         */
+        /** @type {Spaceship[]} - The asteroid spaceships queue list */
         this.spaceshipsQueue = [];
 
         // this.generateShapePoints(200,500,1);
         // this.DEV_generateEvents();
         // this.DEV_generateQueue();
+    }
 
+    /** Updates the ressources production rates according to the asteroid constructions */
+    updateRessourceProduction(){
+        this.mineralsGeneration = 1;
+        this.waterGeneration = 0.1;
+        this.energyGeneration = 1;
+
+        for (var construction in this.constructions){
+            this.mineralsGeneration += this.constructions[construction].generationMinerals;
+            this.waterGeneration += this.constructions[construction].generationWater;
+            this.energyGeneration += this.constructions[construction].energyGeneration;
+        }
+    }
     /** 
     * @summary Generate noisy circular pattern to represent the asteroid shape
     * @param {number} minSize Minimal base radius, km
@@ -361,7 +344,7 @@ class Asteroid extends GameObject{
     * @param {number} randomness Between 0 and 1, the higher the weirdest
     * @param {number} pointDensity Number of points per km radius
     * @return {Array} Returns the generated points, and store them to the asteroid object
-    */}
+    */
     generateShapePoints(minSize, maxSize, randomness, pointDensity=1/4){
         this.maxRadius = 0
 
@@ -404,23 +387,6 @@ class Asteroid extends GameObject{
     addEvent(event){
         this.events.push(event);
     }
-    // DEV_generateEvents(){
-        
-    //     for (var i=0; i<50;i++){
-    //         const newConstruction = new Construction(this.gameData, this, Object.keys(this.gameData.constructionData)[0]);
-    //         this.addEvent(new ConstructionCompleteEvent(this.gameData, newConstruction))
-    //     }
-    // }
-    // DEV_generateQueue(){
-    //     for (var i=0; i<10;i++){
-    //         const newConstruction = new Construction(this.gameData, this, Object.keys(this.gameData.constructionData)[0]);
-    //         this.constructionsQueue.push(newConstruction);
-    //     }
-    //     for (var i=0; i<10;i++){
-    //         const newSpaceShip = new Spaceship(this.gameData, this, Object.keys(this.gameData.spaceshipsData)[0]);
-    //         this.spaceshipsQueue.push(newSpaceShip);
-    //     }
-    // }
 
     /** 
     * Add a construction to this asteroid construction queue and register unique id
@@ -463,14 +429,47 @@ class Asteroid extends GameObject{
         }
     }
 
+    /** Runs a loop to propagate the game state through time 
+     * @param {number} dt - Elapsed seconds since last loop
+     * @param {Date} currentDate - Current loop date
+    */
+    runLoopIteration(dt, currentDate){
+        this.updateRessourceProduction();
+
+        // Ressources
+        this.ressourceMinerals += this.mineralsGeneration*dt/3600;
+        this.ressourceWater += this.waterGeneration*dt/3600;
+
+        // Energy ratios
+        const energyConstruction = 1*this.energyGeneration;
+        const energyShipyard = 0;
+        const energyScience = 0;
+
+        // Construction
+        if (this.constructionsQueue.length > 0){
+            this.constructionsQueue[0].constructedEnergy += energyConstruction;
+            console.log(this.constructionsQueue[0].constructedEnergy)
+            if (this.constructionsQueue[0].constructedEnergy >= this.constructionsQueue[0].costEnergy){
+                this.constructions.push(this.constructionsQueue[0]);
+                this.constructionsQueue.splice(0,1);
+            }
+        }
+    }
+
     /** 
     * Export all dynamic fields relative to game state to JSON
     * @returns {object} - An {object} structure containing all fields.
     * */
-    exportJSON(){
+    exportJSON(){        
         var data = super.exportJSON();
         data.x = this.x;
         data.y = this.y;
+
+        data.ressourceMinerals           = this.ressourceMinerals;
+        data.ressourceWater              = this.ressourceWater;
+        data.mineralsGeneration = this.mineralsGeneration;
+        data.waterGeneration    = this.waterGeneration;
+        data.energyGeneration   = this.energyGeneration;
 
         data["constructions"] = [];
         for (var construction in this.constructions){
@@ -501,6 +500,12 @@ class Asteroid extends GameObject{
         super.loadJSON(JSONData);
         this.x = JSONData.x;
         this.y = JSONData.x;
+
+        this.ressourceMinerals           = JSONData.ressourceMinerals;
+        this.ressourceWater              = JSONData.ressourceWater;
+        this.mineralsGeneration = JSONData.mineralsGeneration;
+        this.waterGeneration    = JSONData.waterGeneration;
+        this.energyGeneration   = JSONData.energyGeneration;
 
         this.constructions = [];
         for (var construction in JSONData.constructions){
@@ -589,62 +594,29 @@ class Construction extends GameObject {
         this.constructionTypeID = constructionTypeID;
 
         // Default values. To be overriden by JSON data from gamedata.
-        /**
-         * Construction name
-         * @type {string}
-         */
+        /** @type {string} - Construction name */
         this.name = "{DEFAULT}_NAME";
-        /**
-         * Construction description in picker
-         * @type {string}
-         */
+        /** @type {string} - Construction description in picker */
         this.description = "{DEFAULT}_DESCRIPTION";
 
-        /**
-         * Total energy required for initial construction
-         * @type {number}
-         */
+        /** @type {number} - Total energy required for initial construction */
         this.costEnergy = 0;
-        /**
-         * Total minerals required for initial construction
-         * @type {number}
-         */
+        /** @type {number} - Total minerals required for initial construction */
         this.costMinerals = 0;
-        /**
-         * Total water required for initial construction
-         * @type {number}
-         */
+        /** @type {number} - Total water required for initial construction */
         this.costWater = 0;
-        /**
-        * Produced energy by cycle
-        * @type {number}
-        */
+        /** @type {number} - Produced energy by cycle */
         this.generationEnergy = 0;
-        /**
-        * Produced minerals by cycle
-        * @type {number}
-        */
+        /** @type {number} - Produced minerals by cycle */
         this.generationMinerals = 0;
-        /**
-        * Produced water by cycle
-        * @type {number}
-        */
+        /** @type {number} - Produced water by cycle */
         this.generationWater = 0;
 
-        /**
-        * Construction intial structure points
-        * @type {number}
-        */
+        /** @type {number} - Construction intial structure points */
         this.maxStructurePoints = 0;
-        /**
-        * Shield reducing incoming damage
-        * @type {number}
-        */
+        /** @type {number} - Shield reducing incoming damage */
         this.shield = 0;
-        /**
-        * Damage dealt to ennemy units shield and structure points
-        * @type {number}
-        */
+        /** * @type {number} - Damage dealt to ennemy units shield and structure points */
         this.firePower = 0;
 
         // Update fields with static data:
@@ -652,26 +624,15 @@ class Construction extends GameObject {
 
 
         // Initialize dynamic fields
-        /**
-        * Construction date
-        * @type {Date}
-        */
+        /** @type {Date} Construction date */
         this.constructionDate = new Date();
-        /**
-        * Amount of energy used for construction (progress)
-        * @type {number}
-        */
+        /** @type {number} - Amount of energy used for construction (progress) */
         this.constructedEnergy = 0;
-        /**
-        * Remaining structure points
-        * @type {number}
-        */
+        /** @type {number} - Remaining structure points */
         this.structurePoints = this.maxStructurePoints;
     }
 
-     /** 
-    * Load all type related static fields
-    * */
+     /** Load all type related static fields */
     loadStaticFields(){
         const statics = this.gameData.constructionsData[this.constructionTypeID];
         for (var field in statics){
