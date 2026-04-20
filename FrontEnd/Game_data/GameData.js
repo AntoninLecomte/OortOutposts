@@ -4,6 +4,8 @@ class GameData {
         this.startDate = new Date();
         /** @type {number} - Elapsed seconds since game start */
         this.elapsedSeconds = 0;
+        /** @type {Date} - Game current date */
+        this.currentDate = new Date();
         /** @type {number} - Time in s, between two iterations of the game world */
         this.iterationLoopTime = 3;
         /** @type {number} - {DEV} allowing time multiplication for dev purposes */
@@ -72,23 +74,26 @@ class GameData {
     runLoopIteration(){
         const dt = this.iterationLoopTime * this.DEV_timeMultiplier
         this.elapsedSeconds += dt;
-        const currentGameDate = new Date(this.startDate.getTime()+this.elapsedSeconds*1000);
-        this.cluster.runLoopIteration(dt, currentGameDate);
+        this.currentDate = new Date(this.startDate.getTime()+this.elapsedSeconds*1000);
+        this.cluster.runLoopIteration(dt);
     }
 
 
     /** 
     * Export all dynamic fields relative to game state to JSON
+    * @param {Date} timestamp - Only data occuring before timestamp will be returned
     * @returns {object} - An {object} structure containing all fields.
     * */
-    exportJSON(){
+    exportJSON(timestamp){
         var data = {};
 
         data.gameObjectCurrentID = this.gameObjectCurrentID;
 
-        data.startDate      = this.startDate.toISOString();
-        data.elapsedSeconds = this.elapsedSeconds;
-        data.cluster = this.cluster.exportJSON();
+        data.startDate        = this.startDate.toISOString();
+        data.elapsedSeconds   = this.elapsedSeconds;
+        data.currentDate      = this.currentDate.toISOString();
+
+        data.cluster = this.cluster.exportJSON(timestamp);
 
         return data;
     }
@@ -102,6 +107,7 @@ class GameData {
 
         this.startDate      = new Date(Date.parse(JSONData.startDate));
         this.elapsedSeconds = JSONData.elapsedSeconds;
+        this.currentDate    = new Date(Date.parse(JSONData.currentDate));
 
         this.cluster = new Cluster(this);
         this.cluster.loadJSON(JSONData["cluster"]);
@@ -112,12 +118,12 @@ class GameData {
 * All game objects share this class
 */
 class GameObject{
-    /** 
-    * Cluster creation function
-    * @param {GameData} gameData - GameData object storing all variables
-    */
     constructor(gameData){
         this.gameData = gameData;
+        /** @type {integer} - A unique identifier for this gameObject */
+        this.gameObjectId;
+        /** @type {Date} - The timestamp at which this gameObject had been exported */
+        this.exportTimestamp;
     }
     /** Attribute a new unique gameObjectID to this object */
     attributeNewId(){
@@ -126,12 +132,14 @@ class GameObject{
         this.gameData.gameObjectsFlatList.push(this);
         this.gameData.gameObjectCurrentID ++;
     }
-    exportJSON(){
-        return {"gameObjectId":this.gameObjectId};
+    exportJSON(timestamp){
+        this.exportTimestamp = timestamp;
+        return {"gameObjectId":this.gameObjectId,"timestamp":timestamp.toISOString()};
     }
     loadJSON(data){
         this.gameObjectId = data.gameObjectId;
         this.gameData.gameObjectsFlatList.push(this);
+        this.exportTimestamp = new Date(Date.parse(data.timestamp));
     }
     delete(){
          // Remove itself from the flat list
@@ -239,23 +247,23 @@ class Cluster{
 
     /** Runs a loop to propagate the game state through time 
      * @param {number} dt - Elapsed seconds since last loop
-     * @param {Date} currentDate - Current loop date
     */
-    runLoopIteration(dt, currentDate){
+    runLoopIteration(dt){
         for (var asteroid in this.asteroids){
-            this.asteroids[asteroid].runLoopIteration(dt,currentDate);
+            this.asteroids[asteroid].runLoopIteration(dt);
         }
     }
 
     /** 
     * Export all dynamic fields relative to game state to JSON
+    * @param {Date} timestamp - Only data occuring before timestamp will be returned
     * @returns {object} - An {object} structure containing all fields.
     * */
-    exportJSON(){
+    exportJSON(timestamp){
         var data = {};
         data.asteroids = [];
         for (var ast in this.asteroids){
-            data["asteroids"].push(this.asteroids[ast].exportJSON());
+            data["asteroids"].push(this.asteroids[ast].exportJSON(timestamp));
         }
         return data;
     }
@@ -334,7 +342,7 @@ class Asteroid extends GameObject{
         for (var construction in this.constructions){
             this.mineralsGeneration += this.constructions[construction].generationMinerals;
             this.waterGeneration += this.constructions[construction].generationWater;
-            this.energyGeneration += this.constructions[construction].energyGeneration;
+            this.energyGeneration += this.constructions[construction].generationEnergy;
         }
     }
     /** 
@@ -431,9 +439,8 @@ class Asteroid extends GameObject{
 
     /** Runs a loop to propagate the game state through time 
      * @param {number} dt - Elapsed seconds since last loop
-     * @param {Date} currentDate - Current loop date
     */
-    runLoopIteration(dt, currentDate){
+    runLoopIteration(dt){
         this.updateRessourceProduction();
 
         // Ressources
@@ -448,7 +455,6 @@ class Asteroid extends GameObject{
         // Construction
         if (this.constructionsQueue.length > 0){
             this.constructionsQueue[0].constructedEnergy += energyConstruction;
-            console.log(this.constructionsQueue[0].constructedEnergy)
             if (this.constructionsQueue[0].constructedEnergy >= this.constructionsQueue[0].costEnergy){
                 this.constructions.push(this.constructionsQueue[0]);
                 this.constructionsQueue.splice(0,1);
@@ -458,10 +464,11 @@ class Asteroid extends GameObject{
 
     /** 
     * Export all dynamic fields relative to game state to JSON
+    * @param {Date} timestamp - Only data occuring before timestamp will be returned
     * @returns {object} - An {object} structure containing all fields.
     * */
-    exportJSON(){        
-        var data = super.exportJSON();
+    exportJSON(timestamp){      
+        var data = super.exportJSON(timestamp);
         data.x = this.x;
         data.y = this.y;
 
@@ -646,12 +653,13 @@ class Construction extends GameObject {
         this.asteroid.constructionsQueue.splice(this.asteroid.constructionsQueue.indexOf(this),1);
     }
 
-     /** 
+    /** 
     * Export all dynamic fields relative to game state to JSON
+    * @param {Date} timestamp - Only data occuring before timestamp will be returned
     * @returns {object} - An {object} structure containing all fields.
     * */
-    exportJSON(){
-        var data = super.exportJSON();
+    exportJSON(timestamp){
+        var data = super.exportJSON(timestamp);
         data.constructionTypeID = this.constructionTypeID;
         data.constructionDate = this.constructionDate;
         data.constructedEnergy = this.constructedEnergy;
@@ -793,10 +801,11 @@ class Spaceship extends GameObject{
 
     /** 
     * Export all dynamic fields relative to game state to JSON
+    * @param {Date} timestamp - Only data occuring before timestamp will be returned
     * @returns {object} - An {object} structure containing all fields.
     * */
-    exportJSON(){
-        var data = super.exportJSON();
+    exportJSON(timestamp){
+        var data = super.exportJSON(timestamp);
         data.spaceshipTypeID = this.spaceshipTypeID;
         data.constructionDate = this.constructionDate;
         data.constructedEnergy = this.constructedEnergy;

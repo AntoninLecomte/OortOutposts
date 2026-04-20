@@ -1,5 +1,5 @@
 
-import { GameData } from "../FrontEnd/Game_data/GameData.js";
+import { GameData, GameEvent } from "../FrontEnd/Game_data/GameData.js";
 import { readFileSync, writeFileSync } from 'fs';
 import {createServer} from 'http';
 import * as path from 'node:path';
@@ -9,9 +9,9 @@ class GameServerEngine {
     constructor() {
         this.currentGameData = new GameData();
         this.loadStaticData();
-        this.loadDynamicData();
-        // this.createNewGame();
-        // this.saveDynamicData();
+        // this.loadDynamicData();
+        this.createNewGame();
+        this.saveDynamicData();
 
        this.currentGameData.startIterationLoopTime()
     }
@@ -30,7 +30,7 @@ class GameServerEngine {
      * Saves a game data state in a JSON file
      */
     saveDynamicData(){
-        writeFileSync('./Backend/Saved_Game.json', JSON.stringify(this.currentGameData.exportJSON(), null, 4));
+        writeFileSync('./Backend/Saved_Game.json', JSON.stringify(this.currentGameData.exportJSON(this.currentGameData.currentDate), null, 4));
     }
     /**
      * Loads a game data state from a JSON file
@@ -117,11 +117,11 @@ class Server{
 
         // Execute action
         if (request.url.includes("getGameData")){
-            return response.end(JSON.stringify(gameData.exportJSON(), null, 4));
+            return response.end(JSON.stringify(gameData.exportJSON(gameData.currentDate), null, 4));
         }
         if (request.url.includes("getGameObjectData")){
             const targetGameObject = gameData.getGameObjectById(urlParams.get("gameObjectID"));
-            return response.end(JSON.stringify(targetGameObject.exportJSON(), null, 4));
+            return response.end(JSON.stringify(targetGameObject.exportJSON(gameData.currentDate), null, 4));
         }
 
 

@@ -1,50 +1,22 @@
 {
-    "gameObjectCurrentID": 5,
-    "startDate": "2026-04-19T13:41:33.450Z",
-    "elapsedSeconds": 50400,
+    "gameObjectCurrentID": 1,
+    "startDate": "2026-04-20T11:38:17.308Z",
+    "elapsedSeconds": 0,
+    "currentDate": "2026-04-20T11:38:17.308Z",
     "cluster": {
         "asteroids": [
             {
                 "gameObjectId": 0,
+                "timestamp": "2026-04-20T11:38:17.308Z",
                 "x": 0,
                 "y": 0,
-                "ressourceMinerals": 17,
-                "ressourceWater": 0.3999999999999999,
-                "mineralsGeneration": 2,
-                "waterGeneration": 0.1,
-                "energyGeneration": null,
-                "constructions": [
-                    {
-                        "gameObjectId": 1,
-                        "constructionTypeID": "CONST_MineralExtractor",
-                        "constructionDate": 1776606621802,
-                        "constructedEnergy": 4,
-                        "structurePoints": 0
-                    }
-                ],
-                "constructionsQueue": [
-                    {
-                        "gameObjectId": 2,
-                        "constructionTypeID": "CONST_MineralExtractor",
-                        "constructionDate": "2026-04-19T14:45:43.574Z",
-                        "constructedEnergy": 0,
-                        "structurePoints": 0
-                    },
-                    {
-                        "gameObjectId": 3,
-                        "constructionTypeID": "CONST_MineralExtractor",
-                        "constructionDate": "2026-04-19T14:45:44.725Z",
-                        "constructedEnergy": 0,
-                        "structurePoints": 0
-                    },
-                    {
-                        "gameObjectId": 4,
-                        "constructionTypeID": "CONST_MineralExtractor",
-                        "constructionDate": "2026-04-19T14:45:45.455Z",
-                        "constructedEnergy": 0,
-                        "structurePoints": 0
-                    }
-                ],
+                "ressourceMinerals": 10,
+                "ressourceWater": 10,
+                "mineralsGeneration": -1,
+                "waterGeneration": -1,
+                "energyGeneration": -1,
+                "constructions": [],
+                "constructionsQueue": [],
                 "spaceships": [],
                 "spaceshipsQueue": []
             }

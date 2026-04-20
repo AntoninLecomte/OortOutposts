@@ -73,6 +73,9 @@ class UI_Asteroid {
             UI_asteroidObject.receivedHTML(DOM);
         });
 
+        // Display static elements
+        this.refreshStaticElements()
+
         // Start periodic update:
         setInterval(function(self){
             self.getChangesFromServer();
@@ -120,18 +123,32 @@ class UI_Asteroid {
         }
     }
 
+    /** Update static data, run only once at page loading */
+    refreshStaticElements(){
+        
+    }
+
     /** Asks server for any updates and show result */
     getChangesFromServer(){
         this.parentScene.networkHandler.updateGameObjectData(this.parentScene.asteroid,this,this.refresh);
     }
     /** Refresh displayed information to match gamedata state */
     refresh(){
+        this.updateTimeStamp();
         this.updateRessources();
         this.updateLog();
-        this.updateConstructionQueue();
+
         this.updateConstructionPicks();
-        this.updateSpaceshipsQueue();
         this.updateSpaceshipsPicks();
+        this.updateConstructionQueue();
+        this.updateSpaceshipsQueue();
+    }
+
+    /** Update timestamp */
+    updateTimeStamp(){
+        const timestamp = new Date(this.parentScene.asteroid.exportTimestamp);
+        const timestampStr = timestamp.toLocaleString();
+        document.getElementById("TimeStamp").innerHTML = timestampStr;
     }
 
     /** Update ressources level */
