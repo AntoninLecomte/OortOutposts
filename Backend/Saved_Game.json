@@ -1,13 +1,13 @@
 {
     "gameObjectCurrentID": 1,
-    "startDate": "2026-04-20T11:38:17.308Z",
+    "startDate": "2026-04-20T13:15:19.402Z",
     "elapsedSeconds": 0,
-    "currentDate": "2026-04-20T11:38:17.308Z",
+    "currentDate": "2026-04-20T13:15:19.402Z",
     "cluster": {
         "asteroids": [
             {
                 "gameObjectId": 0,
-                "timestamp": "2026-04-20T11:38:17.308Z",
+                "timestamp": "2026-04-20T13:15:19.402Z",
                 "x": 0,
                 "y": 0,
                 "ressourceMinerals": 10,

@@ -9,7 +9,7 @@ class GameData {
         /** @type {number} - Time in s, between two iterations of the game world */
         this.iterationLoopTime = 3;
         /** @type {number} - {DEV} allowing time multiplication for dev purposes */
-        this.DEV_timeMultiplier = 3600/this.iterationLoopTime;
+        this.DEV_timeMultiplier = 1;//3600/this.iterationLoopTime;
         
         /** @type {integer} - Incremental counter to allow individual unique ids for all game objects */
         this.gameObjectCurrentID = 0;
