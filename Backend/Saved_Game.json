@@ -1,20 +1,20 @@
 {
-    "gameObjectCurrentID": 1,
-    "startDate": "2026-04-20T13:15:19.402Z",
+    "gameObjectCurrentID": 11,
+    "startDate": "2026-04-23T13:10:12.289Z",
     "elapsedSeconds": 0,
-    "currentDate": "2026-04-20T13:15:19.402Z",
+    "currentDate": "2026-04-23T13:10:12.289Z",
     "cluster": {
         "asteroids": [
             {
                 "gameObjectId": 0,
-                "timestamp": "2026-04-20T13:15:19.402Z",
+                "timestamp": "2026-04-23T13:10:12.289Z",
                 "x": 0,
                 "y": 0,
                 "ressourceMinerals": 10,
                 "ressourceWater": 10,
-                "mineralsGeneration": -1,
-                "waterGeneration": -1,
-                "energyGeneration": -1,
+                "mineralsGeneration": 1,
+                "waterGeneration": 0.1,
+                "energyGeneration": 1,
                 "constructions": [],
                 "constructionsQueue": [],
                 "spaceships": [],

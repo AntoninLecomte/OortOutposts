@@ -9,7 +9,7 @@ class GameData {
         /** @type {number} - Time in s, between two iterations of the game world */
         this.iterationLoopTime = 3;
         /** @type {number} - {DEV} allowing time multiplication for dev purposes */
-        this.DEV_timeMultiplier = 1;//3600/this.iterationLoopTime;
+        this.DEV_timeMultiplier = 0;//3600/this.iterationLoopTime;
         
         /** @type {integer} - Incremental counter to allow individual unique ids for all game objects */
         this.gameObjectCurrentID = 0;
@@ -480,20 +480,20 @@ class Asteroid extends GameObject{
 
         data["constructions"] = [];
         for (var construction in this.constructions){
-            data["constructions"].push(this.constructions[construction].exportJSON())
+            data["constructions"].push(this.constructions[construction].exportJSON(timestamp))
         }
         data["constructionsQueue"] = [];
         for (var construction in this.constructionsQueue){
-            data["constructionsQueue"].push(this.constructionsQueue[construction].exportJSON())
+            data["constructionsQueue"].push(this.constructionsQueue[construction].exportJSON(timestamp))
         }
 
         data["spaceships"] = [];
         for (var spaceship in this.spaceships){
-            data["spaceships"].push(this.spaceships[spaceship].exportJSON())
+            data["spaceships"].push(this.spaceships[spaceship].exportJSON(timestamp))
         }
         data["spaceshipsQueue"] = [];
         for (var spaceship in this.spaceshipsQueue){
-            data["spaceshipsQueue"].push(this.spaceshipsQueue[spaceship].exportJSON())
+            data["spaceshipsQueue"].push(this.spaceshipsQueue[spaceship].exportJSON(timestamp))
         }
 
         return data;

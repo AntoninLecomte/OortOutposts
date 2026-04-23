@@ -7,6 +7,8 @@ class GameConfig {
             "debug": "rgb(255,0,255)"
         }
         this.strings_EN = {
+            "EmptyConstructionsQueue": "No construction planned.",
+            "EmptySpaceshipsQueue": "No spaceship is ordered.",
             "ConstructionComplete": "Construction completed: {} ",
             "AddToQueue": "Add",
             "ConstructionCost": "Cost",

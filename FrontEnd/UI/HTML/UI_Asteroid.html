@@ -50,33 +50,36 @@
     <div class="UI_Window" id="Window_Construction">
         <div class="UI_WindowFrame UI_Frame">
             <div class="UI_WindowContent">
-                <div class="UI_Scroller">
-                    <div id="ConstructionQueueDiv" class="UI_Timeline">
-                        <div class="UI_Factory UI_TimelineStep QueueItem" id="QueueItemFactory">
-                            <div class="UI_TimelineStepPoint"></div>
-                            <div class="Miniature">
-                                <img src="NO_IMAGE"/>
-                                <p class="DurationText"></p>
-                            </div>
-                            <div class="RightPanel">
-                                <p class="Name"></p>
-                                <div class="ButtonsPanel">
-                                    <div class="UI_Button"><p>△</p></div>
-                                    <div class="UI_Button"><p>▽</p></div>
-                                    <div class="UI_Button"><p>⨯</p></div>
+                <div class="QueueColumn">
+                    <p class="QueueStatusLabel" id="ConstructionsQueueLabel"></p>
+                    <div class="UI_Scroller" id="ConstructionQueueScroller">
+                        <div id="ConstructionQueueDiv" class="UI_Timeline">
+                            <div class="UI_Factory UI_TimelineStep QueueItem" id="QueueItemFactory">
+                                <div class="UI_TimelineStepPoint"></div>
+                                <div class="Miniature">
+                                    <img src="NO_IMAGE"/>
+                                    <p class="DurationText"></p>
+                                </div>
+                                <div class="RightPanel">
+                                    <p class="Name"></p>
+                                    <div class="ButtonsPanel">
+                                        <div class="UI_Button"><p>△</p></div>
+                                        <div class="UI_Button"><p>▽</p></div>
+                                        <div class="UI_Button"><p>⨯</p></div>
+                                    </div>
                                 </div>
                             </div>
-                            
-                        </div>
-                        <div class="UI_TimelineLineDiv">
-                            <div class="UI_TimelineLine"></div>
+
+                            <div class="UI_TimelineLineDiv">
+                                <div class="UI_TimelineLine"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="UI_VerticalSeparator"></div>
 
-                <div class="UI_Scroller" id="ConstructionPicksScroller">
+                <div class="UI_Scroller PickColumn">
                     <div class="PicksDiv" id="ConstructionPicksDiv">
                         <div class="UI_Factory PickItem" id="PickItemFactory">
                             <div class="ButtonCentralizer">
@@ -116,17 +119,21 @@
     <div class="UI_Window" id="Window_Shipyard">
         <div class="UI_WindowFrame UI_Frame">
             <div class="UI_WindowContent">
-                <div class="UI_Scroller">
-                    <div id="SpaceshipsQueueDiv" class="UI_Timeline">
-                        <div class="UI_TimelineLineDiv">
-                            <div class="UI_TimelineLine"></div>
+                <div class="QueueColumn">
+                    <p class="QueueStatusLabel" id="SpaceshipsQueueLabel">HALO is a good direction, but how to perform this such ambitious project? How to do it ? That's not gonna be easy, but we'll make it</p>
+                    <div class="UI_Scroller">
+                        <div id="SpaceshipsQueueDiv" class="UI_Timeline">
+                            <div class="UI_TimelineLineDiv">
+                                <div class="UI_TimelineLine"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                
 
                 <div class="UI_VerticalSeparator"></div>
 
-                <div class="UI_Scroller" id="SpaceshipsPickScroller">
+                <div class="UI_Scroller PickColumn">
                     <div class="PicksDiv" id="SpaceshipPicksDiv">
                     </div>
                 </div>

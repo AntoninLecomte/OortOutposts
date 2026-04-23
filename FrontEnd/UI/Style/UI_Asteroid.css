@@ -15,6 +15,7 @@
     left: 1vw;
 
     column-gap: 1vw;
+    padding: 1em;
 }
 
 #UI_Asteroid #RightButtonsDiv{
@@ -68,7 +69,25 @@
     background-color: black;    
 }
 
+/*  Queue windows */
+#UI_Asteroid .QueueColumn{
+   flex: 1;
+   display: flex;
+   flex-direction: column;
+   row-gap: 2vh;
+}
+#UI_Asteroid .QueueStatusLabel{
+    width: 100%;
+    text-align: center;
+    word-wrap: break-word;
+    font-size: small;
+}
+#UI_Asteroid .PickColumn{
+    flex:3;
+}
+
 /* Construction queue common styling */
+
 #UI_Asteroid .UI_Timeline{
     row-gap: 3vh;
 }
@@ -100,7 +119,6 @@
     text-align: center;
     vertical-align: middle;
 }
-
 
 /* Pick items common stying */
 #UI_Asteroid .PicksDiv{
@@ -165,10 +183,6 @@
     overflow-y: hidden;
     flex-direction: row;
 }
-#UI_Asteroid #ConstructionPicksScroller{
-    padding-right: 2vw;
-    flex: 1;
-}
 
 
 
@@ -176,8 +190,4 @@
 #UI_Asteroid #Window_Shipyard .UI_WindowContent{
     overflow-y: hidden;
     flex-direction: row;
-}
-#UI_Asteroid #SpaceshipsPickScroller{
-    padding-right: 2vw;
-    flex: 1;
 }

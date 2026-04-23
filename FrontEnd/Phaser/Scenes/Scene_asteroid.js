@@ -191,6 +191,13 @@ class UI_Asteroid {
 
     /** Updates the construction queue in reference with game data */
     updateConstructionQueue(){
+        // Update status
+        if (this.parentScene.asteroid.constructionsQueue.length == 0){
+            document.getElementById("ConstructionsQueueLabel").innerHTML = gameConfig.strings_EN["EmptyConstructionsQueue"];
+        }else{
+            document.getElementById("ConstructionsQueueLabel").style.display = "none";
+        }
+
         // Remove existing elements
         this.UI_constructionQueueItems = [];
         var previousItems = document.getElementById("ConstructionQueueDiv").querySelectorAll(".QueueItem");
@@ -219,6 +226,13 @@ class UI_Asteroid {
      * Updates the soaceships queue in reference with game data
      */
     updateSpaceshipsQueue(){
+        // Update status
+        if (this.parentScene.asteroid.spaceshipsQueue.length == 0){
+            document.getElementById("SpaceshipsQueueLabel").innerHTML = gameConfig.strings_EN["EmptySpaceshipsQueue"];
+        }else{
+            document.getElementById("SpaceshipsQueueLabel").style.display = "none";
+        }
+
         // Remove existing elements
         this.UI_spaceshipsQueueItems = [];
         var previousItems = document.getElementById("SpaceshipsQueueDiv").querySelectorAll(".QueueItem");
