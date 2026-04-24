@@ -1,13 +1,13 @@
 {
-    "gameObjectCurrentID": 11,
-    "startDate": "2026-04-23T13:10:12.289Z",
+    "gameObjectCurrentID": 9,
+    "startDate": "2026-04-24T08:28:31.976Z",
     "elapsedSeconds": 0,
-    "currentDate": "2026-04-23T13:10:12.289Z",
+    "currentDate": "2026-04-24T08:28:31.976Z",
     "cluster": {
         "asteroids": [
             {
                 "gameObjectId": 0,
-                "timestamp": "2026-04-23T13:10:12.289Z",
+                "timestamp": "2026-04-24T08:28:31.976Z",
                 "x": 0,
                 "y": 0,
                 "ressourceMinerals": 10,
@@ -16,9 +16,65 @@
                 "waterGeneration": 0.1,
                 "energyGeneration": 1,
                 "constructions": [],
-                "constructionsQueue": [],
-                "spaceships": [],
-                "spaceshipsQueue": []
+                "constructionsQueue": [
+                    {
+                        "gameObjectId": 2,
+                        "timestamp": "2026-04-24T08:28:31.976Z",
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-24T08:28:52.974Z",
+                        "constructedEnergy": -1,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 4,
+                        "timestamp": "2026-04-24T08:28:31.976Z",
+                        "constructionTypeID": "CONST_WaterExtractor",
+                        "constructionDate": "2026-04-24T08:28:58.198Z",
+                        "constructedEnergy": -1,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 6,
+                        "timestamp": "2026-04-24T08:28:31.976Z",
+                        "constructionTypeID": "CONST_SolarUnit",
+                        "constructionDate": "2026-04-24T08:29:04.078Z",
+                        "constructedEnergy": -1,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 3,
+                        "timestamp": "2026-04-24T08:28:31.976Z",
+                        "spaceshipTypeID": "SHIP_Cargo",
+                        "constructionDate": "2026-04-24T08:28:55.407Z",
+                        "constructedEnergy": -1,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 5,
+                        "timestamp": "2026-04-24T08:28:31.976Z",
+                        "spaceshipTypeID": "SHIP_Alpha",
+                        "constructionDate": "2026-04-24T08:29:00.126Z",
+                        "constructedEnergy": -1,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 7,
+                        "timestamp": "2026-04-24T08:28:31.976Z",
+                        "spaceshipTypeID": "SHIP_Omega",
+                        "constructionDate": "2026-04-24T08:29:05.871Z",
+                        "constructedEnergy": -1,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 8,
+                        "timestamp": "2026-04-24T08:28:31.976Z",
+                        "spaceshipTypeID": "SHIP_Omega",
+                        "constructionDate": "2026-04-24T08:58:02.904Z",
+                        "constructedEnergy": -1,
+                        "structurePoints": 0
+                    }
+                ],
+                "spaceships": []
             }
         ]
     }

@@ -1,5 +1,5 @@
 
-import { GameData, GameEvent } from "../FrontEnd/Game_data/GameData.js";
+import { GameData, GameEvent, Asteroid } from "../FrontEnd/Game_data/GameData.js";
 import { readFileSync, writeFileSync } from 'fs';
 import {createServer} from 'http';
 import * as path from 'node:path';
@@ -109,7 +109,8 @@ class Server{
         /** @type {GameData} */
         const gameData = server.gameData;
 
-        var targetAsteroid; /** @type {Asteroid} */
+        /** @type {Asteroid} */
+        var targetAsteroid; 
         if (urlParams.get("asteroidID") != null){
             targetAsteroid = gameData.getGameObjectById(urlParams.get("asteroidID"))
         }
@@ -129,24 +130,28 @@ class Server{
         if (request.url.includes("addConstructionToQueue")){
             targetAsteroid.addConstructionToQueue(urlParams.get("constructionTypeID"));
             gameServerEngine.saveDynamicData();
+            return response.end("Ok");
         }
         if (request.url.includes("addSpaceShipToQueue")){
             targetAsteroid.addSpaceshipToQueue(urlParams.get("spaceshipTypeID"));
             gameServerEngine.saveDynamicData();
+            return response.end("Ok");
         }
         if (request.url.includes("swapQueueObjects")){
             const targetGameObject = gameData.getGameObjectById(urlParams.get("gameObjectID"));
             const targetGameObject2 = gameData.getGameObjectById(urlParams.get("gameObjectID2"));
             targetAsteroid.swapQueueObjects(targetGameObject, targetGameObject2);
             gameServerEngine.saveDynamicData();
+            return response.end("Ok");
         }
     
-        if (request.url.includes("deleteObject")){
+        if (request.url.includes("cancelConstruction")){
             const targetGameObject = gameData.getGameObjectById(urlParams.get("gameObjectID"));
-            targetGameObject.delete();
+            targetAsteroid.cancelConstruction(targetGameObject);
             gameServerEngine.saveDynamicData();
+            return response.end("Ok");
         }
-        response.end("Ok");
+        throw new Error("Last received command unknown.")
     }
 }
 

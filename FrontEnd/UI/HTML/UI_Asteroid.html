@@ -24,30 +24,13 @@
     </div>
 
     <div class="UI_Column" id="RightButtonsDiv">
+        <div class="UI_Button" id="Button_Queue"><p>QUE</p></div>
         <div class="UI_Button" id="Button_Log"><p>LOG</p></div>
         <div class="UI_Button" id="Button_Construction"><p>CST</p></div>
         <div class="UI_Button" id="Button_Shipyard"><p>SHP</p></div>
     </div>
-    
 
-    <div class="UI_Window" id="Window_Log">
-        <div class="UI_WindowFrame UI_Frame">
-            <div class="UI_WindowContent">
-                <div id="LogEventsDiv" class="UI_Timeline">
-                    <div class="UI_Factory UI_TimelineStep LogEventsItem" id="LogEventItemFactory">
-                        <div class="UI_TimelineStepPoint"></div>
-                        <p class="LogEventTimeText"></p>
-                        <p class="LogEventText"></p>
-                    </div>
-                    <div class="UI_TimelineLineDiv">
-                        <div class="UI_TimelineLine"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="UI_Window" id="Window_Construction">
+    <div class="UI_Window" id="Window_Queue">
         <div class="UI_WindowFrame UI_Frame">
             <div class="UI_WindowContent">
                 <div class="QueueColumn">
@@ -76,9 +59,30 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <div class="UI_VerticalSeparator"></div>
+    <div class="UI_Window" id="Window_Log">
+        <div class="UI_WindowFrame UI_Frame">
+            <div class="UI_WindowContent">
+                <div id="LogEventsDiv" class="UI_Timeline">
+                    <div class="UI_Factory UI_TimelineStep LogEventsItem" id="LogEventItemFactory">
+                        <div class="UI_TimelineStepPoint"></div>
+                        <p class="LogEventTimeText"></p>
+                        <p class="LogEventText"></p>
+                    </div>
+                    <div class="UI_TimelineLineDiv">
+                        <div class="UI_TimelineLine"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="UI_Window" id="Window_Construction">
+        <div class="UI_WindowFrame UI_Frame">
+            <div class="UI_WindowContent">
                 <div class="UI_Scroller PickColumn">
                     <div class="PicksDiv" id="ConstructionPicksDiv">
                         <div class="UI_Factory PickItem" id="PickItemFactory">
@@ -120,7 +124,7 @@
         <div class="UI_WindowFrame UI_Frame">
             <div class="UI_WindowContent">
                 <div class="QueueColumn">
-                    <p class="QueueStatusLabel" id="SpaceshipsQueueLabel">HALO is a good direction, but how to perform this such ambitious project? How to do it ? That's not gonna be easy, but we'll make it</p>
+                    <p class="QueueStatusLabel" id="SpaceshipsQueueLabel"></p>
                     <div class="UI_Scroller">
                         <div id="SpaceshipsQueueDiv" class="UI_Timeline">
                             <div class="UI_TimelineLineDiv">

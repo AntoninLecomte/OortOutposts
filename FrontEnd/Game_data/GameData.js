@@ -72,7 +72,7 @@ class GameData {
     }
     /** Runs a loop to propagate the game state through time */
     runLoopIteration(){
-        const dt = this.iterationLoopTime * this.DEV_timeMultiplier
+        const dt = this.iterationLoopTime * this.DEV_timeMultiplier;
         this.elapsedSeconds += dt;
         this.currentDate = new Date(this.startDate.getTime()+this.elapsedSeconds*1000);
         this.cluster.runLoopIteration(dt);
@@ -315,18 +315,18 @@ class Asteroid extends GameObject{
         /** @type {number} - Energy production in kW */
         this.energyGeneration = -1;
 
-        /** @type {Construction[]} - The asteroid list of events */
+        /** @type {GameEvent[]} - The asteroid list of events */
         this.events = [];
+        
+        /** @type {GameObject[]} - The asteroid constructions queue list */
+        this.constructionsQueue = [];
+        /** @type {string} - The asteroid constructions queue status, either IDLE, RUNNING or BLOCKED_RESSOURCES*/
+        this.constructionsQueueStatus = "IDLE";
+
         /** @type {Construction[]} - The asteroid completed constructions */
         this.constructions = [];
-        /** @type {Construction[]} - The asteroid constructions queue list */
-        this.constructionsQueue = [];
-
         /** @type {Spaceship[]} - List of spaceships based to this asteroid */
         this.spaceships = [];
-
-        /** @type {Spaceship[]} - The asteroid spaceships queue list */
-        this.spaceshipsQueue = [];
 
         // this.generateShapePoints(200,500,1);
         // this.DEV_generateEvents();
@@ -412,29 +412,27 @@ class Asteroid extends GameObject{
     addSpaceshipToQueue(spaceshipTypeID){
         const newSpaceShip = new Spaceship(this.gameData, this, spaceshipTypeID);
         newSpaceShip.attributeNewId();
-        this.spaceshipsQueue.push(newSpaceShip);
+        this.constructionsQueue.push(newSpaceShip);
     }
+    /** 
+    * Remove a game object from this asteroid construction list
+    * @param {GameObject} gameObject - Game object to be removed
+    */
+    cancelConstruction(gameObject){
+        this.constructionsQueue.splice(this.constructionsQueue.indexOf(gameObject),1);
+    }
+
     /** 
     * Swaps two elements from a queue
     * @param {GameObject} gameObject - First object
     * @param {GameObject} gameObject2 - second object
     */
     swapQueueObjects(gameObject, gameObject2){
-        if (gameObject instanceof Construction){
-            const switchCopy = gameObject;
-            const index = this.constructionsQueue.indexOf(gameObject);
-            const index2 = this.constructionsQueue.indexOf(gameObject2);
-            this.constructionsQueue[index] = gameObject2;
-            this.constructionsQueue[index2] = switchCopy;
-            
-        }
-        if (gameObject instanceof Spaceship){
-            const switchCopy = gameObject;
-            const index = this.spaceshipsQueue.indexOf(gameObject);
-            const index2 = this.spaceshipsQueue.indexOf(gameObject2);
-            this.spaceshipsQueue[index] = gameObject2;
-            this.spaceshipsQueue[index2] = switchCopy;
-        }
+        const switchCopy = gameObject;
+        const index = this.constructionsQueue.indexOf(gameObject);
+        const index2 = this.constructionsQueue.indexOf(gameObject2);
+        this.constructionsQueue[index] = gameObject2;
+        this.constructionsQueue[index2] = switchCopy;
     }
 
     /** Runs a loop to propagate the game state through time 
@@ -448,15 +446,20 @@ class Asteroid extends GameObject{
         this.ressourceWater += this.waterGeneration*dt/3600;
 
         // Energy ratios
-        const energyConstruction = 1*this.energyGeneration;
-        const energyShipyard = 0;
-        const energyScience = 0;
+        const energyConstruction = 1*this.energyGeneration*dt;
+        const energyShipyard = 0*dt;
+        const energyScience = 0*dt;
 
         // Construction
         if (this.constructionsQueue.length > 0){
             this.constructionsQueue[0].constructedEnergy += energyConstruction;
             if (this.constructionsQueue[0].constructedEnergy >= this.constructionsQueue[0].costEnergy){
-                this.constructions.push(this.constructionsQueue[0]);
+                if (this.constructionsQueue[0].constructor.name == "Construction"){
+                    this.constructions.push(this.constructionsQueue[0]);
+                }
+                if (this.constructionsQueue[0].constructor.name == "Spaceship"){
+                    this.spaceships.push(this.constructionsQueue[0]);
+                }
                 this.constructionsQueue.splice(0,1);
             }
         }
@@ -491,10 +494,6 @@ class Asteroid extends GameObject{
         for (var spaceship in this.spaceships){
             data["spaceships"].push(this.spaceships[spaceship].exportJSON(timestamp))
         }
-        data["spaceshipsQueue"] = [];
-        for (var spaceship in this.spaceshipsQueue){
-            data["spaceshipsQueue"].push(this.spaceshipsQueue[spaceship].exportJSON(timestamp))
-        }
 
         return data;
     }
@@ -523,7 +522,13 @@ class Asteroid extends GameObject{
         }
         this.constructionsQueue = [];
         for (var construction in JSONData.constructionsQueue){
-            const newConstruction = new Construction(this.gameData, this, null);
+            var newConstruction;
+            if (JSONData.constructionsQueue[construction].constructionTypeID == undefined){
+                newConstruction = new Spaceship(this.gameData, this, null);
+            }
+            if (JSONData.constructionsQueue[construction].spaceshipTypeID == undefined){
+                newConstruction = new Construction(this.gameData, this, null);
+            }
             newConstruction.loadJSON(JSONData.constructionsQueue[construction]);
             newConstruction.loadStaticFields();
             this.constructionsQueue.push(newConstruction);
@@ -536,14 +541,6 @@ class Asteroid extends GameObject{
             newSpaceship.loadStaticFields();
             this.spaceships.push(newSpaceship);
         }
-        this.spaceshipsQueue = [];
-        for (var spaceship in JSONData.spaceshipsQueue){
-            const newSpaceship = new Spaceship(this.gameData, this, null);
-            newSpaceship.loadJSON(JSONData.spaceshipsQueue[spaceship]);
-            newSpaceship.loadStaticFields();
-            this.spaceshipsQueue.push(newSpaceship);
-        }
-
     }
 }
 
@@ -607,7 +604,7 @@ class Construction extends GameObject {
         this.description = "{DEFAULT}_DESCRIPTION";
 
         /** @type {number} - Total energy required for initial construction */
-        this.costEnergy = 0;
+        this.costEnergy = 1;
         /** @type {number} - Total minerals required for initial construction */
         this.costMinerals = 0;
         /** @type {number} - Total water required for initial construction */
@@ -645,12 +642,6 @@ class Construction extends GameObject {
         for (var field in statics){
             this[field] = statics[field];
         }
-    }
-
-    /** Removes the construction from the world */
-    delete(){
-        super.delete();
-        this.asteroid.constructionsQueue.splice(this.asteroid.constructionsQueue.indexOf(this),1);
     }
 
     /** 
@@ -695,93 +686,45 @@ class Spaceship extends GameObject{
         this.spaceshipTypeID = spaceshipTypeID;
 
         // Default values. To be overriden by JSON data from gamedata.
-        /**
-         * Spaceship name
-         * @type {string}
-         */
+        /** @type {string} - Spaceship name */
         this.name = "{DEFAULT}_NAME";
-        /**
-         * Spaceship description in picker
-         * @type {string}
-         */
+        /** @type {string} - Spaceship description in picker */
         this.description = "{DEFAULT}_DESCRIPTION";
-        /**
-         * Total energy required for initial construction
-         * @type {number}
-         */
-        this.costEnergy = 0;
-        /**
-         * Total minerals required for initial construction
-         * @type {number}
-         */
+        /** @type {number} - Total energy required for initial construction */
+        this.costEnergy = 1;
+        /** @type {number} - Total minerals required for initial construction */
         this.costMinerals = 0;
-        /**
-         * Total water required for initial construction
-         * @type {number}
-         */
+        /** @type {number} - Total water required for initial construction */
         this.costWater = 0;
 
-        /**
-        * Ability to start firing before ennemy units
-        * @type {number}
-        */
+        /** @type {number} - Ability to start firing before ennemy units */
         this.initiative = 0;
-        /**
-        * spaceship intial structure points
-        * @type {number}
-        */
+        /** @type {number} - Spaceship intial structure points */
         this.maxStructurePoints = 0;
-        /**
-        * Shield reducing incoming damage
-        * @type {number}
-        */
+        /** @type {number} - Shield reducing incoming damage */
         this.shield = 0;
-        /**
-        * Damage dealt to ennemy units shield and structure points
-        * @type {number}
-        */
+        /** @type {number} - Damage dealt to ennemy units shield and structure points */
         this.firePower = 0;
 
-        /**
-        * Spaceship speed
-        * @type {number}
-        */
+        /** @type {number} - Spaceship speed */
         this.speed = 0;
-        /**
-        * Water consumption in T/distance
-        * @type {number}
-        */
+        /** @type {number} - Water consumption in T/distance */
         this.waterConsumption = 0;
-        /**
-        * Range in distance
-        * @type {number}
-        */
+        /** @type {number} - Range in distance */
         this.range = 0;
 
-        /**
-        * Spaceship cargo capacity in kg
-        * @type {number}
-        */
+        /** @type {number} - Spaceship cargo capacity in kg */
         this.maxCargo = 0;
 
         // Load static data
         this.loadStaticFields();
 
         // Initialize dynamic fields
-        /**
-        * Construction date
-        * @type {Date}
-        */
+        /** @type {Date} - Construction date */
         this.constructionDate = new Date();
-        /**
-        * Amount of energy used for construction (progress)
-        * @type {number}
-        */
+        /** @type {number} - Amount of accumulated energy (tracks construction progress) */
         this.constructedEnergy = 0;
-        /**
-        * Remaining structure points
-        * @type {number}
-        */
+        /** @type {number} - Remaining structure points */
         this.structurePoints = this.maxStructurePoints;
     }
 
@@ -791,12 +734,6 @@ class Spaceship extends GameObject{
         for (var field in statics){
             this[field] = statics[field];
         }
-    }
-
-    /** Removes the spaceship from the world */
-    delete(){
-        super.delete();
-        this.asteroid.spaceshipsQueue.splice(this.asteroid.spaceshipsQueue.indexOf(this),1);
     }
 
     /** 

@@ -4,6 +4,7 @@ class GameConfig {
             "background": "rgb(0,0,0)",
             "foreground": "rgb(255,255,255)",
             "foreground_fade": "rgb(170,170,170)",
+            "warning": "rgb(255, 150, 0)",
             "debug": "rgb(255,0,255)"
         }
         this.strings_EN = {

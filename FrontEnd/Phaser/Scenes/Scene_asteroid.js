@@ -92,6 +92,7 @@ class UI_Asteroid {
         
         // Create window and associated button objects
         this.windows = {
+            "Queue": [],
             "Log": [],
             "Construction": [],
             "Shipyard": [],
@@ -141,7 +142,6 @@ class UI_Asteroid {
         this.updateConstructionPicks();
         this.updateSpaceshipsPicks();
         this.updateConstructionQueue();
-        this.updateSpaceshipsQueue();
     }
 
     /** Update timestamp */
@@ -194,6 +194,8 @@ class UI_Asteroid {
         // Update status
         if (this.parentScene.asteroid.constructionsQueue.length == 0){
             document.getElementById("ConstructionsQueueLabel").innerHTML = gameConfig.strings_EN["EmptyConstructionsQueue"];
+            document.getElementById("ConstructionsQueueLabel").style.display = "block";
+            document.getElementById("ConstructionsQueueLabel").style.color = gameConfig.colors["warning"];
         }else{
             document.getElementById("ConstructionsQueueLabel").style.display = "none";
         }
@@ -208,8 +210,8 @@ class UI_Asteroid {
         });
 
         // Recreate items:
-        for (var construction in this.parentScene.asteroid.constructionsQueue){
-            const constructionOb = this.parentScene.asteroid.constructionsQueue[construction];
+        for (var item in this.parentScene.asteroid.constructionsQueue){
+            const constructionOb = this.parentScene.asteroid.constructionsQueue[item];
 
             const newNode = document.getElementById("QueueItemFactory").cloneNode(true);
             newNode.id = "";
@@ -217,44 +219,10 @@ class UI_Asteroid {
             const newQueueItem = new UI_QueueItem(this.parentScene, newNode, constructionOb, this.parentScene.asteroid.constructionsQueue);
             this.UI_constructionQueueItems.push(newQueueItem)
         }
+
         // Update buttons:
         for (var item in this.UI_constructionQueueItems){
             this.UI_constructionQueueItems[item].updateButtons()
-        }
-    }
-    /**
-     * Updates the soaceships queue in reference with game data
-     */
-    updateSpaceshipsQueue(){
-        // Update status
-        if (this.parentScene.asteroid.spaceshipsQueue.length == 0){
-            document.getElementById("SpaceshipsQueueLabel").innerHTML = gameConfig.strings_EN["EmptySpaceshipsQueue"];
-        }else{
-            document.getElementById("SpaceshipsQueueLabel").style.display = "none";
-        }
-
-        // Remove existing elements
-        this.UI_spaceshipsQueueItems = [];
-        var previousItems = document.getElementById("SpaceshipsQueueDiv").querySelectorAll(".QueueItem");
-        previousItems.forEach(function (el){
-            if (el.id != "QueueItemFactory"){
-                el.remove(el);
-            }
-        });
-
-        // Recreate items
-        for (var spaceship in this.parentScene.asteroid.spaceshipsQueue){
-            const spaceshipOb = this.parentScene.asteroid.spaceshipsQueue[spaceship];
-
-            const newNode = document.getElementById("QueueItemFactory").cloneNode(true);
-            newNode.id = "";
-            document.getElementById("SpaceshipsQueueDiv").appendChild(newNode);
-            const newQueueItem = new UI_QueueItem(this.parentScene, newNode, spaceshipOb, this.parentScene.asteroid.spaceshipsQueue);
-            this.UI_spaceshipsQueueItems.push(newQueueItem)
-        }
-        // Update buttons:
-        for (var item in this.UI_spaceshipsQueueItems){
-            this.UI_spaceshipsQueueItems[item].updateButtons()
         }
     }
 
@@ -418,7 +386,7 @@ class UI_QueueItem{
 
     deleteButtonClicked(){
         this.parentScene.networkHandler.sendCommand(
-            "deleteObject",
+            "cancelConstruction",
             {
                 "gameObjectID":this.targetOb.gameObjectId, 
                 "asteroidID":this.parentScene.asteroid.gameObjectId
