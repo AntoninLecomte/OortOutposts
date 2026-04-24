@@ -1,0 +1,137 @@
+<div id="UI_Asteroid">
+    <div class="UI_Frame" id="RessourcesDiv">
+        <div class="UI_Ressource" id="ressourceMinerals">
+            <img class="UI_RessourceImg" src="./WebPage/Media/Ressources/MINERALS.png">
+            <p class="UI_RessourceP"></p>
+        </div>
+        <div class="UI_Ressource" id="ressourceWater">
+            <img class="UI_RessourceImg" src="./WebPage/Media/Ressources/WATER.png">
+            <p class="UI_RessourceP"></p>
+        </div>
+        <div class="UI_Ressource" id="ressourceEnergy">
+            <img class="UI_RessourceImg" src="./WebPage/Media/Ressources/ENERGY.png">
+            <p class="UI_RessourceP"></p>
+        </div>
+    </div>
+
+    <div class="UI_Column" id="TopTexts">
+        <div class="UI_Row" id="AsteroidNameDiv">
+            <p id="AsteroidName">Asteroid name</p>        
+        </div>
+        <div class="UI_Row" id="TimeStampDiv">
+            <p id="TimeStamp">Timestamp</p>        
+        </div>
+    </div>
+
+    <div class="UI_Column" id="RightButtonsDiv">
+        <div class="UI_Button" id="Button_Log"><p>LOG</p></div>
+        <div class="UI_Button" id="Button_Queue"><p>QUE</p></div>
+        <div class="UI_Button" id="Button_Construction"><p>CST</p></div>
+        <div class="UI_Button" id="Button_Shipyard"><p>SHP</p></div>
+    </div>
+
+    <div id="WindowsOrganizer">
+        <div class="UI_Window" id="Window_Log">
+            <div class="UI_WindowFrame UI_Frame">
+                <div class="UI_WindowContent">
+                    <div id="LogEventsDiv" class="UI_Timeline">
+                        <div class="UI_Factory UI_TimelineStep LogEventsItem" id="LogEventItemFactory">
+                            <div class="UI_TimelineStepPoint"></div>
+                            <p class="LogEventTimeText"></p>
+                            <p class="LogEventText"></p>
+                        </div>
+                        <div class="UI_TimelineLineDiv">
+                            <div class="UI_TimelineLine"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    
+        <div class="UI_Window" id="Window_Queue">
+            <div class="UI_WindowFrame UI_Frame">
+                <div class="UI_WindowContent">
+                    <div class="QueueColumn">
+                        <p class="QueueStatusLabel" id="ConstructionsQueueLabel"></p>
+                        <div class="UI_Scroller" id="ConstructionQueueScroller">
+                            <div id="ConstructionQueueDiv" class="UI_Timeline">
+                                <div class="UI_Factory UI_TimelineStep QueueItem" id="QueueItemFactory">
+                                    <div class="UI_TimelineStepPoint"></div>
+                                    <div class="Miniature">
+                                        <img src="NO_IMAGE"/>
+                                        <p class="DurationText"></p>
+                                    </div>
+                                    <div class="RightPanel">
+                                        <p class="Name"></p>
+                                        <div class="ButtonsPanel">
+                                            <div class="UI_Button"><p>△</p></div>
+                                            <div class="UI_Button"><p>▽</p></div>
+                                            <div class="UI_Button"><p>⨯</p></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="UI_TimelineLineDiv">
+                                    <div class="UI_TimelineLine"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="UI_Window" id="Window_Construction">
+            <div class="UI_WindowFrame UI_Frame">
+                <div class="UI_WindowContent">
+                    <div class="UI_Scroller PickColumn">
+                        <div class="PicksDiv" id="ConstructionPicksDiv">
+                            <div class="UI_Factory PickItem" id="PickItemFactory">
+                                <div class="ButtonCentralizer">
+                                    <div class="UI_Button">
+                                        <p class="AddToQueueButtonText"></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="Miniature">
+                                    <img src="NO_IMAGE"/>
+                                    <p class="DurationText"></p>
+                                </div>
+                                <div class="RightPanel">
+                                    <p class="Name"></p>
+                                    <p class="Description"></p>
+                                    <div class="NumberFramesDiv">
+                                        <div class="UI_Factory NumberFrameDiv" id="NumberFrameFactory">
+                                            <p class="NumberFrameTitle"></p>
+                                            <div class="NumberFrameContent">
+                                                <div class="UI_Factory UI_Ressource" id="NumberFrameRessourceFactory">
+                                                    <img class="UI_RessourceImg" src="RESSOURCE.jpg">
+                                                    <p class="UI_RessourceP"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="UI_Window" id="Window_Shipyard">
+            <div class="UI_WindowFrame UI_Frame">
+                <div class="UI_WindowContent">              
+                    <div class="UI_Scroller PickColumn">
+                        <div class="PicksDiv" id="SpaceshipPicksDiv">
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

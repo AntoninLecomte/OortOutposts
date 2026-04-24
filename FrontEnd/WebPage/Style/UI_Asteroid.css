@@ -37,11 +37,17 @@
 }
 
 
-#UI_Asteroid .UI_WindowFrame{
+#UI_Asteroid #WindowsOrganizer{
+    border: 1px solid red;
+    display: flex;
+    
     margin-top: 12vh;
     margin-left: 1vw;
     margin-bottom: 3vh;
     margin-right: 7vw;
+}
+#UI_Asteroid .UI_Window{
+    position: relative;
 }
 
 
