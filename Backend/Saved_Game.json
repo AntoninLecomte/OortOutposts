@@ -1,22 +1,168 @@
 {
-    "gameObjectCurrentID": 5,
-    "startDate": "2026-04-24T13:37:31.364Z",
-    "elapsedSeconds": 0,
-    "currentDate": "2026-04-24T13:37:31.364Z",
+    "gameObjectCurrentID": 19,
+    "startDate": "2026-04-28T15:25:39.084Z",
+    "elapsedSeconds": 259800,
+    "currentDate": "2026-05-01T15:35:39.084Z",
     "cluster": {
         "asteroids": [
             {
                 "gameObjectId": 0,
-                "timestamp": "2026-04-24T13:37:31.364Z",
+                "timestamp": "2026-05-01T15:35:39.084Z",
                 "x": 0,
                 "y": 0,
-                "ressourceMinerals": 10,
-                "ressourceWater": 10,
-                "mineralsGeneration": 1,
+                "ressourceMinerals": 363.0000000000002,
+                "ressourceWater": 17.216666666666896,
+                "mineralsGeneration": 8,
                 "waterGeneration": 0.1,
                 "energyGeneration": 1,
-                "constructions": [],
-                "constructionsQueue": [],
+                "constructions": [
+                    {
+                        "gameObjectId": 1,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-28T15:25:43.106Z",
+                        "constructedEnergy": 4.166666666666665,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 2,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-28T15:25:43.265Z",
+                        "constructedEnergy": 4.166666666666665,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 3,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-28T15:26:44.105Z",
+                        "constructedEnergy": 4.166666666666665,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 4,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-28T15:26:44.243Z",
+                        "constructedEnergy": 4.166666666666665,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 5,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-28T15:30:45.979Z",
+                        "constructedEnergy": 4.166666666666665,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 6,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-28T15:30:46.124Z",
+                        "constructedEnergy": 4.166666666666665,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 7,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_MineralExtractor",
+                        "constructionDate": "2026-04-28T15:30:46.276Z",
+                        "constructedEnergy": 4.166666666666665,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 8,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_SolarUnit",
+                        "constructionDate": "2026-04-28T15:32:13.269Z",
+                        "constructedEnergy": 1.1666666666666665,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 9,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_SolarUnit",
+                        "constructionDate": "2026-04-28T15:32:13.426Z",
+                        "constructedEnergy": 1.1666666666666665,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 10,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_SolarUnit",
+                        "constructionDate": "2026-04-28T15:32:13.583Z",
+                        "constructedEnergy": 1.1666666666666665,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 11,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_SolarUnit",
+                        "constructionDate": "2026-04-28T15:32:13.746Z",
+                        "constructedEnergy": 1.1666666666666665,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 12,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_SolarUnit",
+                        "constructionDate": "2026-04-28T15:32:13.905Z",
+                        "constructedEnergy": 1.1666666666666665,
+                        "structurePoints": 0
+                    }
+                ],
+                "constructionsQueue": [
+                    {
+                        "gameObjectId": 13,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_WaterExtractor",
+                        "constructionDate": "2026-04-28T15:32:55.094Z",
+                        "constructedEnergy": 0.16666666666666666,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 14,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_WaterExtractor",
+                        "constructionDate": "2026-04-28T15:32:55.254Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 15,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_WaterExtractor",
+                        "constructionDate": "2026-04-28T15:32:55.406Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 16,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_WaterExtractor",
+                        "constructionDate": "2026-04-28T15:32:55.574Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 17,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_WaterExtractor",
+                        "constructionDate": "2026-04-28T15:32:55.734Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    },
+                    {
+                        "gameObjectId": 18,
+                        "timestamp": "2026-05-01T15:35:39.084Z",
+                        "constructionTypeID": "CONST_WaterExtractor",
+                        "constructionDate": "2026-04-28T15:32:55.896Z",
+                        "constructedEnergy": 0,
+                        "structurePoints": 0
+                    }
+                ],
                 "spaceships": []
             }
         ]

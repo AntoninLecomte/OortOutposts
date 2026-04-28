@@ -1,4 +1,4 @@
-#UI_Asteroid{
+#View_Asteroid{
     position: absolute;
     width: 100%;
     height: 100%;
@@ -6,28 +6,42 @@
     right: 0;
 
     display: flex;
-    flex-direction: column;
+}
+#View_Asteroid #LeftPanel{
+    position: relative;
+    flex: 2;
+
+    display: flex;
+}
+#View_Asteroid #RightPanel{
+    position: relative;
+    flex: 1;
+
+    display: flex;
+}
+#View_Asteroid #RightPanelContent{
+    display: flex;
+    width: 100%;
+}
+#View_Asteroid #RightTabView{
+    width: 100%;
+    height: 100%;
 }
 
-#UI_Asteroid #RessourcesDiv{
+#View_Asteroid #RessourcesDiv{
     position: absolute;
-    top: 1vw;
-    left: 1vw;
+    top: 0;
+    left: 2em;
 
-    column-gap: 1vw;
+    column-gap: 1em;
     padding: 1em;
+
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
-#UI_Asteroid #RightButtonsDiv{
-    position: absolute;
-    right: 1vw;
-
-    row-gap: 3vh;
-
-    z-index: 3;
-}
-
-#UI_Asteroid #TopTexts{
+#View_Asteroid #TopTexts{
     position: absolute;
     top: 1vw;
     width: 100%;
@@ -37,163 +51,143 @@
 }
 
 
-#UI_Asteroid #WindowsOrganizer{
-    border: 1px solid red;
-    display: flex;
-    
-    margin-top: 12vh;
-    margin-left: 1vw;
-    margin-bottom: 3vh;
-    margin-right: 7vw;
-}
-#UI_Asteroid .UI_Window{
-    position: relative;
-}
-
-
-/* Applicable to all windows */
-#UI_Asteroid .Miniature{
+#View_Asteroid .Miniature{
     position: relative;
     border: 1px solid white;
 }
-
-
-/* Log events window */
-#UI_Asteroid #LogEventsDiv{
-    row-gap: 2vh;
+#View_Asteroid .Miniature img{
+    width: 8em;
+    height: 8em;
+}
+#View_Asteroid .Miniature .DurationText{
     font-size: small;
-}
-#UI_Asteroid .Miniature img{
-    width: 10vh;
-    height: 10vh;
-}
-#UI_Asteroid .Miniature .DurationText{
     position: absolute;
-    bottom: 2vh;
+    bottom: 1em;
     width: 100%;
     text-align: center;
     background-color: black;    
 }
 
-/*  Queue windows */
-#UI_Asteroid .QueueColumn{
-   flex: 1;
-   display: flex;
-   flex-direction: column;
-   row-gap: 2vh;
+/* UI_timeline elements */
+#View_Asteroid .UI_Timeline{
+    row-gap: 3vh;
 }
-#UI_Asteroid .QueueStatusLabel{
+#View_Asteroid .UI_TimelineStepPoint{
+    margin-right: 1vw;
+}
+
+/* Log events panel */
+#View_Asteroid #LogEventsDiv{
+    row-gap: 2vh;
+    font-size: small;
+}
+
+/*  Queue panel */
+#View_Asteroid #ConstructionsQueuePanel{
+    display: flex;
+    flex-direction: column;
+}
+#View_Asteroid #ConstructionQueueScroller{
+    width: 100%;
+}
+#View_Asteroid .QueueStatusLabel{
     width: 100%;
     text-align: center;
     word-wrap: break-word;
     font-size: small;
 }
-#UI_Asteroid .PickColumn{
-    flex:3;
-}
-
-/* Construction queue common styling */
-
-#UI_Asteroid .UI_Timeline{
-    row-gap: 3vh;
-}
-#UI_Asteroid .UI_TimelineStepPoint{
-    margin-right: 1vw;
-}
-#UI_Asteroid .QueueItem{
+#View_Asteroid .QueueItem{
     position: relative;
     top: 0;
     transition: 0.3s ease-in top;
 }
-#UI_Asteroid .QueueItem .RightPanel{
+#View_Asteroid .QueueItem .RightPanel{
     display: flex;
     flex-direction: column;
     row-gap: 1vh;
 }
-#UI_Asteroid .QueueItem .ButtonsPanel{
+#View_Asteroid .QueueItem .ButtonsPanel{
     display: flex;
     flex-direction: row;
     column-gap: 0.5vw;
 }
-#UI_Asteroid .QueueItem .UI_Button{
+#View_Asteroid .QueueItem .UI_Button{
     border-radius: 0.5em;
     width: 3em;
     height: 3em;
 }
-#UI_Asteroid .QueueItem .UI_Button p{
+#View_Asteroid .QueueItem .UI_Button p{
     font-size: medium;
     text-align: center;
     vertical-align: middle;
 }
 
-/* Pick items common stying */
-#UI_Asteroid .PicksDiv{
+/* Pick items */
+#View_Asteroid .PicksDiv{
     display: flex;
     flex-direction: column;
     row-gap: 2vh;
 }
-#UI_Asteroid .PickItem{
+#View_Asteroid .PickItem{
     border: 1px solid white;
     border-radius: 0.5vw;
     padding: 1vw;
+
     display: flex;
-    align-items: center;
-    column-gap: 1vw;
+    align-items: stretch;
+    column-gap: 1em;
 }
-#UI_Asteroid .PickItem .UI_Button{
-    width: auto;
-    height: auto;
-    padding: 0.5em;
-    border-radius: 0.5vw;
-    writing-mode: sideways-lr;
-    word-break: keep-all;
+#View_Asteroid .PickItem .RightPanel{
+    flex:1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    row-gap: 1em;
 }
-#UI_Asteroid .PickItem .RightPanel{
+#View_Asteroid .PickItem .TopPanel{
+    display: flex;
+    column-gap: 1em;
+}
+#View_Asteroid .PickItem .ButtonCentralizer{
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
-#UI_Asteroid .PickItem .Name{
+#View_Asteroid .PickItem .UI_Button{
+    flex: 1;
+    width: auto;
+    height: auto;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    writing-mode: sideways-lr;
+    word-break: keep-all;
+}
+#View_Asteroid .PickItem .Name{
     font-weight: bold;
     margin-bottom: 0.5vh;
 }
-#UI_Asteroid .PickItem .NumberFramesDiv{
+#View_Asteroid .PickItem .NumberFramesDiv{
     display: flex;
-    margin-top: 2vh;
-    column-gap: 1vw;
+    column-gap: 1em;
     flex-wrap: wrap;
 }
-#UI_Asteroid .PickItem .NumberFrameDiv{
+#View_Asteroid .PickItem .NumberFrameDiv{
     position: relative;
     display: flex;
     flex-direction: column;
     row-gap: 0.2vh;
 }
-#UI_Asteroid .PickItem .NumberFrameTitle{
+#View_Asteroid .PickItem .NumberFrameTitle{
     font-size: x-small;
     background-color: black;
     padding-left: 0.3vw;
     padding-right: 0.3vw;
 }
-#UI_Asteroid .PickItem .NumberFrameContent{
+#View_Asteroid .PickItem .NumberFrameContent{
     position: relative;
     border: 1px solid white;
     border-radius: 0.25vw;
     display: flex;
     column-gap: 0.8em;
     padding: 0.5vw;
-}
-
-/* Construction window */
-#UI_Asteroid #Window_Construction .UI_WindowContent{
-    overflow-y: hidden;
-    flex-direction: row;
-}
-
-
-
-/* Shipyard window */
-#UI_Asteroid #Window_Shipyard .UI_WindowContent{
-    overflow-y: hidden;
-    flex-direction: row;
 }

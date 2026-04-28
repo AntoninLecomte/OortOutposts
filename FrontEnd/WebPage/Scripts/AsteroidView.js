@@ -1,6 +1,7 @@
-import { GameData } from "../../Game_data/GameData.js";
+import { GameObject, Construction, GameData, Spaceship } from "../../Game_data/GameData.js";
 import { NetworkHandler } from "./Network.js";
-import { UI_Button, UI_Window } from "./UI.js";
+import { UI_Button, UI_TabView, UI_Window } from "./UI.js";
+import { secondsToDurationString } from "./Utils.js";
 
 /** Class linking and organizing all handlers and instances */
 class AsteroidViewEngine{
@@ -28,7 +29,15 @@ class UI_Asteroid {
         this.parentEngine = parentEngine;
         this.gameData = parentEngine.gameData;
 
-        let UI_asteroidObject = this
+        /** @type {UI_QueueItem[]} - Collection of all QueueItem objects */
+        this.UI_constructionQueueItems = [];
+
+        /** @type {Date} - The date at which the page was loaded */
+        this.dataLoadTimeStamp;
+        /** @type {number} - The number of seconds elapsed since the page was loaded */
+        this.dataLoadElapsedSeconds;
+
+        let UI_asteroidObject = this;
         fetch("WebPage/HTML/UI_Asteroid.html")
         .then((response) => response.text())
         .then((text) => {
@@ -39,57 +48,44 @@ class UI_Asteroid {
 
         // Display static elements
         this.refreshStaticElements()
-
-        // Start periodic update:
-        setInterval(function(self){
-            self.getChangesFromServer();
-        },3000,this)
     }
     /** 
     * Function executed at reception of the UI html code
     * @param {Document} DOM - Received HML document
     */
     receivedHTML(DOM){
-        this.mainDiv = DOM.querySelector("#UI_Asteroid");
+        this.mainDiv = DOM.querySelector("#View_Asteroid");
         this.parentEngine.HTML.appendChild(this.mainDiv);
         
-        // Create window and associated button objects
-        this.windows = {
-            "Log": [],
-            "Queue": [],
-            "Construction": [],
-            "Shipyard": [],
-        }
-        for (var w in this.windows){
-            this.windows[w] = [
-                new UI_Window(document.querySelector("#Window_"+w)), 
-                new UI_Button(document.querySelector("#Button_"+w),this,this.windowButtonClicked)
-            ]
-        }
+        // Create tabs
+        this.rightTabs = new UI_TabView(document.getElementById("RightTabView"));
+        this.rightTabs.addTab("log", gameConfig.strings_EN["PanelName_Log"], document.getElementById("LogPanel"));
+        this.rightTabs.addTab("queue", gameConfig.strings_EN["PanelName_Queue"], document.getElementById("ConstructionsQueuePanel"));
+        this.rightTabs.addTab("constructions", gameConfig.strings_EN["PanelName_Constructions"], document.getElementById("ConstructionsPickPanel"));
+        this.rightTabs.addTab("shipyard", gameConfig.strings_EN["PanelName_Shipyard"], document.getElementById("ShipyardPanel"));
+        this.rightTabs.setTab("constructions");
 
-        this.refresh();
+        this.dataLoadTimeStamp = new Date();
 
-        // Open window {DEV}
-        this.windows["Shipyard"][0].open();
-    }
-    windowButtonClicked(button){
-        for (var w in this.windows){
-            if (button != this.windows[w][1]){
-                this.windows[w][0].close(); // Close windows that are not related
-                this.windows[w][1].setState("OFF") // Off the buttons that are not related 
-            }else{
-                if (button.state == "ON"){
-                    this.windows[w][0].open();
-                }else{
-                    this.windows[w][0].close();
-                }
-            }
-        }
+        // Start periodic update:
+        this.getChangesFromServer();
+        setInterval(function(self){
+            self.updateLocalTick();
+        },1000,this)
     }
 
     /** Update static data, run only once at page loading */
     refreshStaticElements(){
         
+    }
+
+    /** Update all local timers */
+    updateLocalTick(){
+        // Run local clock:
+        this.dataLoadElapsedSeconds = (new Date().getTime() - this.dataLoadTimeStamp)/1000*this.gameData.DEV_timeMultiplier;
+        for (var item in this.UI_constructionQueueItems){
+            this.UI_constructionQueueItems[item].updateLocalTick();
+        }
     }
 
     /** Asks server for any updates and show result */
@@ -98,6 +94,8 @@ class UI_Asteroid {
     }
     /** Refresh displayed information to match gamedata state */
     refresh(){
+        this.dataLoadTimeStamp = new Date();
+        
         this.updateTimeStamp();
         this.updateRessources();
         this.updateLog();
@@ -109,21 +107,14 @@ class UI_Asteroid {
 
     /** Update timestamp */
     updateTimeStamp(){
-        var sec_num = (new Date().getTime() - this.parentEngine.asteroid.exportTimestamp.getTime())/1000;
+        var sec_num = ((this.gameData.currentDate.getTime() - this.parentEngine.asteroid.exportTimestamp.getTime()))/1000;
         sec_num = Math.round(sec_num/30)*30; // Round to 30 seconds
+        var timestampStr = secondsToDurationString(sec_num);
 
-        var hours   = Math.floor(Math.abs(sec_num) / 3600);
-        var minutes = Math.floor((Math.abs(sec_num)  - (hours * 3600)) / 60);
-        var seconds = Math.round(Math.abs(sec_num)  - (hours * 3600) - (minutes * 60));
-
-        if (hours   < 10) {hours   = "0"+hours;}
-        if (minutes < 10) {minutes = "0"+minutes;}
-        if (seconds < 10) {seconds = "0"+seconds;}
-        
-        var timestampStr;
-        if (sec_num < 0)  {timestampStr = "+ "+hours+':'+minutes+':'+seconds}
+        timestampStr;
+        if (sec_num < 0)  {timestampStr = "+ "+timestampStr}
         if (sec_num == 0)  {timestampStr = "Real time"}
-        if (sec_num > 0)  {timestampStr = "- "+hours+':'+minutes+':'+seconds}
+        if (sec_num > 0)  {timestampStr = "- "+timestampStr}
 
         document.getElementById("TimeStamp").innerHTML = timestampStr;
     }
@@ -165,7 +156,7 @@ class UI_Asteroid {
 
         // Remove existing elements
         this.UI_constructionQueueItems = [];
-        var previousItems = document.getElementById("ConstructionQueueDiv").querySelectorAll(".QueueItem");
+        var previousItems = document.getElementById("ConstructionQueueList").querySelectorAll(".QueueItem");
         previousItems.forEach(function (el){
             if (el.id != "QueueItemFactory"){
                 el.remove(el);
@@ -178,7 +169,7 @@ class UI_Asteroid {
 
             const newNode = document.getElementById("QueueItemFactory").cloneNode(true);
             newNode.id = "";
-            document.getElementById("ConstructionQueueDiv").appendChild(newNode);
+            document.getElementById("ConstructionQueueList").appendChild(newNode);
             const newQueueItem = new UI_QueueItem(this.parentEngine, newNode, constructionOb, this.parentEngine.asteroid.constructionsQueue);
             this.UI_constructionQueueItems.push(newQueueItem)
         }
@@ -233,9 +224,7 @@ class UI_Asteroid {
     }
 }
 
-/**
-* Class storing DOM structure and fonctions for a construction queue item
-*/
+/** Class storing DOM structure and fonctions for a construction queue item */
 class UI_QueueItem{
    /** 
     * @param {AsteroidViewEngine} parentEngine - Engine storing all handlers and useful objects
@@ -246,11 +235,11 @@ class UI_QueueItem{
     constructor(parentEngine, HTMLRoot, targetOb, queueList){
         this.parentEngine = parentEngine;
         this.HTMLRoot = HTMLRoot;
+        /** @type {GameObject|Construction|Spaceship} - The associated GameObject */
         this.targetOb = targetOb;
         this.queueList = queueList;
 
         this.HTMLRoot.classList.remove("UI_Factory");
-        this.HTMLRoot.querySelector(".DurationText").innerHTML = targetOb.constructedEnergy;
         this.HTMLRoot.querySelector(".Name").innerHTML = targetOb.name;
 
         this.upButton = new UI_Button(this.HTMLRoot.querySelectorAll(".UI_Button")[0],this,this.upButtonClicked);
@@ -258,6 +247,8 @@ class UI_QueueItem{
         this.deleteButton = new UI_Button(this.HTMLRoot.querySelectorAll(".UI_Button")[2],this,this.deleteButtonClicked);
 
         this.HTMLRoot.style.top = "0px";
+
+        this.updateLocalTick();
     }
     updateButtons(){
         // Disable buttons for extremities:
@@ -360,6 +351,23 @@ class UI_QueueItem{
     deleteCallback(){
         this.deleteButton.setState("OFF");
         this.parentEngine.ui.getChangesFromServer();
+    }
+
+    /** Updates the remaining time */
+    updateLocalTick(){
+        const finishDelay = (this.targetOb.costEnergy - this.targetOb.constructedEnergy)/(this.parentEngine.asteroid.energyGeneration/3600);
+        if (this.parentEngine.asteroid.constructionsQueue.indexOf(this.targetOb)==0){
+            const localDelay = finishDelay - this.parentEngine.ui.dataLoadElapsedSeconds;
+            if (localDelay > 0){
+                this.HTMLRoot.querySelector(".DurationText").innerHTML = secondsToDurationString(localDelay);
+            }else{
+                this.HTMLRoot.querySelector(".DurationText").innerHTML = secondsToDurationString(0);
+                setTimeout(function(self){self.parentEngine.ui.getChangesFromServer()},3000,this);
+            }
+            
+        }else{
+            this.HTMLRoot.querySelector(".DurationText").innerHTML = secondsToDurationString(finishDelay);
+        }
     }
 }
 

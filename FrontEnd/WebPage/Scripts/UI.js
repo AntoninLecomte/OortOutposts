@@ -1,6 +1,4 @@
-/**
-* A fonctionnal animated window
-*/
+/** A fonctionnal animated window */
 class UI_Window{
     /** 
     * Window constructor
@@ -52,9 +50,7 @@ class UI_Window{
 }
 
 
-/**
-* A fonctionnal button with state and signals
-*/
+/** A fonctionnal button with state and signals */
 class UI_Button {
     /** 
     * Button constructor
@@ -134,4 +130,58 @@ class UI_Button {
     }
 }
 
-export {UI_Window, UI_Button}
+/** A fonctionnal animated window */
+class UI_TabView{
+    /**
+     * @param {HTMLElement} HTML - Tab view root HTML element
+     */
+    constructor(HTML){
+        this.HTML = HTML;
+        /** @type {HTMLElement{}} - Tabs HTML stored by tabID */
+        this.tabs = {}
+    }
+    /**
+     * @param {string} tabID - The tab ID
+     * @param {string} tabName - The tab name to be displayed
+     * @param {HTMLElement} HTML - The HTML to be displayed when the tab is active
+     */
+    addTab(tabID, name, HTML){
+        const newTabButton = document.createElement("div");
+        newTabButton.className = "UI_TabViewButton";
+        const newP = document.createElement("p");
+        newP.innerHTML = name;
+        newTabButton.appendChild(newP);
+        this.HTML.querySelector(".UI_TabViewButtonsDiv").appendChild(newTabButton);
+
+        newTabButton.tabView = this;
+        newTabButton.tabID = tabID;
+        newTabButton.onclick = function(ev){
+            ev.currentTarget.tabView.setTab(ev.currentTarget.tabID);
+        }
+
+        this.tabs[tabID] = {
+            "name":name,
+            "HTMLContent": HTML,
+            "HTMLButton": newTabButton
+        }
+
+        this.setTab(tabID);
+    }
+    /** 
+     * Set the current tab to tabID
+     * @param {string} tabID - The tab ID to display
+     */
+    setTab(tabID){
+        for (var tab in this.tabs){
+            if (tab == tabID){
+                this.tabs[tab].HTMLContent.style.display = "flex";
+                this.tabs[tab].HTMLButton.style.backgroundColor = gameConfig.colors["background-light"];
+            }else{
+                this.tabs[tab].HTMLContent.style.display = "none";
+                this.tabs[tab].HTMLButton.style.backgroundColor = "";
+            }
+        }
+    }
+}
+
+export {UI_Window, UI_Button, UI_TabView}

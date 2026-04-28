@@ -122,7 +122,7 @@ class Server{
         }
         if (request.url.includes("getGameObjectData")){
             const targetGameObject = gameData.getGameObjectById(urlParams.get("gameObjectID"));
-            const askDate = new Date(gameData.currentDate.getTime() - 3600*1*1000)
+            const askDate = new Date(gameData.currentDate.getTime()) //- 3600*1*1000)
             return response.end(JSON.stringify(targetGameObject.exportJSON(askDate), null, 4));
         }
 

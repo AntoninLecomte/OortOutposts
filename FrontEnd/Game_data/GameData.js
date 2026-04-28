@@ -7,9 +7,9 @@ class GameData {
         /** @type {Date} - Game current date */
         this.currentDate = new Date();
         /** @type {number} - Time in s, between two iterations of the game world */
-        this.iterationLoopTime = 3;
+        this.iterationLoopTime = 1;
         /** @type {number} - {DEV} allowing time multiplication for dev purposes */
-        this.DEV_timeMultiplier = 0;//3600/this.iterationLoopTime;
+        this.DEV_timeMultiplier = 600/this.iterationLoopTime;
         
         /** @type {integer} - Incremental counter to allow individual unique ids for all game objects */
         this.gameObjectCurrentID = 0;
@@ -445,14 +445,9 @@ class Asteroid extends GameObject{
         this.ressourceMinerals += this.mineralsGeneration*dt/3600;
         this.ressourceWater += this.waterGeneration*dt/3600;
 
-        // Energy ratios
-        const energyConstruction = 1*this.energyGeneration*dt;
-        const energyShipyard = 0*dt;
-        const energyScience = 0*dt;
-
         // Construction
         if (this.constructionsQueue.length > 0){
-            this.constructionsQueue[0].constructedEnergy += energyConstruction;
+            this.constructionsQueue[0].constructedEnergy += this.energyGeneration*dt/3600;
             if (this.constructionsQueue[0].constructedEnergy >= this.constructionsQueue[0].costEnergy){
                 if (this.constructionsQueue[0].constructor.name == "Construction"){
                     this.constructions.push(this.constructionsQueue[0]);
