@@ -2,8 +2,6 @@ class GameData {
     constructor() {
         /** @type {Date} - Game start date and time */
         this.startDate = new Date();
-        /** @type {number} - Elapsed seconds since game start */
-        this.elapsedSeconds = 0;
         /** @type {Date} - Game current date */
         this.currentDate = new Date();
         /** @type {number} - Time in s, between two iterations of the game world */
@@ -73,8 +71,7 @@ class GameData {
     /** Runs a loop to propagate the game state through time */
     runLoopIteration(){
         const dt = this.iterationLoopTime * this.DEV_timeMultiplier;
-        this.elapsedSeconds += dt;
-        this.currentDate = new Date(this.startDate.getTime()+this.elapsedSeconds*1000);
+        this.currentDate = new Date(this.currentDate.getTime()+dt*1000);
         this.cluster.runLoopIteration(dt);
     }
 

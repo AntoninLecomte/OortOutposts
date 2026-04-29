@@ -361,7 +361,7 @@ class UI_QueueItem{
             if (localDelay > 0){
                 this.HTMLRoot.querySelector(".DurationText").innerHTML = secondsToDurationString(localDelay);
             }else{
-                this.HTMLRoot.querySelector(".DurationText").innerHTML = secondsToDurationString(0);
+                this.HTMLRoot.querySelector(".DurationText").innerHTML = "...";
                 setTimeout(function(self){self.parentEngine.ui.getChangesFromServer()},3000,this);
             }
             

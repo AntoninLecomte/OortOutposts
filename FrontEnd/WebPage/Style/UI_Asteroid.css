@@ -146,6 +146,7 @@
 }
 #View_Asteroid .PickItem .TopPanel{
     display: flex;
+    align-items: flex-start;
     column-gap: 1em;
 }
 #View_Asteroid .PickItem .ButtonCentralizer{

@@ -26,6 +26,7 @@ class NetworkHandler{
         xmlHttp.onreadystatechange = function() { 
             if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
                 const data = JSON.parse(xmlHttp.responseText);
+                this.gameObject.gameData.currentDate = new Date(Date.parse(data.gameCurrentDate));
                 this.gameObject.loadJSON(data);
                 this.callback.call(this.callbackTarget,data);
             }

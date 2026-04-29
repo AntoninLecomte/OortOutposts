@@ -115,15 +115,24 @@ class Server{
             targetAsteroid = gameData.getGameObjectById(urlParams.get("asteroidID"))
         }
         
+        // Common values for every requests
+        var baseData = {
+            "gameCurrentDate":gameData.currentDate.toISOString()
+        }
 
         // Execute action
+        var specificData = {};
         if (request.url.includes("getGameData")){
-            return response.end(JSON.stringify(gameData.exportJSON(gameData.currentDate), null, 4));
+            specificData = gameData.exportJSON(gameData.currentDate);
+            const allResponse = Object.assign({}, baseData, specificData);
+            return response.end(JSON.stringify(allResponse, null, 4));
         }
         if (request.url.includes("getGameObjectData")){
             const targetGameObject = gameData.getGameObjectById(urlParams.get("gameObjectID"));
             const askDate = new Date(gameData.currentDate.getTime()) //- 3600*1*1000)
-            return response.end(JSON.stringify(targetGameObject.exportJSON(askDate), null, 4));
+            specificData = targetGameObject.exportJSON(askDate);
+            const allResponse = Object.assign({}, baseData, specificData);
+            return response.end(JSON.stringify(allResponse, null, 4));
         }
 
 
