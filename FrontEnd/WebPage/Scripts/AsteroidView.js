@@ -1,6 +1,6 @@
 import { GameObject, Construction, GameData, Spaceship } from "../../Game_data/GameData.js";
 import { NetworkHandler } from "./Network.js";
-import { UI_Button, UI_TabView, UI_Window } from "./UI.js";
+import { UI_Button, UI_RollingNumber, UI_TabView, UI_Window } from "./UI.js";
 import { secondsToDurationString } from "./Utils.js";
 
 /** Class linking and organizing all handlers and instances */
@@ -15,6 +15,13 @@ class AsteroidViewEngine{
         this.gameData = gameData;
         this.asteroid = gameData.cluster.asteroids[0];
         this.networkHandler = networkHandler;
+
+        /** @type {number} - Local game update interval in seconds */
+        this.localIterationLoopTime = 1;
+        /** @type {Date} - The date at which the page was loaded */
+        this.dataLoadTimeStamp;
+        /** @type {number} - The number of seconds elapsed since the page was loaded */
+        this.dataLoadElapsedSeconds;
 
         this.ui = new UI_Asteroid(this)
     }
@@ -31,11 +38,6 @@ class UI_Asteroid {
 
         /** @type {UI_QueueItem[]} - Collection of all QueueItem objects */
         this.UI_constructionQueueItems = [];
-
-        /** @type {Date} - The date at which the page was loaded */
-        this.dataLoadTimeStamp;
-        /** @type {number} - The number of seconds elapsed since the page was loaded */
-        this.dataLoadElapsedSeconds;
 
         let UI_asteroidObject = this;
         fetch("WebPage/HTML/UI_Asteroid.html")
@@ -56,6 +58,12 @@ class UI_Asteroid {
     receivedHTML(DOM){
         this.mainDiv = DOM.querySelector("#View_Asteroid");
         this.parentEngine.HTML.appendChild(this.mainDiv);
+
+        // Create ressources numbers
+        this.ressourcesNumbers = {};
+        this.ressourcesNumbers["minerals"] = new UI_RollingNumber(document.getElementById("ressourceMinerals"),4,this.parentEngine.localIterationLoopTime*1000);
+        this.ressourcesNumbers["water"] = new UI_RollingNumber(document.getElementById("ressourceWater"),4,this.parentEngine.localIterationLoopTime*1000);
+        this.ressourcesNumbers["energy"] = new UI_RollingNumber(document.getElementById("ressourceEnergy"),4,this.parentEngine.localIterationLoopTime*1000);
         
         // Create tabs
         this.rightTabs = new UI_TabView(document.getElementById("RightTabView"));
@@ -65,13 +73,13 @@ class UI_Asteroid {
         this.rightTabs.addTab("shipyard", gameConfig.strings_EN["PanelName_Shipyard"], document.getElementById("ShipyardPanel"));
         this.rightTabs.setTab("constructions");
 
-        this.dataLoadTimeStamp = new Date();
+        this.parentEngine.dataLoadTimeStamp = new Date();
 
         // Start periodic update:
         this.getChangesFromServer();
         setInterval(function(self){
             self.updateLocalTick();
-        },1000,this)
+        },this.parentEngine.localIterationLoopTime*1000,this)
     }
 
     /** Update static data, run only once at page loading */
@@ -82,10 +90,13 @@ class UI_Asteroid {
     /** Update all local timers */
     updateLocalTick(){
         // Run local clock:
-        this.dataLoadElapsedSeconds = (new Date().getTime() - this.dataLoadTimeStamp)/1000*this.gameData.DEV_timeMultiplier;
+        this.parentEngine.dataLoadElapsedSeconds = (new Date().getTime() - this.parentEngine.dataLoadTimeStamp)/1000*this.gameData.DEV_timeMultiplier;
         for (var item in this.UI_constructionQueueItems){
             this.UI_constructionQueueItems[item].updateLocalTick();
         }
+        // Update ressources:
+        this.parentEngine.asteroid.runLoopIteration(this.parentEngine.localIterationLoopTime*this.gameData.DEV_timeMultiplier);
+        this.updateRessources();
     }
 
     /** Asks server for any updates and show result */
@@ -94,7 +105,7 @@ class UI_Asteroid {
     }
     /** Refresh displayed information to match gamedata state */
     refresh(){
-        this.dataLoadTimeStamp = new Date();
+        this.parentEngine.dataLoadTimeStamp = new Date();
         
         this.updateTimeStamp();
         this.updateRessources();
@@ -121,13 +132,9 @@ class UI_Asteroid {
 
     /** Update ressources level */
     updateRessources(){
-        const stringMinerals = Math.round(this.parentEngine.asteroid.ressourceMinerals*10)/10+" ("+ Math.round(this.parentEngine.asteroid.mineralsGeneration*10)/10+"/h)";
-        const stringWater = Math.round(this.parentEngine.asteroid.ressourceWater*10)/10+" ("+ Math.round(this.parentEngine.asteroid.waterGeneration*10)/10+"/h)";
-        const stringEnergy = "("+ Math.round(this.parentEngine.asteroid.energyGeneration*10)/10+"/h)";
-
-        document.getElementById("ressourceMinerals").querySelector(".UI_RessourceP").innerHTML = stringMinerals;
-        document.getElementById("ressourceWater").querySelector(".UI_RessourceP").innerHTML = stringWater;
-        document.getElementById("ressourceEnergy").querySelector(".UI_RessourceP").innerHTML = stringEnergy;
+        this.ressourcesNumbers["minerals"].setValue(this.parentEngine.asteroid.ressourceMinerals);
+        this.ressourcesNumbers["water"].setValue(this.parentEngine.asteroid.ressourceWater);
+        this.ressourcesNumbers["energy"].setValue(this.parentEngine.asteroid.energyGeneration);
     }
 
     /** Updates the logs in reference with game data*/
@@ -356,17 +363,11 @@ class UI_QueueItem{
     /** Updates the remaining time */
     updateLocalTick(){
         const finishDelay = (this.targetOb.costEnergy - this.targetOb.constructedEnergy)/(this.parentEngine.asteroid.energyGeneration/3600);
-        if (this.parentEngine.asteroid.constructionsQueue.indexOf(this.targetOb)==0){
-            const localDelay = finishDelay - this.parentEngine.ui.dataLoadElapsedSeconds;
-            if (localDelay > 0){
-                this.HTMLRoot.querySelector(".DurationText").innerHTML = secondsToDurationString(localDelay);
-            }else{
-                this.HTMLRoot.querySelector(".DurationText").innerHTML = "...";
-                setTimeout(function(self){self.parentEngine.ui.getChangesFromServer()},3000,this);
-            }
-            
-        }else{
+        if (finishDelay > 0){
             this.HTMLRoot.querySelector(".DurationText").innerHTML = secondsToDurationString(finishDelay);
+        }else{
+            this.HTMLRoot.querySelector(".DurationText").innerHTML = "...";
+            setTimeout(function(self){self.parentEngine.ui.getChangesFromServer()},1000,this);
         }
     }
 }

@@ -1,29 +1,34 @@
 <div id="View_Asteroid">
     <div id="LeftPanel">
-        <div class="UI_Frame" id="RessourcesDiv">
-            <div class="UI_Ressource" id="ressourceMinerals">
-                <img class="UI_RessourceImg" src="./WebPage/Media/Ressources/MINERALS.png">
-                <p class="UI_RessourceP"></p>
-            </div>
-            <div class="UI_Ressource" id="ressourceWater">
-                <img class="UI_RessourceImg" src="./WebPage/Media/Ressources/WATER.png">
-                <p class="UI_RessourceP"></p>
-            </div>
-            <div class="UI_Ressource" id="ressourceEnergy">
-                <img class="UI_RessourceImg" src="./WebPage/Media/Ressources/ENERGY.png">
-                <p class="UI_RessourceP"></p>
-            </div>
-        </div>
+        <div class="UI_Row">
+            <div class="UI_Column" id="TopElements">
+                <div class="UI_Frame" id="RessourcesDiv">
+                    <div class="UI_Ressource">
+                        <img class="UI_RessourceImg" src="./WebPage/Media/Ressources/MINERALS.png">
+                        <div id="ressourceMinerals"></div>
+                    </div>
+                    <div class="UI_Ressource">
+                        <img class="UI_RessourceImg" src="./WebPage/Media/Ressources/WATER.png">
+                        <div id="ressourceWater"></div>
+                    </div>
+                    <div class="UI_Ressource">
+                        <img class="UI_RessourceImg" src="./WebPage/Media/Ressources/ENERGY.png">
+                        <div id="ressourceEnergy"></div>
+                    </div>
+                </div>
 
-        <div class="UI_Column" id="TopTexts">
-            <div class="UI_Row" id="AsteroidNameDiv">
-                <p id="AsteroidName">Asteroid name</p>        
-            </div>
-            <div class="UI_Row" id="TimeStampDiv">
-                <p id="TimeStamp">Timestamp</p>        
+                <div id="TopTexts">
+                    <div class="UI_Row" id="AsteroidNameDiv">
+                        <p id="AsteroidName">Asteroid name</p>        
+                    </div>
+                    <div class="UI_Row" id="TimeStampDiv">
+                        <p id="TimeStamp">Timestamp</p>        
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
     <div id="RightPanel">
         <div id="RightPanelContent">
             <div class="UI_TabView" id="RightTabView">

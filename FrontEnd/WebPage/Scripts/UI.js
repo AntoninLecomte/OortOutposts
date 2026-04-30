@@ -130,7 +130,7 @@ class UI_Button {
     }
 }
 
-/** A fonctionnal animated window */
+/** Displays different elements by user selection of tabs */
 class UI_TabView{
     /**
      * @param {HTMLElement} HTML - Tab view root HTML element
@@ -184,4 +184,100 @@ class UI_TabView{
     }
 }
 
-export {UI_Window, UI_Button, UI_TabView}
+/** An animated number display with rolling digits */
+class UI_RollingNumber{
+    /**
+     * @param {HTMLElement} HTML - Digit root HTML element
+     * @param {number} ndigits - Number of digits to display
+     * @param {number} transitionTime - Animation time for a roll in ms
+     */
+    constructor(HTML,ndigits, transitionTime){
+        this.transitionTime = transitionTime;
+
+        this.HTML = document.createElement("div");
+        this.HTML.className = "UI_RollingNumberDiv";
+        HTML.appendChild(this.HTML);
+        this.digits = [];
+
+        /** @type {number} - The current value displayed */
+        this.value = 0;
+
+        // Create subelements:
+        for (var d=0; d<ndigits; d++){
+            const newDigitWindow = document.createElement("div");
+            newDigitWindow.className = "UI_RollingNumberDigitWindow";
+            this.HTML.appendChild(newDigitWindow);
+            this.digits.push(newDigitWindow);
+
+            const newStrip = document.createElement("div");
+            newStrip.className = "UI_RollingNumberStrip";
+            newStrip.topPosition = 0;
+            newStrip.previousValue = 0;
+            newStrip.style.transition = "top "+this.transitionTime+"ms linear";
+            newDigitWindow.appendChild(newStrip);
+
+            newStrip.appendChild(this.createDigit(0));
+        }
+
+        // Store size info:
+        this.digitHeight = this.HTML.querySelector(".UI_RollingNumberDigitDiv").getBoundingClientRect().height;
+    }
+    createDigit(value){
+        const newDigitDiv = document.createElement("div");
+        newDigitDiv.className = "UI_RollingNumberDigitDiv";
+
+        const newDigitP = document.createElement("p");
+        newDigitP.className = "UI_RollingNumberDigitP";
+        newDigitP.innerHTML = value;
+        newDigitDiv.appendChild(newDigitP);
+        return newDigitDiv;
+    }
+    setValue(value){
+        if (isNaN(value)){throw new Error("Cannot set rolling number value: "+value);}
+        value = Math.round(value);
+        const evolutionSign = Math.sign(value-this.value);
+        var selector = 10;
+        var valueForSplit = value;
+        for (var d in this.digits){
+            // Black magic to get each number:
+            var digitValue = valueForSplit%selector;            
+            valueForSplit -= digitValue;
+            digitValue = digitValue/(selector/10); // Holds the digit to be displayed at this position
+            selector = 10*selector;
+
+            const digitIndex = this.digits.length-1-d;
+            const strip = this.digits[digitIndex].querySelector(".UI_RollingNumberStrip")
+
+            // Remove child nodes:
+            strip.innerHTML = ""
+            
+            // Current value
+            const digit = this.createDigit(strip.previousValue);
+            digit.style.top = -strip.topPosition+"px";
+            strip.append(digit);
+
+            // Transition values
+            var transitionDigit = strip.previousValue;
+            var count = 1;
+
+            while (transitionDigit != digitValue){
+                transitionDigit += evolutionSign;
+                if (transitionDigit == 10){transitionDigit = 0}
+                if (transitionDigit == -1){transitionDigit = 9}
+
+                const digit = this.createDigit(transitionDigit);
+                digit.style.top = -strip.topPosition + this.digitHeight*count*evolutionSign+"px";
+                strip.append(digit);
+                count++;
+            }
+
+            strip.topPosition -= evolutionSign*(count-1)*this.digitHeight;
+            strip.style.top = strip.topPosition+"px";
+            strip.previousValue = digitValue;
+        }
+        this.value = value;
+    }
+    
+}
+
+export {UI_Window, UI_Button, UI_TabView, UI_RollingNumber}

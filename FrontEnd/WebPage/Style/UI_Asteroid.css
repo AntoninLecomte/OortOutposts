@@ -28,11 +28,10 @@
     height: 100%;
 }
 
+#TopElements{
+    row-gap: 1em;
+}
 #View_Asteroid #RessourcesDiv{
-    position: absolute;
-    top: 0;
-    left: 2em;
-
     column-gap: 1em;
     padding: 1em;
 
@@ -40,16 +39,11 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
-
-#View_Asteroid #TopTexts{
-    position: absolute;
-    top: 1vw;
-    width: 100%;
-
-    justify-content: flex-start;
-    row-gap: 1vh;
+#TopTexts{
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5em;
 }
-
 
 #View_Asteroid .Miniature{
     position: relative;

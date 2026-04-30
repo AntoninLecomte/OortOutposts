@@ -1,46 +1,21 @@
 {
-    "gameObjectCurrentID": 4,
-    "startDate": "2026-04-29T19:57:09.390Z",
-    "currentDate": "2026-04-29T21:27:09.390Z",
+    "gameObjectCurrentID": 1,
+    "startDate": "2026-04-30T11:17:57.256Z",
+    "currentDate": "2026-04-30T11:17:57.256Z",
     "cluster": {
         "asteroids": [
             {
                 "gameObjectId": 0,
-                "timestamp": "2026-04-29T21:27:09.390Z",
+                "timestamp": "2026-04-30T11:17:57.256Z",
                 "x": 0,
                 "y": 0,
-                "ressourceMinerals": 11.499999999999995,
-                "ressourceWater": 10.150000000000007,
-                "mineralsGeneration": 1,
-                "waterGeneration": 0.1,
-                "energyGeneration": 1,
+                "ressourceMinerals": 10,
+                "ressourceWater": 10,
+                "mineralsGeneration": -1,
+                "waterGeneration": -1,
+                "energyGeneration": -1,
                 "constructions": [],
-                "constructionsQueue": [
-                    {
-                        "gameObjectId": 1,
-                        "timestamp": "2026-04-29T21:27:09.390Z",
-                        "constructionTypeID": "CONST_WaterExtractor",
-                        "constructionDate": "2026-04-29T19:57:17.992Z",
-                        "constructedEnergy": 0.16666666666666666,
-                        "structurePoints": 0
-                    },
-                    {
-                        "gameObjectId": 2,
-                        "timestamp": "2026-04-29T21:27:09.390Z",
-                        "constructionTypeID": "CONST_WaterExtractor",
-                        "constructionDate": "2026-04-29T19:57:18.565Z",
-                        "constructedEnergy": 0,
-                        "structurePoints": 0
-                    },
-                    {
-                        "gameObjectId": 3,
-                        "timestamp": "2026-04-29T21:27:09.390Z",
-                        "constructionTypeID": "CONST_WaterExtractor",
-                        "constructionDate": "2026-04-29T19:57:18.773Z",
-                        "constructedEnergy": 0,
-                        "structurePoints": 0
-                    }
-                ],
+                "constructionsQueue": [],
                 "spaceships": []
             }
         ]
